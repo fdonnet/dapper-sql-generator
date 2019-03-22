@@ -117,5 +117,16 @@ namespace SqlGenerator.UI
                 txtOutput.Text = output;
             }
         }
+
+        private void ButtonGenerateTableType_Click(object sender, RoutedEventArgs e)
+        {
+            TSqlObject table = lstTables.SelectedItem as TSqlObject;
+            if (table != null)
+            {
+                var gen = new SqlTableTypeGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }, doNotIncludeColumns: new string[] { "inserted_by", "inserted_on" });
+                var output = gen.Generate();
+                txtOutput.Text = output;
+            }
+        }
     }
 }
