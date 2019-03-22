@@ -21,7 +21,7 @@ namespace SqlGenerator.StoredProcedures
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 GrantExecuteTo.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
-                    + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectAll] TO [{roleName}] AS [dbo];"
+                    + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_select] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
             );
 
@@ -32,7 +32,7 @@ $@"
 -- Description:	Select All Procedure for the table {Table.Name} 
 -- =================================================================
 
-CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectAll]
+CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_select]
 AS
 BEGIN
     SET NOCOUNT ON;
