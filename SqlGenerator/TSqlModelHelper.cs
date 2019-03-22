@@ -127,9 +127,9 @@ namespace SqlGenerator
             {
                 int length = column.GetProperty<int>(Column.Length);
                 bool isMax = column.GetProperty<bool>(Column.IsMax);
-                if (length == 0 && !isMax) return sdt.ToString().ToUpper();
-                else if (length == 0) return sdt.ToString().ToUpper() + "(MAX)";
-                else return sdt.ToString().ToUpper() + "(" + length + ")";
+                return length == 0 && !isMax
+                    ? sdt.ToString().ToUpper()
+                    : length == 0 ? sdt.ToString().ToUpper() + "(MAX)" : sdt.ToString().ToUpper() + "(" + length + ")";
             }
             else
             {
