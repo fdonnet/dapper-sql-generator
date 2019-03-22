@@ -48,7 +48,7 @@ namespace SqlGenerator.StoredProcedures
                     })
                 );
 
-                var pkFieldNames = String.Join("And",
+                var ukFieldNames = String.Join("And",
                     ukColumns.Select(col =>
                     {
                         var colName = col.Name.Parts[2];
@@ -59,7 +59,7 @@ namespace SqlGenerator.StoredProcedures
                 var grants = String.Join(Environment.NewLine + Environment.NewLine,
                     GrantExecuteTo.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
-                    + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldNames}] TO [{roleName}] AS [dbo];"
+                    + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{ukFieldNames}] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
                 );
 
@@ -70,7 +70,7 @@ $@"
 -- Description:	Select By UK Procedure for the table {Table.Name} 
 -- =================================================================
 
-CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldNames}]
+CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{ukFieldNames}]
 (
 {inputParamDeclarations}
 )
