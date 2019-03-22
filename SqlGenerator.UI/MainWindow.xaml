@@ -16,6 +16,7 @@
             <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" >Generate SQL Update for selected table</Button>
             <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click">Generate SQL Select All for selected table</Button>
             <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" >Generate SQL Select By PK for selected table</Button>
+            <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" >Generate SQL Table Type for selected table</Button>
             <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click">Generate .NET Entity Class for selected table</Button>
             <TextBox x:Name="txtOutput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console"></TextBox>
         </StackPanel>
