@@ -159,7 +159,7 @@ namespace SqlGenerator
         }
 
         /// <summary>
-        /// Get uk with attached column(s) from a table. Based on unique constrain finding
+        /// Get uk(s) with attached column(s) from a table. Based on unique constrains finding
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
