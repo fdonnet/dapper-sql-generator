@@ -108,6 +108,16 @@ namespace SqlGenerator.UI
             }
         }
 
+        private void ButtonGenerateSelectByUK_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstTables.SelectedItem is TSqlObject table)
+            {
+                var gen = new SqlSelectByUKGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var output = gen.Generate();
+                txtOutput.Text = output;
+            }
+        }
+
         private void ButtonGenerateUpdate_Click(object sender, RoutedEventArgs e)
         {
             if (lstTables.SelectedItem is TSqlObject table)

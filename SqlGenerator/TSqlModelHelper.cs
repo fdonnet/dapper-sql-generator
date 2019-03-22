@@ -163,7 +163,7 @@ namespace SqlGenerator
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        public static List<IEnumerable<TSqlObject>> GetUniqueKeyWithColumns(this TSqlObject table)
+        public static List<IEnumerable<TSqlObject>> GetUniqueKeysWithColumns(this TSqlObject table)
         {
             if (table == null) throw new ArgumentNullException(nameof(table));
 

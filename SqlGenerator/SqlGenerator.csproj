@@ -68,6 +68,7 @@
     <Compile Include="StoredProcedures\SqlInsertGenerator.cs" />
     <Compile Include="StoredProcedures\SqlSelectAllGenerator.cs" />
     <Compile Include="StoredProcedures\SqlSelectByPKGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectByUKGenerator.cs" />
     <Compile Include="StoredProcedures\SqlTableTypeGenerator.cs" />
     <Compile Include="StoredProcedures\SqlUpdateGenerator.cs" />
     <Compile Include="TSqlModelHelper.cs" />
