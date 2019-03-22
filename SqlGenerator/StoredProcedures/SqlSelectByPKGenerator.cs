@@ -49,7 +49,7 @@ namespace SqlGenerator.StoredProcedures
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 GrantExecuteTo.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
-                    + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectByPK] TO [{roleName}] AS [dbo];"
+                    + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldName}] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
             );
 
