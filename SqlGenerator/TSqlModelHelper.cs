@@ -10,7 +10,7 @@ namespace SqlGenerator
 {
     public static class TSqlModelHelper
     {
-        
+
         /// <summary>
         /// Get SQL database model from a .dacpac file
         /// </summary>
@@ -20,12 +20,12 @@ namespace SqlGenerator
         {
             ModelLoadOptions options = new ModelLoadOptions()
             {
-                LoadAsScriptBackedModel = true,
-                ModelStorageType = DacSchemaModelStorageType.Memory
+                LoadAsScriptBackedModel = false,
+                ModelStorageType = DacSchemaModelStorageType.File
             };
             return TSqlModel.LoadFromDacpac(dacpacFileName, options);
         }
-        
+
 
         /// <summary>
         /// Get all tables from a model
@@ -54,6 +54,7 @@ namespace SqlGenerator
         /// <returns></returns>
         public static IEnumerable<TSqlObject> GetAllColumns(this TSqlObject table)
         {
+            if (table == null) throw new ArgumentNullException(nameof(table));
             var columns = table.GetReferenced(Table.Columns);
             return columns;
         }
@@ -66,6 +67,7 @@ namespace SqlGenerator
         /// <returns></returns>
         public static string GetDotNetDataType(string sqlDataTypeName, bool nullable = false)
         {
+            if (sqlDataTypeName == null) throw new ArgumentNullException(nameof(sqlDataTypeName));
             switch (sqlDataTypeName.ToLower())
             {
                 case "bigint":
@@ -110,7 +112,7 @@ namespace SqlGenerator
                     return null;
             }
         }
-        
+
 
         /// <summary>
         /// Get the data type and its size (if applicable) from a table column 
@@ -119,6 +121,7 @@ namespace SqlGenerator
         /// <returns></returns>
         public static string GetColumnSqlDataType(this TSqlObject column, bool withLength = true)
         {
+            if (column == null) throw new ArgumentNullException(nameof(column));
             SqlDataType sdt = column.GetReferenced(Column.DataType).First().GetProperty<SqlDataType>(DataType.SqlDataType);
             if (withLength)
             {
@@ -142,31 +145,28 @@ namespace SqlGenerator
         /// <returns></returns>
         public static IEnumerable<TSqlObject> GetPrimaryKeyColumns(this TSqlObject table)
         {
-            List<TSqlObject> pkColumns = new List<TSqlObject>();
-
-            if (table != null)
+            if (table == null) throw new ArgumentNullException(nameof(table));
+            TSqlObject pk = table.GetReferencing(PrimaryKeyConstraint.Host, DacQueryScopes.UserDefined).FirstOrDefault();
+            if (pk != null)
             {
-                TSqlObject pk = table.GetReferencing(PrimaryKeyConstraint.Host, DacQueryScopes.UserDefined).FirstOrDefault();
-                if (pk != null)
+                var columns = pk.GetReferenced(PrimaryKeyConstraint.Columns);
+                if (columns != null)
                 {
-                    var columns = pk.GetReferenced(PrimaryKeyConstraint.Columns);
-                    if (columns != null)
-                    {
-                        pkColumns.AddRange(columns);
-                    }
+                    return columns;
                 }
             }
-            return pkColumns;
+            return new TSqlObject[0];
         }
 
 
         public static bool IsColumnNullable(this TSqlObject column)
         {
+            if (column == null) throw new ArgumentNullException(nameof(column));
             bool result = column.GetProperty<bool>(Column.Nullable);
             return result;
         }
 
-        
+
         /// <summary>
         /// Transforms a string in the form 'foo_bar' into a string in the form 'FooBar'
         /// </summary>

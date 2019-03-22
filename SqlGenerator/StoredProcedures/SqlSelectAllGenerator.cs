@@ -7,37 +7,32 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.StoredProcedures
 {
-    public class DeleteGenerator
+    public class SqlSelectAllGenerator : SqlGenerator
     {
 
-        public TSqlObject Table { get; private set; } = null;
-
-        public string Author { get; private set; } = "Author";
-
-        public IEnumerable<string> GrantExecuteTo { get; private set; } = new List<string>();
-
-
-        public DeleteGenerator(TSqlObject table, string author = null, IEnumerable<string> grantExecuteTo = null)
+        public SqlSelectAllGenerator(TSqlObject table, string author = null, IEnumerable<string> grantExecuteTo = null)
+            : base(table, author, grantExecuteTo)
         {
-            this.Table = table;
-            this.Author = author ?? this.Author;
-            this.GrantExecuteTo = grantExecuteTo ?? this.GrantExecuteTo;
         }
 
 
-        public string Generate()
+        public override string Generate()
         {
+            var grants = String.Join(Environment.NewLine + Environment.NewLine,
+                GrantExecuteTo.Select(roleName =>
+                    "GRANT EXECUTE" + Environment.NewLine
+                    + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectAll] TO [{roleName}] AS [dbo];"
+                    + Environment.NewLine + "GO")
+            );
+
             string output =
 $@" 
 -- =================================================================
 -- Author: {this.Author}
--- Description:	Delete Procedure for the table {Table.Name} 
+-- Description:	Select All Procedure for the table {Table.Name} 
 -- =================================================================
 
-CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_delete]
-(
-@id INT
-)
+CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectAll]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -49,9 +44,8 @@ BEGIN
 
     BEGIN TRY
     
-        DELETE FROM {Table.Name}
-	    WHERE [id] = @id
-
+        SELECT * FROM {Table.Name}
+        
     END TRY
     BEGIN CATCH
         SELECT
@@ -70,17 +64,7 @@ END
 
 GO
 
-{
-String.Concat(
-GrantExecuteTo.Select(roleName => $@"
-
-GRANT EXECUTE
-ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_delete] TO [{roleName}]
-AS[dbo];
-GO
-
-"))
-}
+{grants}
 
 ";
 
@@ -90,6 +74,3 @@ GO
 
     }
 }
-
-
-

@@ -60,9 +60,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DotNetClient\EntityClassGenerator.cs" />
-    <Compile Include="StoredProcedures\DeleteGenerator.cs" />
-    <Compile Include="StoredProcedures\InsertGenerator.cs" />
+    <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
+    <Compile Include="ICodeGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlDeleteGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlInsertGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectAllGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectByPKGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlUpdateGenerator.cs" />
     <Compile Include="TSqlModelHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
