@@ -63,7 +63,7 @@ namespace SqlGenerator.UI
             TSqlObject table = lstTables.SelectedItem as TSqlObject;
             if (table != null)
             {
-                DeleteGenerator gen = new DeleteGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                SqlDeleteGenerator gen = new SqlDeleteGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -74,7 +74,7 @@ namespace SqlGenerator.UI
             TSqlObject table = lstTables.SelectedItem as TSqlObject;
             if (table != null)
             {
-                InsertGenerator gen = new InsertGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                SqlInsertGenerator gen = new SqlInsertGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -85,7 +85,40 @@ namespace SqlGenerator.UI
             TSqlObject table = lstTables.SelectedItem as TSqlObject;
             if (table != null)
             {
-                EntityClassGenerator gen = new EntityClassGenerator(table, classNamespace: "PensionLab.DTO");
+                CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: "PensionLab.DTO");
+                var output = gen.Generate();
+                txtOutput.Text = output;
+            }
+        }
+
+        private void ButtonGenerateSelectAll_Click(object sender, RoutedEventArgs e)
+        {
+            TSqlObject table = lstTables.SelectedItem as TSqlObject;
+            if (table != null)
+            {
+                var gen = new SqlSelectAllGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var output = gen.Generate();
+                txtOutput.Text = output;
+            }
+        }
+
+        private void ButtonGenerateSelectByPK_Click(object sender, RoutedEventArgs e)
+        {
+            TSqlObject table = lstTables.SelectedItem as TSqlObject;
+            if (table != null)
+            {
+                var gen = new SqlSelectByPKGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var output = gen.Generate();
+                txtOutput.Text = output;
+            }
+        }
+
+        private void ButtonGenerateUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            TSqlObject table = lstTables.SelectedItem as TSqlObject;
+            if (table != null)
+            {
+                var gen = new SqlUpdateGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }, doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }

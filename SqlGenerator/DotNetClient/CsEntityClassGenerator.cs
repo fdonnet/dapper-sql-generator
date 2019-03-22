@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
-    public class EntityClassGenerator
+    public class CsEntityClassGenerator : ICodeGenerator
     {
         public TSqlObject Table { get; private set; } = null;
 
         public string Author { get; private set; } = "Author";
 
-        public string ClassNamespace { get; private set; } = "Entities";
+        public string ClassNamespace { get; private set; } = "DTO";
 
 
-        public EntityClassGenerator(TSqlObject table, string author = null, string classNamespace = null)
+        public CsEntityClassGenerator(TSqlObject table, string author = null, string classNamespace = null)
         {
             this.Table = table;
             this.Author = author ?? this.Author;
