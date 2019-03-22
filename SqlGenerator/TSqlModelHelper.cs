@@ -158,7 +158,40 @@ namespace SqlGenerator
             return new TSqlObject[0];
         }
 
+        /// <summary>
+        /// Get uk with attached column(s) from a table. Based on unique constrain finding
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static List<IEnumerable<TSqlObject>> GetUniqueKeyWithColumns(this TSqlObject table)
+        {
+            if (table == null) throw new ArgumentNullException(nameof(table));
 
+            IEnumerable<TSqlObject> uks = table.GetReferencing(UniqueConstraint.Host, DacQueryScopes.UserDefined);
+            var ukWithColumns = new List<IEnumerable<TSqlObject>>();
+
+            if (uks != null)
+            {
+                foreach (var uk in uks)
+                {
+                    var columns = uk.GetReferenced(UniqueConstraint.Columns);
+
+                    if (columns != null)
+                    {
+                        ukWithColumns.Add(columns);
+                    }
+                }
+            }
+
+            return ukWithColumns;
+        }
+
+        
+        /// <summary>
+        /// Check if a column is nullable
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
         public static bool IsColumnNullable(this TSqlObject column)
         {
             if (column == null) throw new ArgumentNullException(nameof(column));
