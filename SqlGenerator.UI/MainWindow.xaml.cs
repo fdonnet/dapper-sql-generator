@@ -90,8 +90,7 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateSelectAll_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
                 var gen = new SqlSelectAllGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
                 var output = gen.Generate();
@@ -101,8 +100,7 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateSelectByPK_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
                 var gen = new SqlSelectByPKGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
                 var output = gen.Generate();
@@ -112,8 +110,7 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateUpdate_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
                 var gen = new SqlUpdateGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }, doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
                 var output = gen.Generate();
