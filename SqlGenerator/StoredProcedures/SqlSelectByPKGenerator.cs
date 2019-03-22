@@ -38,6 +38,14 @@ namespace SqlGenerator.StoredProcedures
                 })
             );
 
+            var pkFieldName = String.Join("And",
+                pkColumns.Select(col =>
+                {
+                    var colName = col.Name.Parts[2];
+                    return $"{TSqlModelHelper.PascalCase(colName)}";
+                })
+            );
+
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 GrantExecuteTo.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
@@ -52,7 +60,7 @@ $@"
 -- Description:	Select By PK Procedure for the table {Table.Name} 
 -- =================================================================
 
-CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectByPK]
+CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldName}]
 (
 {inputParamDeclarations}
 )
