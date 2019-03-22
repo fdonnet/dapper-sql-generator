@@ -60,8 +60,7 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
                 DeleteGenerator gen = new DeleteGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
                 var output = gen.Generate();
@@ -71,8 +70,7 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateInsert_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
                 InsertGenerator gen = new InsertGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
                 var output = gen.Generate();
@@ -82,8 +80,7 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateNetEntityClass_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
                 EntityClassGenerator gen = new EntityClassGenerator(table, classNamespace: "PensionLab.DTO");
                 var output = gen.Generate();
