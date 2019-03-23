@@ -1,4 +1,5 @@
 ﻿using Microsoft.SqlServer.Dac.Model;
+using Microsoft.Win32;
 using SqlGenerator.DotNetClient;
 using SqlGenerator.StoredProcedures;
 using System;
@@ -37,7 +38,11 @@ namespace SqlGenerator.UI
             try
             {
                 buttonLoadModel.IsEnabled = false;
-                Model = await Task.Run(() => TSqlModelHelper.LoadModel("PensionLab.DB.dacpac"));
+                if(txtPath.Text ==string.Empty)
+                {
+                    Model = await Task.Run(() => TSqlModelHelper.LoadModel("PensionLab.DB.dacpac"));
+                }
+                
                 MessageBox.Show("Model loaded successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);               
             }
             catch (Exception exc)
@@ -122,7 +127,9 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlUpdateGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }, doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
+                var gen = new SqlUpdateGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }
+                , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
+
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -130,13 +137,22 @@ namespace SqlGenerator.UI
 
         private void ButtonGenerateTableType_Click(object sender, RoutedEventArgs e)
         {
-            TSqlObject table = lstTables.SelectedItem as TSqlObject;
-            if (table != null)
+            if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlTableTypeGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }, doNotIncludeColumns: new string[] { "inserted_by", "inserted_on" });
+                var gen = new SqlTableTypeGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }
+                , doNotIncludeColumns: new string[] { "inserted_by", "inserted_on" });
+
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
+        }
+
+
+        private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+                txtPath.Text = openFileDialog.FileName;
         }
     }
 }

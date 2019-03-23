@@ -5,21 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SqlGenerator.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <ScrollViewer>
-        <StackPanel>
-            <Button x:Name="buttonLoadModel" Click="ButtonLoadModel_Click">Load Model</Button>
-            <Button x:Name="buttonShowTables" Click="ButtonShowTables_Click">Show tables</Button>
-            <ListBox x:Name="lstTables"></ListBox>
-            <Button x:Name="buttonGenerateDelete" Click="ButtonGenerateDelete_Click">Generate SQL Delete USP for selected table</Button>
-            <Button x:Name="buttonGenerateInsert" Click="ButtonGenerateInsert_Click">Generate SQL Insert USP for selected table</Button>
-            <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" >Generate SQL Update for selected table</Button>
-            <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click">Generate SQL Select All for selected table</Button>
-            <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" >Generate SQL Select By PK for selected table</Button>
-            <Button x:Name="buttonGenerateSelectByUk" Click="ButtonGenerateSelectByUK_Click" >Generate SQL Select By UK for selected table</Button>
-            <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" >Generate SQL Table Type for selected table</Button>
-            <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click">Generate .NET Entity Class for selected table</Button>
-            <TextBox x:Name="txtOutput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console"></TextBox>
-        </StackPanel>
-    </ScrollViewer>
+        Title="MainWindow" Height="850" Width="1350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Column="0">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition MaxWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Name="txtPath" Grid.Column="0"></TextBox>
+                    <Button Name="buttonBrowse" Grid.Column="1" Click="ButtonBrowse_Click" >Browse</Button>
+                </Grid>
+
+                <Button x:Name="buttonLoadModel" Click="ButtonLoadModel_Click">Load Model</Button>
+                <Button x:Name="buttonShowTables" Click="ButtonShowTables_Click">Show tables</Button>
+                <ListBox x:Name="lstTables"></ListBox>
+            </StackPanel>
+        </ScrollViewer>
+        <TabControl Grid.Column="1">
+            <TabItem Header="Table settings"></TabItem>
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="35"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <Button x:Name="buttonGenerateDelete" Click="ButtonGenerateDelete_Click" Margin="3,0,3,0">Delete</Button>
+                        <Button x:Name="buttonGenerateInsert" Click="ButtonGenerateInsert_Click" Margin="3,0,3,0">Insert</Button>
+                        <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" Margin="3,0,3,0">Update</Button>
+                        <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click" Margin="3,0,3,0">Select All</Button>
+                        <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" Margin="3,0,3,0">Select By PK</Button>
+                        <Button x:Name="buttonGenerateSelectByUk" Click="ButtonGenerateSelectByUK_Click" Margin="3,0,3,0">Select By UK</Button>
+                        <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" Margin="3,0,3,0">Table Type</Button>
+                        <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click" Margin="3,0,3,0">.NET Entity Class</Button>
+                    </StackPanel>
+                    <TextBox Grid.Row="1"  x:Name="txtOutput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console"></TextBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Window>
