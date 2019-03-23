@@ -26,10 +26,14 @@ namespace SqlGenerator.UI
     {
 
         TSqlModel Model { get; set; } = null;
+        private string _dacpacPath = string.Empty;
+        private GeneratorGlobalSettings _settings;
 
         public MainWindow()
         {
             InitializeComponent();
+            _settings = new GeneratorGlobalSettings();
+            DataContext = _settings;
         }
 
 
@@ -38,9 +42,14 @@ namespace SqlGenerator.UI
             try
             {
                 buttonLoadModel.IsEnabled = false;
-                if(txtPath.Text ==string.Empty)
+                if(_dacpacPath !=string.Empty)
                 {
-                    Model = await Task.Run(() => TSqlModelHelper.LoadModel("PensionLab.DB.dacpac"));
+                    IsEnabled = false;
+                    Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
+                    LoadTablesList();
+                    LoadRolesList();
+                    IsEnabled = true;
+
                 }
                 
                 MessageBox.Show("Model loaded successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);               
@@ -56,18 +65,25 @@ namespace SqlGenerator.UI
         }
 
 
-        private void ButtonShowTables_Click(object sender, RoutedEventArgs e)
+        private void LoadTablesList()
         {
             var tables = Model.GetAllTables();
             lstTables.ItemsSource = tables;
             lstTables.DisplayMemberPath = "Name.Parts[1]";
         }
 
+        private void LoadRolesList()
+        {
+            var roles = Model.GetAllRoles();
+            lstRoles.ItemsSource = roles;
+            lstRoles.DisplayMemberPath = "Name.Parts[0]";
+        }
+
         private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                SqlDeleteGenerator gen = new SqlDeleteGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                SqlDeleteGenerator gen = new SqlDeleteGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -77,7 +93,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                SqlInsertGenerator gen = new SqlInsertGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                SqlInsertGenerator gen = new SqlInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -88,7 +104,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -98,7 +114,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: "PensionLab.DTO");
+                CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: _settings.EntitiesNamespace);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -108,7 +124,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlSelectAllGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var gen = new SqlSelectAllGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -118,7 +134,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlSelectByPKGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var gen = new SqlSelectByPKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -128,7 +144,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlSelectByUKGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var gen = new SqlSelectByUKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
                 var output = gen.Generate();
                 txtOutput.Text = output;
             }
@@ -138,7 +154,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlUpdateGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }
+                var gen = new SqlUpdateGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute
                 , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
 
                 var output = gen.Generate();
@@ -150,7 +166,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlTableTypeGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var gen = new SqlTableTypeGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
 
                 var output = gen.Generate();
                 txtOutput.Text = output;
@@ -160,10 +176,43 @@ namespace SqlGenerator.UI
 
         private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "dacpac files (*.dacpac)|*.dacpac"
+            };
+
             if (openFileDialog.ShowDialog() == true)
                 txtPath.Text = openFileDialog.FileName;
+
+            _dacpacPath = txtPath.Text;
+                
         }
 
+        private void TxtAuthor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _settings.AuthorName = txtAuthor.Text;
+        }
+
+        private void LstRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstRoles.SelectedItems.Count == 0)
+                _settings.SelectedMSSQLRolesForExecute = null;
+            else
+            {
+                List<string> roles = new List<string>();
+                foreach(var item in lstRoles.SelectedItems)
+                {
+                    roles.Add(((TSqlObject)item).Name.Parts[0]);
+                }
+
+                _settings.SelectedMSSQLRolesForExecute = roles.ToArray();
+            }
+
+        }
+
+        private void TxtEntitiesNamespace_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _settings.EntitiesNamespace = txtEntitiesNamespace.Text;
+        }
     }
 }

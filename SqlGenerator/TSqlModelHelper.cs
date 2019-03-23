@@ -46,6 +46,25 @@ namespace SqlGenerator
             return tables;
         }
 
+        /// <summary>
+        /// Get all roles from a model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="excludeSysSchema"></param>
+        /// <returns></returns>
+        public static IEnumerable<TSqlObject> GetAllRoles(this TSqlModel model, bool excludeSysSchema = true)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var roles = model.GetObjects(DacQueryScopes.All, ModelSchema.Role);
+            if (roles != null)
+            {
+                if (excludeSysSchema)
+                    roles = roles.Where(curRole => !curRole.Name.Parts[0].ToLower().Contains("db_") && curRole.Name.Parts[0].ToLower() != "public");
+            }
+            return roles;
+        }
+
 
         /// <summary>
         /// Get all columns from a table

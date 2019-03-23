@@ -40,7 +40,7 @@ namespace SqlGenerator.StoredProcedures
                     })
                 );
 
-                var whereClause_conditions = String.Join(" AND ",
+                var whereClause_conditions = String.Join(Environment.NewLine + "        AND ",
                     ukColumns.Select(col =>
                     {
                         var colName = col.Name.Parts[2];
