@@ -39,6 +39,7 @@
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <Button x:Name="buttonGenerateDelete" Click="ButtonGenerateDelete_Click" Margin="3,0,3,0">Delete</Button>
                         <Button x:Name="buttonGenerateInsert" Click="ButtonGenerateInsert_Click" Margin="3,0,3,0">Insert</Button>
+                        <Button x:Name="buttonGenerateBulkInsert" Click="ButtonGenerateBulkInsert_Click" Margin="3,0,3,0">Bulk Insert</Button>
                         <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" Margin="3,0,3,0">Update</Button>
                         <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click" Margin="3,0,3,0">Select All</Button>
                         <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" Margin="3,0,3,0">Select By PK</Button>

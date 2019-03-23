@@ -63,6 +63,7 @@
     <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
     <Compile Include="ICodeGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlBulkInsertGenerator.cs" />
     <Compile Include="StoredProcedures\SqlGenerator.cs" />
     <Compile Include="StoredProcedures\SqlDeleteGenerator.cs" />
     <Compile Include="StoredProcedures\SqlInsertGenerator.cs" />

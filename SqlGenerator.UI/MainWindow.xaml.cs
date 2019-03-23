@@ -83,6 +83,17 @@ namespace SqlGenerator.UI
             }
         }
 
+
+        private void ButtonGenerateBulkInsert_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstTables.SelectedItem is TSqlObject table)
+            {
+                SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
+                var output = gen.Generate();
+                txtOutput.Text = output;
+            }
+        }
+
         private void ButtonGenerateNetEntityClass_Click(object sender, RoutedEventArgs e)
         {
             if (lstTables.SelectedItem is TSqlObject table)
@@ -139,8 +150,7 @@ namespace SqlGenerator.UI
         {
             if (lstTables.SelectedItem is TSqlObject table)
             {
-                var gen = new SqlTableTypeGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" }
-                , doNotIncludeColumns: new string[] { "inserted_by", "inserted_on" });
+                var gen = new SqlTableTypeGenerator(table, grantExecuteTo: new string[] { "role_admin", "role_user" });
 
                 var output = gen.Generate();
                 txtOutput.Text = output;
@@ -154,5 +164,6 @@ namespace SqlGenerator.UI
             if (openFileDialog.ShowDialog() == true)
                 txtPath.Text = openFileDialog.FileName;
         }
+
     }
 }
