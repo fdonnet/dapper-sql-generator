@@ -29,7 +29,7 @@
                 </Grid>
 
                 <Button x:Name="buttonLoadModel" Click="ButtonLoadModel_Click" Margin="40,20,40,10">Load Model</Button>
-                <Label>Tables list of your db model:</Label>
+                <Label>Select tables from your db model:</Label>
                 <ListBox x:Name="lstTables" MaxHeight="260" MinHeight="150" SelectionMode="Extended"></ListBox>
 
                 <Label Margin="0,15,0,0">Global generation settings:</Label>

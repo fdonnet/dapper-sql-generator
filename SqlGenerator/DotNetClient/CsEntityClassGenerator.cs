@@ -15,14 +15,16 @@ namespace SqlGenerator.DotNetClient
 
         public string ClassNamespace { get; private set; } = "DTO";
 
+        public bool WithStandardDecorator { get; private set; } = true;
 
-        public CsEntityClassGenerator(TSqlObject table, string author = null, string classNamespace = null)
+
+        public CsEntityClassGenerator(TSqlObject table, string author = null, string classNamespace = null, bool? withStandarDecorator = null)
         {
             this.Table = table;
             this.Author = author ?? this.Author;
             this.ClassNamespace = classNamespace ?? this.ClassNamespace;
+            this.WithStandardDecorator = withStandarDecorator ?? this.WithStandardDecorator;
         }
-
 
         public string Generate()
         {
@@ -36,19 +38,22 @@ namespace SqlGenerator.DotNetClient
                 var memberType = TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
 
                 var decorators = "";
-                if (memberType == "string")
+                if(WithStandardDecorator)
                 {
-                    var colLen = col.GetProperty<int>(Column.Length);
-                    if (colLen > 0)
+                    if (memberType == "string")
                     {
-                        decorators += $"[StringLength({colLen})]"
-                            + Environment.NewLine + "        ";
+                        var colLen = col.GetProperty<int>(Column.Length);
+                        if (colLen > 0)
+                        {
+                            decorators += $"[StringLength({colLen})]"
+                                + Environment.NewLine + "        ";
+                        }
                     }
-                }
-                if (!isNullable)
-                {
-                    decorators += $"[Required]"
-                            + Environment.NewLine + "        ";
+                    if (!isNullable)
+                    {
+                        decorators += $"[Required]"
+                                + Environment.NewLine + "        ";
+                    }
                 }
 
                 return $"{decorators}public {memberType} {memberName} {{ get; set; }}";
