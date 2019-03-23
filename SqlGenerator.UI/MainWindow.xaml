@@ -58,6 +58,8 @@
                     </TabItem>
                     <TabItem Header="Repositories"></TabItem>
                 </TabControl>
+                <Button Name="buttonSaveConfig" Click="ButtonSaveConfig_Click">Test save config</Button>
+                <Button Name="buttonLoadConfig" Click="ButtonLoadConfig_Click">Test load config</Button>
             </StackPanel>
         </ScrollViewer>
         <TabControl Grid.Column="1" Margin="10,5,10,5">

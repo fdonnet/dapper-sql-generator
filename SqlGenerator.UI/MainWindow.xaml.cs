@@ -281,5 +281,16 @@ namespace SqlGenerator.UI
         {
             _settings.EntitiesNamespace = txtEntitiesNamespace.Text;
         }
+
+        private void ButtonSaveConfig_Click(object sender, RoutedEventArgs e)
+        {
+            _settings.SaveConfig();
+        }
+
+        private void ButtonLoadConfig_Click(object sender, RoutedEventArgs e)
+        {
+            _settings = _settings.LoadConfig();
+            DataContext = _settings;
+        }
     }
 }
