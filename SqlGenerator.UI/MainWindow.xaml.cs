@@ -77,98 +77,165 @@ namespace SqlGenerator.UI
             var roles = Model.GetAllRoles();
             lstRoles.ItemsSource = roles;
             lstRoles.DisplayMemberPath = "Name.Parts[0]";
+
+            //select all by default
+            lstRoles.SelectAll();
         }
 
         private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if(lstTables.SelectedItems.Count>0)
             {
-                SqlDeleteGenerator gen = new SqlDeleteGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
+           
         }
 
         private void ButtonGenerateInsert_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                SqlInsertGenerator gen = new SqlInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        SqlInsertGenerator gen = new SqlInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
-        }
+         }
 
 
         private void ButtonGenerateBulkInsert_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }
 
         private void ButtonGenerateNetEntityClass_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: _settings.EntitiesNamespace);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: _settings.EntitiesNamespace);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }
 
         private void ButtonGenerateSelectAll_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                var gen = new SqlSelectAllGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectAllGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }
 
         private void ButtonGenerateSelectByPK_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                var gen = new SqlSelectByPKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectByPKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }
 
         private void ButtonGenerateSelectByUK_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                var gen = new SqlSelectByUKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
-                var output = gen.Generate();
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectByUKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }
 
         private void ButtonGenerateUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                var gen = new SqlUpdateGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute
-                , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlUpdateGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute
+                            , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
 
-                var output = gen.Generate();
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }
 
         private void ButtonGenerateTableType_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItem is TSqlObject table)
+            if (lstTables.SelectedItems.Count > 0)
             {
-                var gen = new SqlTableTypeGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlTableTypeGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
 
-                var output = gen.Generate();
+                        output += gen.Generate();
+                    }
+                }
                 txtOutput.Text = output;
             }
         }

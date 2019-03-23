@@ -43,7 +43,7 @@ namespace SqlGenerator.StoredProcedures
 $@" 
 -- =================================================================
 -- Author: {this.Author}
--- Description:	Insert Procedure for the table {Table.Name} 
+-- Description:	Bulk Insert Procedure for the table {Table.Name} 
 -- =================================================================
 
 CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkInsert]
