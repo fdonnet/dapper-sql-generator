@@ -1,5 +1,4 @@
-﻿using Microsoft.SqlServer.Dac.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,27 +20,24 @@ namespace SqlGenerator.UI
     /// </summary>
     public partial class ucSettings : UserControl
     {
-        protected TSqlModel Model { get; set; } = null;
 
         public ucSettings()
         {
             InitializeComponent();
         }
 
-        public void Init(TSqlModel model)
+        public void InitGlobalSettings(MainWindow parent)
         {
-            Model = model;
-            LoadRolesList();
+
+            DataContext = parent.Settings.GlobalSettings;
+
         }
 
-        private void LoadRolesList()
+        public void InitTableSettings(MainWindow parent)
         {
-            var roles = Model.GetAllRoles();
-            lstRoles.ItemsSource = roles;
-            lstRoles.DisplayMemberPath = "Name.Parts[0]";
+            //_settings = settings;
+            //DataContext
 
-            //select all by default
-            lstRoles.SelectAll();
         }
     }
 }

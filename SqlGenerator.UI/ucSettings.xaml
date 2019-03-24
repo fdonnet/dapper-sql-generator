@@ -10,15 +10,27 @@
         <TabItem Header="General">
             <StackPanel Orientation="Horizontal" Margin="0,10,0,35">
                 <Label MinWidth="60">Author:</Label>
-                <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="250"></TextBox>
+                <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="250" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
             </StackPanel>
         </TabItem>
         <TabItem Header="Stored procedures">
             <TabControl MaxHeight="300">
                 <TabItem Header="General">
+                    <StackPanel Margin="0,10,0,5">
+                        <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate delete SP</CheckBox>
+                        <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate insert SP</CheckBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Delete">
                     <StackPanel>
-                        <Label>Select role(s) to grant "execute":</Label>
-                        <ListBox x:Name="lstRoles" MaxHeight="200" MinHeight="150" SelectionMode="Multiple"></ListBox>
+                        <Label>Select role(s) to grant "execute" on delete SP:</Label>
+                        <ListBox x:Name="lstRolesForDeleteSp" MaxHeight="200" MinHeight="150" SelectionMode="Extended"></ListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Insert">
+                    <StackPanel>
+                        <Label>Select role(s) to grant "execute" on insert SP:</Label>
+                        <ListBox x:Name="lstRolesForInsertSp" MaxHeight="200" MinHeight="150" SelectionMode="Extended"></ListBox>
                     </StackPanel>
                 </TabItem>
             </TabControl>
@@ -26,7 +38,7 @@
         <TabItem Header="Entities">
             <StackPanel Orientation="Horizontal" Margin="0,10,0,35">
                 <Label MinWidth="60">Entities project namespace:</Label>
-                <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="250"></TextBox>
+                <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="250" Text="{Binding Path=EntitiesNamespace, Mode=TwoWay}"></TextBox>
             </StackPanel>
         </TabItem>
         <TabItem Header="Repositories"></TabItem>

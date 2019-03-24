@@ -27,14 +27,14 @@ namespace SqlGenerator.UI
 
         TSqlModel Model { get; set; } = null;
         private string _dacpacPath = string.Empty;
-        private GeneratorSettings _settings;
+        public GeneratorSettings Settings;
         private IEnumerable<TSqlObject> _roles;
 
         public MainWindow()
         {
             InitializeComponent();
-            _settings = new GeneratorSettings();
-            DataContext = _settings;
+            Settings = new GeneratorSettings();
+            DataContext = Settings;
         }
 
 
@@ -48,9 +48,8 @@ namespace SqlGenerator.UI
                     IsEnabled = false;
                     Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
                     LoadTablesList();
-                    LoadRolesLists();
+                    ucGlobalSettings.InitGlobalSettings(this);
                     IsEnabled = true;
-
                 }
                 
                 MessageBox.Show("Model loaded successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);               
@@ -78,14 +77,14 @@ namespace SqlGenerator.UI
             _roles = Model.GetAllRoles();
 
             //DeleteSP
-            lstRolesForDeleteSp.ItemsSource = _roles;
-            lstRolesForDeleteSp.DisplayMemberPath = "Name.Parts[0]";
-            lstRolesForDeleteSp.SelectAll();
+            //lstRolesForDeleteSp.ItemsSource = _roles;
+            //lstRolesForDeleteSp.DisplayMemberPath = "Name.Parts[0]";
+            //lstRolesForDeleteSp.SelectAll();
 
-            //InsertSP
-            lstRolesForInsertSp.ItemsSource = _roles;
-            lstRolesForInsertSp.DisplayMemberPath = "Name.Parts[0]";
-            lstRolesForInsertSp.SelectAll();
+            ////InsertSP
+            //lstRolesForInsertSp.ItemsSource = _roles;
+            //lstRolesForInsertSp.DisplayMemberPath = "Name.Parts[0]";
+            //lstRolesForInsertSp.SelectAll();
 
         }
 
@@ -98,7 +97,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForDeleteSP);
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForDeleteSP);
                         output += gen.Generate();
                     }
                 }
@@ -116,7 +115,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(table, _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForInsertSP);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForInsertSP);
                         output += gen.Generate();
                     }
                 }
@@ -134,7 +133,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForBulkInsertSP);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForBulkInsertSP);
                         output += gen.Generate();
                     }
                 }
@@ -151,7 +150,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: _settings.GlobalSettings.EntitiesNamespace);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: Settings.GlobalSettings.EntitiesNamespace);
                         output += gen.Generate();
                     }
                 }
@@ -168,7 +167,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForSelectAllSP);
+                        var gen = new SqlSelectAllGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForSelectAllSP);
                         output += gen.Generate();
                     }
                 }
@@ -185,7 +184,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForSelectByPKSP);
+                        var gen = new SqlSelectByPKGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForSelectByPKSP);
                         output += gen.Generate();
                     }
                 }
@@ -202,7 +201,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForSelectByUKSP);
+                        var gen = new SqlSelectByUKGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForSelectByUKSP);
                         output += gen.Generate();
                     }
                 }
@@ -219,7 +218,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForUpdateSP
+                        var gen = new SqlUpdateGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForUpdateSP
                             , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
 
                         output += gen.Generate();
@@ -238,7 +237,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForTableType);
+                        var gen = new SqlTableTypeGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForTableType);
 
                         output += gen.Generate();
                     }
@@ -262,59 +261,59 @@ namespace SqlGenerator.UI
                 
         }
 
-        private void TxtAuthor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            _settings.GlobalSettings.AuthorName = txtAuthor.Text;
-        }
+        //private void TxtAuthor_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    Settings.GlobalSettings.AuthorName = txtAuthor.Text;
+        //}
 
 
 
-        private void TxtEntitiesNamespace_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            _settings.GlobalSettings.EntitiesNamespace = txtEntitiesNamespace.Text;
-        }
+        //private void TxtEntitiesNamespace_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    Settings.GlobalSettings.EntitiesNamespace = txtEntitiesNamespace.Text;
+        //}
 
         private void ButtonSaveConfig_Click(object sender, RoutedEventArgs e)
         {
-            _settings.SaveConfig();
+            Settings.SaveConfig();
         }
 
         private void ButtonLoadConfig_Click(object sender, RoutedEventArgs e)
         {
-            _settings = _settings.LoadConfig();
-            DataContext = _settings;
+            Settings = Settings.LoadConfig();
+            DataContext = Settings;
         }
 
-        private void LstRolesForInsertSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (lstRolesForInsertSp.SelectedItems.Count == 0)
-                _settings.GlobalSettings.SelectedRolesForInsertSP = null;
-            else
-            {
-                List<string> roles = new List<string>();
-                foreach (var item in lstRolesForInsertSp.SelectedItems)
-                {
-                    roles.Add(((TSqlObject)item).Name.Parts[0]);
-                }
+        //private void LstRolesForInsertSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (lstRolesForInsertSp.SelectedItems.Count == 0)
+        //        Settings.GlobalSettings.SelectedRolesForInsertSP = null;
+        //    else
+        //    {
+        //        List<string> roles = new List<string>();
+        //        foreach (var item in lstRolesForInsertSp.SelectedItems)
+        //        {
+        //            roles.Add(((TSqlObject)item).Name.Parts[0]);
+        //        }
 
-                _settings.GlobalSettings.SelectedRolesForInsertSP = roles.ToArray();
-            }
-        }
+        //        Settings.GlobalSettings.SelectedRolesForInsertSP = roles.ToArray();
+        //    }
+        //}
 
-        private void LstRolesForDeleteSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (lstRolesForDeleteSp.SelectedItems.Count == 0)
-                _settings.GlobalSettings.SelectedRolesForDeleteSP = null;
-            else
-            {
-                List<string> roles = new List<string>();
-                foreach (var item in lstRolesForDeleteSp.SelectedItems)
-                {
-                    roles.Add(((TSqlObject)item).Name.Parts[0]);
-                }
+        //private void LstRolesForDeleteSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (lstRolesForDeleteSp.SelectedItems.Count == 0)
+        //        Settings.GlobalSettings.SelectedRolesForDeleteSP = null;
+        //    else
+        //    {
+        //        List<string> roles = new List<string>();
+        //        foreach (var item in lstRolesForDeleteSp.SelectedItems)
+        //        {
+        //            roles.Add(((TSqlObject)item).Name.Parts[0]);
+        //        }
 
-                _settings.GlobalSettings.SelectedRolesForDeleteSP = roles.ToArray();
-            }
-        }
+        //        Settings.GlobalSettings.SelectedRolesForDeleteSP = roles.ToArray();
+        //    }
+        //}
     }
 }
