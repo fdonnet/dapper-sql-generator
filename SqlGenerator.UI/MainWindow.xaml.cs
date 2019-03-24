@@ -27,12 +27,13 @@ namespace SqlGenerator.UI
 
         TSqlModel Model { get; set; } = null;
         private string _dacpacPath = string.Empty;
-        private GeneratorGlobalSettings _settings;
+        private GeneratorSettings _settings;
+        private IEnumerable<TSqlObject> _roles;
 
         public MainWindow()
         {
             InitializeComponent();
-            _settings = new GeneratorGlobalSettings();
+            _settings = new GeneratorSettings();
             DataContext = _settings;
         }
 
@@ -47,7 +48,7 @@ namespace SqlGenerator.UI
                     IsEnabled = false;
                     Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
                     LoadTablesList();
-                    LoadRolesList();
+                    LoadRolesLists();
                     IsEnabled = true;
 
                 }
@@ -72,14 +73,20 @@ namespace SqlGenerator.UI
             lstTables.DisplayMemberPath = "Name.Parts[1]";
         }
 
-        private void LoadRolesList()
+        private void LoadRolesLists()
         {
-            var roles = Model.GetAllRoles();
-            lstRoles.ItemsSource = roles;
-            lstRoles.DisplayMemberPath = "Name.Parts[0]";
+            _roles = Model.GetAllRoles();
 
-            //select all by default
-            lstRoles.SelectAll();
+            //DeleteSP
+            lstRolesForDeleteSp.ItemsSource = _roles;
+            lstRolesForDeleteSp.DisplayMemberPath = "Name.Parts[0]";
+            lstRolesForDeleteSp.SelectAll();
+
+            //InsertSP
+            lstRolesForInsertSp.ItemsSource = _roles;
+            lstRolesForInsertSp.DisplayMemberPath = "Name.Parts[0]";
+            lstRolesForInsertSp.SelectAll();
+
         }
 
         private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
@@ -91,7 +98,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForDeleteSP);
                         output += gen.Generate();
                     }
                 }
@@ -109,7 +116,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(table, _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForInsertSP);
                         output += gen.Generate();
                     }
                 }
@@ -127,7 +134,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForBulkInsertSP);
                         output += gen.Generate();
                     }
                 }
@@ -144,7 +151,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: _settings.EntitiesNamespace);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: _settings.GlobalSettings.EntitiesNamespace);
                         output += gen.Generate();
                     }
                 }
@@ -161,7 +168,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        var gen = new SqlSelectAllGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForSelectAllSP);
                         output += gen.Generate();
                     }
                 }
@@ -178,7 +185,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        var gen = new SqlSelectByPKGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForSelectByPKSP);
                         output += gen.Generate();
                     }
                 }
@@ -195,7 +202,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        var gen = new SqlSelectByUKGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForSelectByUKSP);
                         output += gen.Generate();
                     }
                 }
@@ -212,7 +219,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute
+                        var gen = new SqlUpdateGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForUpdateSP
                             , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
 
                         output += gen.Generate();
@@ -231,7 +238,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(table, author: _settings.AuthorName, grantExecuteTo: _settings.SelectedMSSQLRolesForExecute);
+                        var gen = new SqlTableTypeGenerator(table, author: _settings.GlobalSettings.AuthorName, grantExecuteTo: _settings.GlobalSettings.SelectedRolesForTableType);
 
                         output += gen.Generate();
                     }
@@ -257,29 +264,14 @@ namespace SqlGenerator.UI
 
         private void TxtAuthor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _settings.AuthorName = txtAuthor.Text;
+            _settings.GlobalSettings.AuthorName = txtAuthor.Text;
         }
 
-        private void LstRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (lstRoles.SelectedItems.Count == 0)
-                _settings.SelectedMSSQLRolesForExecute = null;
-            else
-            {
-                List<string> roles = new List<string>();
-                foreach(var item in lstRoles.SelectedItems)
-                {
-                    roles.Add(((TSqlObject)item).Name.Parts[0]);
-                }
 
-                _settings.SelectedMSSQLRolesForExecute = roles.ToArray();
-            }
-
-        }
 
         private void TxtEntitiesNamespace_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _settings.EntitiesNamespace = txtEntitiesNamespace.Text;
+            _settings.GlobalSettings.EntitiesNamespace = txtEntitiesNamespace.Text;
         }
 
         private void ButtonSaveConfig_Click(object sender, RoutedEventArgs e)
@@ -291,6 +283,38 @@ namespace SqlGenerator.UI
         {
             _settings = _settings.LoadConfig();
             DataContext = _settings;
+        }
+
+        private void LstRolesForInsertSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstRolesForInsertSp.SelectedItems.Count == 0)
+                _settings.GlobalSettings.SelectedRolesForInsertSP = null;
+            else
+            {
+                List<string> roles = new List<string>();
+                foreach (var item in lstRolesForInsertSp.SelectedItems)
+                {
+                    roles.Add(((TSqlObject)item).Name.Parts[0]);
+                }
+
+                _settings.GlobalSettings.SelectedRolesForInsertSP = roles.ToArray();
+            }
+        }
+
+        private void LstRolesForDeleteSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstRolesForDeleteSp.SelectedItems.Count == 0)
+                _settings.GlobalSettings.SelectedRolesForDeleteSP = null;
+            else
+            {
+                List<string> roles = new List<string>();
+                foreach (var item in lstRolesForDeleteSp.SelectedItems)
+                {
+                    roles.Add(((TSqlObject)item).Name.Parts[0]);
+                }
+
+                _settings.GlobalSettings.SelectedRolesForDeleteSP = roles.ToArray();
+            }
         }
     }
 }

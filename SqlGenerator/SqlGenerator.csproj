@@ -65,8 +65,9 @@
   <ItemGroup>
     <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
-    <Compile Include="GeneratorGlobalSettings.cs" />
+    <Compile Include="GeneratorSettings.cs" />
     <Compile Include="ICodeGenerator.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="StoredProcedures\SqlBulkInsertGenerator.cs" />
     <Compile Include="StoredProcedures\SqlGenerator.cs" />
     <Compile Include="StoredProcedures\SqlDeleteGenerator.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="StoredProcedures\SqlSelectByUKGenerator.cs" />
     <Compile Include="StoredProcedures\SqlTableTypeGenerator.cs" />
     <Compile Include="StoredProcedures\SqlUpdateGenerator.cs" />
+    <Compile Include="TableSettings.cs" />
     <Compile Include="TSqlModelHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

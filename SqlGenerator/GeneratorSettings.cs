@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator
 {
-    public class GeneratorGlobalSettings
+    public class GeneratorSettings
     {
-        public string AuthorName { get; set; } = "MSSQL-Dapper Generator";
-        public string EntitiesNamespace { get; set; } = "Project.Entities";
-        public string[] SelectedMSSQLRolesForExecute { get; set; }
         public string ConfigPath { get; set; } = "base.json";
+        public Settings GlobalSettings { get; set; } = new Settings();
+        public List<TableSettings> TablesSettings { get; set; } = new List<TableSettings>();
 
         public void SaveConfig()
         {
@@ -27,10 +26,10 @@ namespace SqlGenerator
     /// </summary>
     public static class GeneratorGlobalSettingsExt
     {
-        public static GeneratorGlobalSettings LoadConfig(this GeneratorGlobalSettings configObjectToLoad)
+        public static GeneratorSettings LoadConfig(this GeneratorSettings configObjectToLoad)
         {
             return JsonConvert.DeserializeObject
-                <GeneratorGlobalSettings>(File.ReadAllText(configObjectToLoad.ConfigPath));
+                <GeneratorSettings>(File.ReadAllText(configObjectToLoad.ConfigPath));
 
         }
     }
