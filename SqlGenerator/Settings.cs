@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator
 {
-    public class Settings
+    public class Settings : ICloneable
     {
         //Generation options
         public bool GenerateDeleteSP { get; set; } = true;
@@ -24,5 +24,10 @@ namespace SqlGenerator
         public string[] SelectedRolesForSelectByPKSP { get; set; } = null;
         public string[] SelectedRolesForSelectByUKSP { get; set; } = null;
         public string[] SelectedRolesForTableType { get; set; } = null;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

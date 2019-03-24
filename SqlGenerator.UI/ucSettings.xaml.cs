@@ -47,9 +47,12 @@ namespace SqlGenerator.UI
                     TableName = tableName,
                 };
 
-                _parent.Settings.TablesSettings.Add(curTableSettings);
+                curTableSettings.CopyValueFromGlobalSettings(_parent.Settings.GlobalSettings);
+               _parent.Settings.TablesSettings.Add(curTableSettings);
             }
 
+
+            DataContext = curTableSettings;
             tabCustomDeco.Visibility = Visibility.Visible;
             tabCustomField.Visibility = Visibility.Visible;
 
