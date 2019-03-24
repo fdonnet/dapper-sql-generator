@@ -20,23 +20,38 @@ namespace SqlGenerator.UI
     /// </summary>
     public partial class ucSettings : UserControl
     {
-
+        private MainWindow _parent;
         public ucSettings()
         {
             InitializeComponent();
         }
 
-        public void InitGlobalSettings(MainWindow parent)
+        public void InitGlobalSettings()
         {
-
-            DataContext = parent.Settings.GlobalSettings;
+            _parent = (MainWindow)Application.Current.MainWindow;
+            DataContext = _parent.Settings.GlobalSettings;
+            tabCustomDeco.Visibility = Visibility.Hidden;
+            tabCustomField.Visibility = Visibility.Hidden;
 
         }
 
-        public void InitTableSettings(MainWindow parent)
+        public void InitTableSettings(string tableName)
         {
-            //_settings = settings;
-            //DataContext
+            _parent = (MainWindow) Application.Current.MainWindow;
+            var curTableSettings = _parent.Settings.TablesSettings.Where(t => t.TableName == tableName).SingleOrDefault();
+            
+            if(curTableSettings == null)
+            {
+                curTableSettings = new TableSettings()
+                {
+                    TableName = tableName,
+                };
+
+                _parent.Settings.TablesSettings.Add(curTableSettings);
+            }
+
+            tabCustomDeco.Visibility = Visibility.Visible;
+            tabCustomField.Visibility = Visibility.Visible;
 
         }
     }

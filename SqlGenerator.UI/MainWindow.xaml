@@ -61,7 +61,13 @@
                         Select one or more tables and click on the preview buttons...</TextBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Table generation settings"></TabItem>
+            <TabItem Header="Table generation settings">
+                <StackPanel>
+                    <CheckBox Name="chkOverrideSettings" Margin="2,10" Click="ChkOverrideSettings_Click">Override global settings</CheckBox>
+                    <local:ucSettings x:Name="ucTableSettings" IsEnabled="False"></local:ucSettings>
+                </StackPanel>
+                
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

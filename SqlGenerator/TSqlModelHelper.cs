@@ -182,13 +182,12 @@ namespace SqlGenerator
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        public static List<IEnumerable<TSqlObject>> GetUniqueKeysWithColumns(this TSqlObject table)
+        public static IEnumerable<IEnumerable<TSqlObject>> GetUniqueKeysWithColumns(this TSqlObject table)
         {
             if (table == null) throw new ArgumentNullException(nameof(table));
 
             IEnumerable<TSqlObject> uks = table.GetReferencing(UniqueConstraint.Host, DacQueryScopes.UserDefined);
-            var ukWithColumns = new List<IEnumerable<TSqlObject>>();
-
+ 
             if (uks != null)
             {
                 foreach (var uk in uks)
@@ -197,12 +196,11 @@ namespace SqlGenerator
 
                     if (columns != null)
                     {
-                        ukWithColumns.Add(columns);
+                        yield return columns;
                     }
                 }
             }
 
-            return ukWithColumns;
         }
 
         

@@ -48,7 +48,7 @@ namespace SqlGenerator.UI
                     IsEnabled = false;
                     Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
                     LoadTablesList();
-                    ucGlobalSettings.InitGlobalSettings(this);
+                    ucGlobalSettings.InitGlobalSettings();
                     IsEnabled = true;
                 }
                 
@@ -282,6 +282,38 @@ namespace SqlGenerator.UI
         {
             Settings = Settings.LoadConfig();
             DataContext = Settings;
+        }
+
+        private void ChkOverrideSettings_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ChkOverrideSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if(chkOverrideSettings.IsChecked == true)
+            {
+                //Check if only one table is selected
+                if (lstTables.SelectedItems.Count != 1)
+                {
+                    MessageBox.Show("Select at least and at max one table to override settings.");
+                    chkOverrideSettings.IsChecked = false;
+                }
+                else
+                {
+                    ucTableSettings.IsEnabled = true;
+                    ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]);
+                    chkOverrideSettings.Content = $"Override global settings for table: " +
+                        $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
+
+                }
+            }
+            else
+            {
+                chkOverrideSettings.Content = "Override global settings";
+                ucTableSettings.IsEnabled = false;
+            }
+            
         }
 
         //private void LstRolesForInsertSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
