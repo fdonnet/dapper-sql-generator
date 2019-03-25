@@ -8,5 +8,6 @@ namespace SqlGenerator.DotNetClient
 {
     public class CsRepositoryClassGeneratorSettings
     {
+
     }
 }

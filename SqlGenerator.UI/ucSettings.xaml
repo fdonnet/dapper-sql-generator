@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:SqlGenerator.UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TabControl MaxHeight="300">
+    <TabControl MaxHeight="500">
         <TabItem Header="Stored procedures">
-            <TabControl MaxHeight="300">
+            <TabControl MaxHeight="400">
                 <TabItem Header="General">
                     <StackPanel Margin="0,10,0,5">
                         <Label>Check the types of stored procedures/table types you want to generate:</Label>
@@ -46,15 +46,45 @@
         <TabItem Header="Entities">
             <TabControl>
                 <TabItem Header="General">
-                    <StackPanel Orientation="Horizontal" Margin="0,10,0,35">
-                        <Label MinWidth="60">Entities project namespace:</Label>
-                        <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="250" Text="{Binding Path=CsEntitySettings.EntitiesNamespace, Mode=TwoWay}"></TextBox>
-                    </StackPanel>
+                    <Grid Margin="5,10,10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="80"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="230">Entities project namespace:</Label>
+                            <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.EntitiesNamespace, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label  MinWidth="230">Custom interface names (separator ","):</Label>
+                            <TextBox Name="txtCustomInterface" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.ImplementCustomInterfaceNames, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+
+                        <CheckBox  Grid.Row="2" Name="chkICloneable" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.ImplementICloneable, Mode=TwoWay}">Implement ICloneable interface</CheckBox>
+
+                        <CheckBox  Grid.Row="3" Name="chkRequieredDecorator" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardRequieredDecorator, Mode=TwoWay}">Standard [Requiered] decorator when NOT NULL</CheckBox>
+
+                        <CheckBox  Grid.Row="4" Name="chkStringLengthDecorator" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardStringLengthDecorator, Mode=TwoWay}">Standard [StringLength(LEN)] decorator when string</CheckBox>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="5" Margin="0,5,0,0">
+                            <CheckBox Name="chkJsonIgnoreDecorator" VerticalAlignment="Center" Margin="0,0,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardJsonIgnoreDecorator, Mode=TwoWay}">Standard [JsonIgnore] decorator when table field names are (separator ","):</CheckBox>
+                            <TextBox Name="txtJsonIgnoreFieldNames" VerticalAlignment="Center" MinWidth="240" Margin="20,5,0,2" 
+                                     Text="{Binding Path=CsEntitySettings.FieldNamesWithJsonIgnoreDecorator, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Custom field type" Name="tabCustomField"></TabItem>
-                <TabItem Header="Custom field decoration" Name="tabCustomDeco"></TabItem>
+                <TabItem Header="Custom field decorator" Name="tabCustomDeco"></TabItem>
             </TabControl>
-            
+
         </TabItem>
         <TabItem Header="Repositories"></TabItem>
     </TabControl>
