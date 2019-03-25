@@ -11,6 +11,8 @@ namespace SqlGenerator
     public class GeneratorSettings
     {
         public string ConfigPath { get; set; } = "base.json";
+        public string AuthorName { get; set; } = "MSSQL-Dapper Generator";
+
         public Settings GlobalSettings { get; set; } = new Settings();
         public List<TableSettings> TablesSettings { get; set; } = new List<TableSettings>();
 

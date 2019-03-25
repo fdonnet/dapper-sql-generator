@@ -97,8 +97,8 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForDeleteSP);
-                        output += gen.Generate();
+                        //SqlDeleteGenerator gen = new SqlDeleteGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForDeleteSP);
+                        // += gen.Generate();
                     }
                 }
                 txtOutput.Text = output;
@@ -115,7 +115,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForInsertSP);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlInsertSettings.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -133,7 +133,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForBulkInsertSP);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlBulkInsertSettings.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -150,7 +150,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: Settings.GlobalSettings.EntitiesNamespace);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: Settings.GlobalSettings.CsEntitySettings.EntitiesNamespace);
                         output += gen.Generate();
                     }
                 }
@@ -167,7 +167,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForSelectAllSP);
+                        var gen = new SqlSelectAllGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectAllSettings.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -184,7 +184,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForSelectByPKSP);
+                        var gen = new SqlSelectByPKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByPKSettings.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -201,7 +201,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForSelectByUKSP);
+                        var gen = new SqlSelectByUKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByUKSettings.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -218,7 +218,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForUpdateSP
+                        var gen = new SqlUpdateGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlUpdateSettings.GrantExecuteToRoles
                             , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
 
                         output += gen.Generate();
@@ -237,7 +237,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(table, author: Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForTableType);
+                        var gen = new SqlTableTypeGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlTableTypeSettings.GrantExecuteToRoles);
 
                         output += gen.Generate();
                     }
@@ -291,29 +291,31 @@ namespace SqlGenerator.UI
 
         private void ChkOverrideSettings_Click(object sender, RoutedEventArgs e)
         {
-            if(chkOverrideSettings.IsChecked == true)
+            if (lstTables.SelectedItems.Count != 1)
             {
-                //Check if only one table is selected
-                if (lstTables.SelectedItems.Count != 1)
-                {
-                    MessageBox.Show("Select at least and at max one table to override settings.");
-                    chkOverrideSettings.IsChecked = false;
-                }
-                else
-                {
-                    ucTableSettings.IsEnabled = true;
-                    ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]);
-                    chkOverrideSettings.Content = $"Override global settings for table: " +
-                        $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
-
-                }
+                MessageBox.Show("Select at least and at max one table to override settings.");
+                chkOverrideSettings.IsChecked = false;
             }
             else
             {
-                chkOverrideSettings.Content = "Override global settings";
-                ucTableSettings.IsEnabled = false;
+                var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
+                if (chkOverrideSettings.IsChecked == true)
+                {
+                    ucTableSettings.IsEnabled = true;
+                    ucTableSettings.InitTableSettings(tableName);
+                    chkOverrideSettings.Content = $"Override global settings for table: " +
+                        $"{tableName.ToUpper()}";
+
+                }
+                else
+                {
+                    var toBeRemoved = Settings.TablesSettings.Where(t => t.TableName == tableName).Single();
+                    Settings.TablesSettings.Remove(toBeRemoved);
+                    chkOverrideSettings.Content = "Override global settings";
+                    ucTableSettings.IsEnabled = false;
+                }
             }
-            
+              
         }
 
         //private void LstRolesForInsertSp_SelectionChanged(object sender, SelectionChangedEventArgs e)

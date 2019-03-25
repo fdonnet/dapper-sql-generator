@@ -42,12 +42,9 @@ namespace SqlGenerator.UI
             
             if(curTableSettings == null)
             {
-                curTableSettings = new TableSettings()
-                {
-                    TableName = tableName,
-                };
-
-                curTableSettings.CopyValueFromGlobalSettings(_parent.Settings.GlobalSettings);
+                curTableSettings = curTableSettings.CopyFromGlobalSettings(_parent.Settings.GlobalSettings);
+                curTableSettings.TableName = tableName;
+                
                _parent.Settings.TablesSettings.Add(curTableSettings);
             }
 
@@ -57,5 +54,6 @@ namespace SqlGenerator.UI
             tabCustomField.Visibility = Visibility.Visible;
 
         }
+
     }
 }

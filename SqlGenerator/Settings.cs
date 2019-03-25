@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SqlGenerator.DotNetClient;
+using SqlGenerator.StoredProcedures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,28 +8,37 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator
 {
-    public class Settings : ICloneable
+    public class Settings
     {
-        //Generation options
+
+        //Generation options - Sql
         public bool GenerateDeleteSP { get; set; } = true;
         public bool GenerateInsertSP { get; set; } = true;
+        public bool GenerateBulkInsertSP { get; set; } = true;
+        public bool GenerateUpdateSP { get; set; } = true;
+        public bool GenerateSelectAllSP { get; set; } = true;
+        public bool GenerateSelectByPk { get; set; } = true;
+        public bool GenerateSelectByUK { get; set; } = true;
+        public bool GenerateTableType { get; set; } = true;
 
-        public string AuthorName { get; set; } = "MSSQL-Dapper Generator";
-        public string EntitiesNamespace { get; set; } = "Project.Entities";
+        //Generation options - c# dapper
+        public bool GenerateEntities { get; set; } = true;
+        public bool GenerateRepositories { get; set; } = true;
 
-        //Grant roles
-        public string[] SelectedRolesForDeleteSP { get; set; } = null;
-        public string[] SelectedRolesForInsertSP { get; set; } = null;
-        public string[] SelectedRolesForBulkInsertSP { get; set; } = null;
-        public string[] SelectedRolesForUpdateSP { get; set; } = null;
-        public string[] SelectedRolesForSelectAllSP { get; set; } = null;
-        public string[] SelectedRolesForSelectByPKSP { get; set; } = null;
-        public string[] SelectedRolesForSelectByUKSP { get; set; } = null;
-        public string[] SelectedRolesForTableType { get; set; } = null;
+        //Sql settings
+        public SqlDeleteGeneratorSettings SqlDeleteSettings { get; set; } = null;
+        public SqlInsertGeneratorSettings SqlInsertSettings { get; set; } = null;
+        public SqlBulkInsertGeneratorSettings SqlBulkInsertSettings { get; set; } = null;
+        public SqlUpdateGeneratorSettings SqlUpdateSettings { get; set; } = null;
+        public SqlSelectAllGeneratorSettings SqlSelectAllSettings { get; set; } = null;
+        public SqlSelectByPKGeneratorSettings SqlSelectByPKSettings { get; set; } = null;
+        public SqlSelectByUKGeneratorSettings SqlSelectByUKSettings { get; set; } = null;
+        public SqlTableTypeGeneratorSettings SqlTableTypeSettings { get; set; } = null;
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
+
+        //C# dapper settings
+        public CsEntityClassGeneratorSettings CsEntitySettings { get; set; } = null;
+        public CsRepositoryClassGeneratorSettings CsRepositorySettings { get; set; } = null;
+
     }
 }

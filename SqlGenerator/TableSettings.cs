@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,25 +11,24 @@ namespace SqlGenerator
     {
         public string TableName = new Guid().ToString();
 
-        public void CopyValueFromGlobalSettings(Settings globalSettings)
+    }
+
+    /// <summary>
+    /// Extension to clone global settings in table settings 
+    /// (return a new table settings object filled with global settings info) 
+    /// </summary>
+    public static class TableSettingsExt
+    {
+        /// <summary>
+        /// Deep clone via JSON => LOL
+        /// </summary>
+        /// <param name="tableSettings"></param>
+        /// <param name="globalSettings"></param>
+        /// <returns></returns>
+        public static TableSettings CopyFromGlobalSettings(this TableSettings tableSettings, Settings globalSettings)
         {
-            var clone = (Settings)globalSettings.Clone();
-
-            GenerateDeleteSP = clone.GenerateDeleteSP;
-            GenerateInsertSP = clone.GenerateInsertSP;
-
-            AuthorName = clone.AuthorName;
-            EntitiesNamespace = clone.EntitiesNamespace;
-
-            SelectedRolesForDeleteSP = clone.SelectedRolesForDeleteSP;
-            SelectedRolesForInsertSP = clone.SelectedRolesForInsertSP;
-            SelectedRolesForBulkInsertSP = clone.SelectedRolesForBulkInsertSP;
-            SelectedRolesForUpdateSP = clone.SelectedRolesForUpdateSP;
-            SelectedRolesForSelectAllSP = clone.SelectedRolesForSelectAllSP;
-            SelectedRolesForSelectByPKSP = clone.SelectedRolesForSelectByPKSP;
-            SelectedRolesForSelectByUKSP = clone.SelectedRolesForSelectByUKSP;
-            SelectedRolesForTableType = clone.SelectedRolesForTableType;
-
+            string tmp = JsonConvert.SerializeObject(globalSettings);
+            return JsonConvert.DeserializeObject<TableSettings>(tmp);
         }
     }
 }

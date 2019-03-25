@@ -64,19 +64,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
+    <Compile Include="DotNetClient\CsEntityClassGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorSettings.cs" />
     <Compile Include="GeneratorSettings.cs" />
     <Compile Include="ICodeGenerator.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StoredProcedures\SqlBulkInsertGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlBulkInsertGeneratorSettings.cs" />
+    <Compile Include="StoredProcedures\SqlDeleteGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlGenerator.cs" />
     <Compile Include="StoredProcedures\SqlDeleteGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlInsertGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlInsertGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlSelectAllGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectAllGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlSelectByPKGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectByPKGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlSelectByUKGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectByUKGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlTableTypeGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlTableTypeGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlUpdateGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlUpdateGeneratorSettings.cs" />
     <Compile Include="TableSettings.cs" />
     <Compile Include="TSqlModelHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

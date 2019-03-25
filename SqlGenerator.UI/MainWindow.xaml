@@ -33,6 +33,10 @@
                 <ListBox x:Name="lstTables" MaxHeight="260" MinHeight="150" SelectionMode="Extended"></ListBox>
 
                 <Label Margin="0,15,0,0">Global generation settings:</Label>
+                <StackPanel Orientation="Horizontal" Margin="0,2,0,10">
+                    <Label MinWidth="50">Author:</Label>
+                    <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
+                </StackPanel>
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
                 <Button Name="buttonSaveConfig" Click="ButtonSaveConfig_Click">Test save config</Button>
                 <Button Name="buttonLoadConfig" Click="ButtonLoadConfig_Click">Test load config</Button>
