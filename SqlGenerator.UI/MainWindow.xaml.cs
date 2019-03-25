@@ -94,8 +94,8 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        //SqlDeleteGenerator gen = new SqlDeleteGenerator(table, Settings.GlobalSettings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SelectedRolesForDeleteSP);
-                        // += gen.Generate();
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlDeleteSettings.GrantExecuteToRoles);
+                         output += gen.Generate();
                     }
                 }
                 txtOutput.Text = output;
@@ -112,7 +112,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlInsertSettings.GrantExecuteToRoles);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlInsertSettings?.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -130,7 +130,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlBulkInsertSettings.GrantExecuteToRoles);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlBulkInsertSettings?.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -147,7 +147,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: Settings.GlobalSettings.CsEntitySettings.EntitiesNamespace);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: Settings.GlobalSettings.CsEntitySettings?.EntitiesNamespace);
                         output += gen.Generate();
                     }
                 }
@@ -164,7 +164,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectAllSettings.GrantExecuteToRoles);
+                        var gen = new SqlSelectAllGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectAllSettings?.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -181,7 +181,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByPKSettings.GrantExecuteToRoles);
+                        var gen = new SqlSelectByPKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByPKSettings?.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -198,7 +198,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByUKSettings.GrantExecuteToRoles);
+                        var gen = new SqlSelectByUKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByUKSettings?.GrantExecuteToRoles);
                         output += gen.Generate();
                     }
                 }
@@ -215,7 +215,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlUpdateSettings.GrantExecuteToRoles
+                        var gen = new SqlUpdateGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlUpdateSettings?.GrantExecuteToRoles
                             , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
 
                         output += gen.Generate();
@@ -234,7 +234,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlTableTypeSettings.GrantExecuteToRoles);
+                        var gen = new SqlTableTypeGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlTableTypeSettings?.GrantExecuteToRoles);
 
                         output += gen.Generate();
                     }
