@@ -28,23 +28,24 @@
                     <Button Name="buttonBrowse" Grid.Column="1" Grid.Row="1" Click="ButtonBrowse_Click" >Browse</Button>
                 </Grid>
 
-                <Button x:Name="buttonLoadModel" Click="ButtonLoadModel_Click" Margin="40,20,40,10">Load Model</Button>
+                <Button x:Name="buttonLoadModel" Click="ButtonLoadModel_Click" Margin="40,20,40,10" MinHeight="37">Load Model</Button>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
                     <Button Name="buttonSaveConfig" Click="ButtonSaveConfig_Click" Padding="5,5" FontWeight="Bold" IsEnabled="False">Save current config</Button>
                     <Button Name="buttonLoadConfig" Click="ButtonLoadConfig_Click" Padding="5,5" Margin="10,0,0,0" FontWeight="Bold" IsEnabled="False">Load existing config</Button>
                 </StackPanel>
                 
-                <Label>Select tables from your db model:</Label>
+                <Label>Tables from your model: </Label>
                 <ListBox x:Name="lstTables" MaxHeight="260" MinHeight="150" SelectionMode="Extended" SelectionChanged="LstTables_SelectionChanged"></ListBox>
-
-                <Label Margin="0,15,0,0">Global generation settings:</Label>
+                <Label FontSize="9">*You can define global settings bellow and precise settings for each table in the "Table generation settings pan" (right)</Label>
+                
+                <Label Margin="0,15,0,0" FontWeight="Bold">Global generation settings:</Label>
                 <StackPanel Orientation="Horizontal" Margin="0,2,0,10">
                     <Label MinWidth="50">Author:</Label>
                     <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
                 </StackPanel>
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
-                <Label Margin="0,15,0,0">Output settings:</Label>
+                <Label Margin="0,15,0,0" FontWeight="Bold">Output settings:</Label>
             </StackPanel>
         </ScrollViewer>
         <TabControl Grid.Column="1" Margin="10,5,10,5">
