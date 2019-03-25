@@ -27,18 +27,18 @@ namespace SqlGenerator
 
         //Sql settings
         public SqlDeleteGeneratorSettings SqlDeleteSettings { get; set; } = new SqlDeleteGeneratorSettings();
-        public SqlInsertGeneratorSettings SqlInsertSettings { get; set; } = null;
-        public SqlBulkInsertGeneratorSettings SqlBulkInsertSettings { get; set; } = null;
-        public SqlUpdateGeneratorSettings SqlUpdateSettings { get; set; } = null;
-        public SqlSelectAllGeneratorSettings SqlSelectAllSettings { get; set; } = null;
-        public SqlSelectByPKGeneratorSettings SqlSelectByPKSettings { get; set; } = null;
-        public SqlSelectByUKGeneratorSettings SqlSelectByUKSettings { get; set; } = null;
-        public SqlTableTypeGeneratorSettings SqlTableTypeSettings { get; set; } = null;
+        public SqlInsertGeneratorSettings SqlInsertSettings { get; set; } = new SqlInsertGeneratorSettings();
+        public SqlBulkInsertGeneratorSettings SqlBulkInsertSettings { get; set; } = new SqlBulkInsertGeneratorSettings();
+        public SqlUpdateGeneratorSettings SqlUpdateSettings { get; set; } = new SqlUpdateGeneratorSettings();
+        public SqlSelectAllGeneratorSettings SqlSelectAllSettings { get; set; } = new SqlSelectAllGeneratorSettings();
+        public SqlSelectByPKGeneratorSettings SqlSelectByPKSettings { get; set; } = new SqlSelectByPKGeneratorSettings();
+        public SqlSelectByUKGeneratorSettings SqlSelectByUKSettings { get; set; } = new SqlSelectByUKGeneratorSettings();
+        public SqlTableTypeGeneratorSettings SqlTableTypeSettings { get; set; } = new SqlTableTypeGeneratorSettings();
 
 
         //C# dapper settings
-        public CsEntityClassGeneratorSettings CsEntitySettings { get; set; } = null;
-        public CsRepositoryClassGeneratorSettings CsRepositorySettings { get; set; } = null;
+        public CsEntityClassGeneratorSettings CsEntitySettings { get; set; } = new CsEntityClassGeneratorSettings();
+        public CsRepositoryClassGeneratorSettings CsRepositorySettings { get; set; } = new CsRepositoryClassGeneratorSettings();
 
     }
 }
