@@ -26,7 +26,7 @@
                 <TabItem Header="Delete">
                     <StackPanel>
                         <Label>Select role(s) to grant "execute" on delete SP:</Label>
-                        <ListBox x:Name="lstRolesForDeleteSp" MaxHeight="200" MinHeight="150" SelectionMode="Extended"></ListBox>
+                        <ListBox x:Name="lstRolesForDeleteSp" MaxHeight="200" MinHeight="150" SelectionMode="Extended" SelectionChanged="LstRolesForDeleteSp_SelectionChanged"></ListBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Insert">

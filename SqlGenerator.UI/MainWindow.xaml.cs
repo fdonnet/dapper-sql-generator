@@ -28,7 +28,7 @@ namespace SqlGenerator.UI
         TSqlModel Model { get; set; } = null;
         private string _dacpacPath = string.Empty;
         public GeneratorSettings Settings;
-        private IEnumerable<TSqlObject> _roles;
+        public IEnumerable<TSqlObject> Roles;
 
         public MainWindow()
         {
@@ -38,21 +38,32 @@ namespace SqlGenerator.UI
         }
 
 
+        /// <summary>
+        /// Load the dacpac model
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ButtonLoadModel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                buttonLoadModel.IsEnabled = false;
-                if(_dacpacPath !=string.Empty)
+                if (string.IsNullOrEmpty(_dacpacPath))
                 {
+                    MessageBox.Show("No dacpac file selected.", "Error to load", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+                else
+                {
+                    buttonLoadModel.IsEnabled = false;
                     IsEnabled = false;
                     Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
                     LoadTablesList();
+                    Roles = Model.GetAllRoles();
                     ucGlobalSettings.InitGlobalSettings();
                     IsEnabled = true;
+                    buttonLoadConfig.IsEnabled = true;
+                    buttonSaveConfig.IsEnabled = true;
+                    MessageBox.Show("Model loaded successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                
-                MessageBox.Show("Model loaded successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);               
             }
             catch (Exception exc)
             {
@@ -64,7 +75,9 @@ namespace SqlGenerator.UI
             }
         }
 
-
+        /// <summary>
+        /// Load all the model tables
+        /// </summary>
         private void LoadTablesList()
         {
             var tables = Model.GetAllTables();
@@ -72,25 +85,9 @@ namespace SqlGenerator.UI
             lstTables.DisplayMemberPath = "Name.Parts[1]";
         }
 
-        private void LoadRolesLists()
-        {
-            _roles = Model.GetAllRoles();
-
-            //DeleteSP
-            //lstRolesForDeleteSp.ItemsSource = _roles;
-            //lstRolesForDeleteSp.DisplayMemberPath = "Name.Parts[0]";
-            //lstRolesForDeleteSp.SelectAll();
-
-            ////InsertSP
-            //lstRolesForInsertSp.ItemsSource = _roles;
-            //lstRolesForInsertSp.DisplayMemberPath = "Name.Parts[0]";
-            //lstRolesForInsertSp.SelectAll();
-
-        }
-
         private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
         {
-            if(lstTables.SelectedItems.Count>0)
+            if (lstTables.SelectedItems.Count > 0)
             {
                 string output = string.Empty;
                 foreach (var item in lstTables.SelectedItems)
@@ -103,7 +100,7 @@ namespace SqlGenerator.UI
                 }
                 txtOutput.Text = output;
             }
-           
+
         }
 
         private void ButtonGenerateInsert_Click(object sender, RoutedEventArgs e)
@@ -121,7 +118,7 @@ namespace SqlGenerator.UI
                 }
                 txtOutput.Text = output;
             }
-         }
+        }
 
 
         private void ButtonGenerateBulkInsert_Click(object sender, RoutedEventArgs e)
@@ -258,96 +255,123 @@ namespace SqlGenerator.UI
                 txtPath.Text = openFileDialog.FileName;
 
             _dacpacPath = txtPath.Text;
-                
+
         }
 
-        //private void TxtAuthor_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    Settings.GlobalSettings.AuthorName = txtAuthor.Text;
-        //}
 
-
-
-        //private void TxtEntitiesNamespace_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    Settings.GlobalSettings.EntitiesNamespace = txtEntitiesNamespace.Text;
-        //}
-
+        /// <summary>
+        /// Save settings in a JSON File
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonSaveConfig_Click(object sender, RoutedEventArgs e)
         {
-            Settings.SaveConfig();
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "json files (*.json)|*.json"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Settings.ConfigPath = saveFileDialog.FileName;
+                Settings.SaveConfig();
+            }
+           
         }
 
+        /// <summary>
+        /// Load all the settings from a JSON file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonLoadConfig_Click(object sender, RoutedEventArgs e)
         {
-            Settings = Settings.LoadConfig();
-            DataContext = Settings;
-        }
-
-        private void ChkOverrideSettings_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ChkOverrideSettings_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count != 1)
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                MessageBox.Show("Select at least and at max one table to override settings.");
-                chkOverrideSettings.IsChecked = false;
+                Filter = "json files (*.json)|*.json"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Settings.ConfigPath = openFileDialog.FileName;
+                Settings = Settings.LoadConfig();
+                DataContext = Settings;
+                ucGlobalSettings.InitGlobalSettings();
+
+                tabPreview.IsSelected = true;
+                lstTables.UnselectAll();
             }
-            else
-            {
-                var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
-                if (chkOverrideSettings.IsChecked == true)
-                {
-                    ucTableSettings.IsEnabled = true;
-                    ucTableSettings.InitTableSettings(tableName);
-                    chkOverrideSettings.Content = $"Override global settings for table: " +
-                        $"{tableName.ToUpper()}";
+        }
 
+
+        /// <summary>
+        /// When the table selection changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LstTables_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ucTableSettings.Visibility = Visibility.Hidden;
+            chkOverrideSettings.Visibility = Visibility.Hidden;
+            TabOverride.IsEnabled = false;
+
+            //if one table selected
+            if (lstTables.SelectedItems.Count == 1)
+            {
+                TabOverride.IsEnabled = true;
+                chkOverrideSettings.Visibility = Visibility.Visible;
+
+                //Check if the config already exists
+                if (Settings.TablesSettings.Any(s => s.TableName == ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]))
+                {
+                    chkOverrideSettings.IsChecked = true;
+
+                    //To be sure the correct settings are loaded
+                    ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]);
+                    chkOverrideSettings.Content = $"Override global settings for table: " +
+                        $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
+
+                    ucTableSettings.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    var toBeRemoved = Settings.TablesSettings.Where(t => t.TableName == tableName).Single();
-                    Settings.TablesSettings.Remove(toBeRemoved);
-                    chkOverrideSettings.Content = "Override global settings";
-                    ucTableSettings.IsEnabled = false;
+                    chkOverrideSettings.IsChecked = false;
+                    ucTableSettings.Visibility = Visibility.Hidden;
                 }
+
             }
-              
         }
 
-        //private void LstRolesForInsertSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (lstRolesForInsertSp.SelectedItems.Count == 0)
-        //        Settings.GlobalSettings.SelectedRolesForInsertSP = null;
-        //    else
-        //    {
-        //        List<string> roles = new List<string>();
-        //        foreach (var item in lstRolesForInsertSp.SelectedItems)
-        //        {
-        //            roles.Add(((TSqlObject)item).Name.Parts[0]);
-        //        }
+        /// <summary>
+        /// Override with table settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChkOverrideSettings_Checked(object sender, RoutedEventArgs e)
+        {
+            var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
+            ucTableSettings.Visibility = Visibility.Visible;
+            ucTableSettings.InitTableSettings(tableName);
+            chkOverrideSettings.Content = $"Override global settings for table: " +
+                $"{tableName.ToUpper()}";
 
-        //        Settings.GlobalSettings.SelectedRolesForInsertSP = roles.ToArray();
-        //    }
-        //}
+        }
 
-        //private void LstRolesForDeleteSp_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (lstRolesForDeleteSp.SelectedItems.Count == 0)
-        //        Settings.GlobalSettings.SelectedRolesForDeleteSP = null;
-        //    else
-        //    {
-        //        List<string> roles = new List<string>();
-        //        foreach (var item in lstRolesForDeleteSp.SelectedItems)
-        //        {
-        //            roles.Add(((TSqlObject)item).Name.Parts[0]);
-        //        }
+        /// <summary>
+        /// Cancel table settings and return to global settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChkOverrideSettings_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
 
-        //        Settings.GlobalSettings.SelectedRolesForDeleteSP = roles.ToArray();
-        //    }
-        //}
+            var toBeRemoved = Settings.TablesSettings.Where(t => t.TableName == tableName).SingleOrDefault();
+            if (toBeRemoved != null)
+                Settings.TablesSettings.Remove(toBeRemoved);
+
+            chkOverrideSettings.Content = "Override global settings";
+            ucTableSettings.Visibility = Visibility.Hidden;
+        }
     }
 }

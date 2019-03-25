@@ -26,7 +26,7 @@ namespace SqlGenerator
         public bool GenerateRepositories { get; set; } = true;
 
         //Sql settings
-        public SqlDeleteGeneratorSettings SqlDeleteSettings { get; set; } = null;
+        public SqlDeleteGeneratorSettings SqlDeleteSettings { get; set; } = new SqlDeleteGeneratorSettings();
         public SqlInsertGeneratorSettings SqlInsertSettings { get; set; } = null;
         public SqlBulkInsertGeneratorSettings SqlBulkInsertSettings { get; set; } = null;
         public SqlUpdateGeneratorSettings SqlUpdateSettings { get; set; } = null;
