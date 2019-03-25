@@ -275,6 +275,9 @@ namespace SqlGenerator.UI
             {
                 Settings.ConfigPath = saveFileDialog.FileName;
                 Settings.SaveConfig();
+                MessageBox.Show("Configuration(all settings) saved successfully", 
+                     "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
             }
            
         }
@@ -300,6 +303,9 @@ namespace SqlGenerator.UI
 
                 tabPreview.IsSelected = true;
                 lstTables.UnselectAll();
+
+                MessageBox.Show("Configuration(all settings) loaded successfully",
+                     "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
