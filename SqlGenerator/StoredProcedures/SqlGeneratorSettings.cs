@@ -8,6 +8,7 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlGeneratorSettings
     {
+
         public string[] GrantExecuteToRoles = new string[0];
 
     }

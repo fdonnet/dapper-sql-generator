@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.StoredProcedures
 {
+
+    /// <summary>
+    /// Generates the code of a Bulk Insert procedure for a SQL table
+    /// </summary>
     public class SqlBulkInsertGenerator : GeneratorBase
     {
         
@@ -20,6 +24,8 @@ namespace SqlGenerator.StoredProcedures
         public override string Generate()
         {
             var allColumns = Table.GetAllColumns();
+
+            // Identity columns will appear as output parameters
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             var identityColumns = allColumns.Where(col => col.GetProperty<bool>(Column.IsIdentity));
 
