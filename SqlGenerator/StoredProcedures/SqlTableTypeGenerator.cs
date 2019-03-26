@@ -10,23 +10,22 @@ namespace SqlGenerator.StoredProcedures
     public class SqlTableTypeGenerator : GeneratorBase
     {
 
-
-        public IEnumerable<string> DoNotIncludeColumns { get; private set; } = new string[0];
-
-
+        private readonly SqlTableTypeGeneratorSettings _settings;
 
         public SqlTableTypeGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlTableTypeSettings ?? GeneratorSettings.GlobalSettings.SqlTableTypeSettings;
             //TODO to be implemented
-           // this.DoNotIncludeColumns = doNotIncludeColumns ?? this.DoNotIncludeColumns;
+            // this.DoNotIncludeColumns = doNotIncludeColumns ?? this.DoNotIncludeColumns;
         }
 
         public override string Generate()
         {
 
             var allColumns = Table.GetAllColumns();
-            allColumns = allColumns.Where(col => !DoNotIncludeColumns.Any(colName => col.Name.Parts[2] == colName));
+            //TODO
+            //allColumns = allColumns.Where(col => !DoNotIncludeColumns.Any(colName => col.Name.Parts[2] == colName));
 
             var columnDeclarations = String.Join(Environment.NewLine + ", ",
                 allColumns.Select(col =>

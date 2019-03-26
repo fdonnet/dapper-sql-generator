@@ -9,21 +9,13 @@ namespace SqlGenerator.DotNetClient
 {
     public class CsRepositoryClassGenerator : GeneratorBase
     {
-
-       // public TSqlObject Table { get; private set; } = null;
-
-        public string Author { get; private set; } = "Author";
-
-        public string ClassNamespace { get; private set; } = "DAL";
-
+        private readonly CsRepositoryClassGeneratorSettings _settings;
 
         public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
 
-            this.Author = GeneratorSettings.AuthorName;
-            //To implement namespace config for repo
-            //this.ClassNamespace = (TableSettings !=null)?TableSettings.CsRepositorySettings.
+            _settings = TableSettings?.CsRepositorySettings ?? GeneratorSettings.GlobalSettings.CsRepositorySettings;
         }
 
 
@@ -60,11 +52,11 @@ namespace SqlGenerator.DotNetClient
             string output =
 $@" 
 -- =================================================================
--- Author: {this.Author}
+-- Author: {GeneratorSettings.AuthorName}
 -- Description:	Entity class for the table {Table.Name} 
 -- =================================================================
 
-namespace { ClassNamespace } {{
+namespace { _settings.Namespace} {{
   
     public class { TSqlModelHelper.PascalCase(Table.Name.Parts[1]) } : ICloneable
     {{ 

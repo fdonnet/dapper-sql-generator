@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
-    public class CsEntityClassGeneratorSettings
+    public class CsEntityClassGeneratorSettings : CsCodeGeneratorSettings
     {
-        public string EntitiesNamespace { get; set; } = "Project.Entities";
-
         public bool ImplementICloneable {get;set;} = true;
         public string ImplementCustomInterfaceNames { get; set; } = null;
         public bool StandardRequieredDecorator { get; set; } = true;
