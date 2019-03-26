@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.StoredProcedures
 {
-    public class SqlTableTypeGenerator : SqlGenerator
+    public class SqlTableTypeGenerator : GeneratorBase
     {
 
 
@@ -15,10 +15,11 @@ namespace SqlGenerator.StoredProcedures
 
 
 
-        public SqlTableTypeGenerator(TSqlObject table, string author = null, IEnumerable<string> grantExecuteTo = null, IEnumerable<string> doNotIncludeColumns = null)
-            : base(table, author, grantExecuteTo)
+        public SqlTableTypeGenerator(GeneratorSettings generatorSettings, TSqlObject table)
+            : base(generatorSettings, table)
         {
-            this.DoNotIncludeColumns = doNotIncludeColumns ?? this.DoNotIncludeColumns;
+            //TODO to be implemented
+           // this.DoNotIncludeColumns = doNotIncludeColumns ?? this.DoNotIncludeColumns;
         }
 
         public override string Generate()
@@ -36,8 +37,12 @@ namespace SqlGenerator.StoredProcedures
                 })
             );
 
+            var grantToExecute = (TableSettings != null) ?
+               TableSettings.SqlTableTypeSettings.GrantExecuteToRoles :
+               GeneratorSettings.GlobalSettings.SqlTableTypeSettings.GrantExecuteToRoles;
+
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                GrantExecuteTo.Select(roleName =>
+                grantToExecute.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON TYPE::[dbo].[udt{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
@@ -46,7 +51,7 @@ namespace SqlGenerator.StoredProcedures
             string output =
 $@" 
 -- =================================================================
--- Author: {this.Author}
+-- Author: {GeneratorSettings.AuthorName}
 -- Description:	Type declaration for table {Table.Name} 
 -- =================================================================
 

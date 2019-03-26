@@ -7,26 +7,25 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
-    public class CsEntityClassGenerator : ICodeGenerator
+    public class CsEntityClassGenerator : GeneratorBase
     {
-        public TSqlObject Table { get; private set; } = null;
-
-        public string Author { get; private set; } = "Author";
-
-        public string ClassNamespace { get; private set; } = "DTO";
+         public string ClassNamespace { get; private set; } = "DTO";
 
         public bool WithStandardDecorator { get; private set; } = true;
 
 
-        public CsEntityClassGenerator(TSqlObject table, string author = null, string classNamespace = null, bool? withStandarDecorator = null)
+        public CsEntityClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
+            : base(generatorSettings, table)
         {
-            this.Table = table;
-            this.Author = author ?? this.Author;
-            this.ClassNamespace = classNamespace ?? this.ClassNamespace;
-            this.WithStandardDecorator = withStandarDecorator ?? this.WithStandardDecorator;
+            this.ClassNamespace = (TableSettings != null) ? 
+                TableSettings.CsEntitySettings.EntitiesNamespace : 
+                GeneratorSettings.GlobalSettings.CsEntitySettings.EntitiesNamespace;
+
+            //todo to be implemented
+            //this.WithStandardDecorator = withStandarDecorator ?? this.WithStandardDecorator;
         }
 
-        public string Generate()
+        public override string Generate()
         {
             var allColumns = Table.GetAllColumns().Where(col => !col.GetProperty<bool>(Column.IsIdentity));
 
@@ -62,7 +61,7 @@ namespace SqlGenerator.DotNetClient
             string output =
 $@" 
 -- =================================================================
--- Author: {this.Author}
+-- Author: {GeneratorSettings.GlobalSettings}
 -- Description:	Entity class for the table {Table.Name} 
 -- =================================================================
 

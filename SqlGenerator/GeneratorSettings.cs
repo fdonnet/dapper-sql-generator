@@ -17,7 +17,7 @@ namespace SqlGenerator
         public string AuthorName { get; set; } = "MSSQL-Dapper Generator";
 
         public Settings GlobalSettings { get; set; } = new Settings();
-        public List<TableSettings> TablesSettings { get; set; } = new List<TableSettings>();
+        public Dictionary<string,TableSettings> TablesSettings { get; set; } = new Dictionary<string,TableSettings>();
 
         public void SaveConfig()
         {
@@ -27,7 +27,7 @@ namespace SqlGenerator
     }
     
     /// <summary>
-    /// Extension to load config return the new object config from file
+    /// Extension to load config => return the new settings container object from file
     /// </summary>
     public static class GeneratorGlobalSettingsExt
     {

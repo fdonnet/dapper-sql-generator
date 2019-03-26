@@ -7,25 +7,27 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
-    public class CsRepositoryClassGenerator : ICodeGenerator
+    public class CsRepositoryClassGenerator : GeneratorBase
     {
 
-        public TSqlObject Table { get; private set; } = null;
+       // public TSqlObject Table { get; private set; } = null;
 
         public string Author { get; private set; } = "Author";
 
         public string ClassNamespace { get; private set; } = "DAL";
 
 
-        public CsRepositoryClassGenerator(TSqlObject table, string author = null, string classNamespace = null)
+        public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
+            : base(generatorSettings, table)
         {
-            this.Table = table;
-            this.Author = author ?? this.Author;
-            this.ClassNamespace = classNamespace ?? this.ClassNamespace;
+
+            this.Author = GeneratorSettings.AuthorName;
+            //To implement namespace config for repo
+            //this.ClassNamespace = (TableSettings !=null)?TableSettings.CsRepositorySettings.
         }
 
 
-        public string Generate()
+        public override string Generate()
         {
             var allColumns = Table.GetAllColumns().Where(col => !col.GetProperty<bool>(Column.IsIdentity));
 

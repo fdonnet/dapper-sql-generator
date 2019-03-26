@@ -94,7 +94,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlDeleteSettings.GrantExecuteToRoles);
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(Settings,table);
                          output += gen.Generate();
                     }
                 }
@@ -112,7 +112,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlInsertSettings?.GrantExecuteToRoles);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(Settings, table);
                         output += gen.Generate();
                     }
                 }
@@ -130,7 +130,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(table, Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlBulkInsertSettings?.GrantExecuteToRoles);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(Settings,table);
                         output += gen.Generate();
                     }
                 }
@@ -147,7 +147,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(table, classNamespace: Settings.GlobalSettings.CsEntitySettings?.EntitiesNamespace);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(Settings,table);
                         output += gen.Generate();
                     }
                 }
@@ -164,7 +164,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectAllSettings?.GrantExecuteToRoles);
+                        var gen = new SqlSelectAllGenerator(Settings,table);
                         output += gen.Generate();
                     }
                 }
@@ -181,7 +181,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByPKSettings?.GrantExecuteToRoles);
+                        var gen = new SqlSelectByPKGenerator(Settings, table);
                         output += gen.Generate();
                     }
                 }
@@ -198,7 +198,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlSelectByUKSettings?.GrantExecuteToRoles);
+                        var gen = new SqlSelectByUKGenerator(Settings,table);
                         output += gen.Generate();
                     }
                 }
@@ -215,8 +215,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlUpdateSettings?.GrantExecuteToRoles
-                            , doNotUpdateColumns: new string[] { "inserted_by", "inserted_on" });
+                        var gen = new SqlUpdateGenerator(Settings,table);
 
                         output += gen.Generate();
                     }
@@ -234,7 +233,7 @@ namespace SqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(table, author: Settings.AuthorName, grantExecuteTo: Settings.GlobalSettings.SqlTableTypeSettings?.GrantExecuteToRoles);
+                        var gen = new SqlTableTypeGenerator(Settings,table);
 
                         output += gen.Generate();
                     }
@@ -328,7 +327,7 @@ namespace SqlGenerator.UI
                 chkOverrideSettings.Visibility = Visibility.Visible;
 
                 //Check if the config already exists
-                if (Settings.TablesSettings.Any(s => s.TableName == ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]))
+                if (Settings.TablesSettings.ContainsKey(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]))
                 {
                     chkOverrideSettings.IsChecked = true;
 
@@ -372,9 +371,9 @@ namespace SqlGenerator.UI
         {
             var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
 
-            var toBeRemoved = Settings.TablesSettings.Where(t => t.TableName == tableName).SingleOrDefault();
-            if (toBeRemoved != null)
-                Settings.TablesSettings.Remove(toBeRemoved);
+            bool toBeRemoved = Settings.TablesSettings.ContainsKey(tableName);
+            if (toBeRemoved)
+                Settings.TablesSettings.Remove(tableName);
 
             chkOverrideSettings.Content = "Override global settings";
             ucTableSettings.Visibility = Visibility.Hidden;

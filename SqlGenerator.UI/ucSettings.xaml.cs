@@ -65,14 +65,16 @@ namespace SqlGenerator.UI
             _initialLoading = true;
 
             _parent = (MainWindow)Application.Current.MainWindow;
-            _curTableSettings = _parent.Settings.TablesSettings.Where(t => t.TableName == tableName).SingleOrDefault();
+
+            if (_parent.Settings.TablesSettings.TryGetValue(tableName, out _curTableSettings) == false)
+                _curTableSettings = null;
 
             if (_curTableSettings == null)
             {
                 _curTableSettings = _curTableSettings.CopyFromGlobalSettings(_parent.Settings.GlobalSettings);
                 _curTableSettings.TableName = tableName;
 
-                _parent.Settings.TablesSettings.Add(_curTableSettings);
+                _parent.Settings.TablesSettings.Add(_curTableSettings.TableName, _curTableSettings);
             }
 
             LoadRolesLists();

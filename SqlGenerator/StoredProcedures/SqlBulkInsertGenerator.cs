@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.StoredProcedures
 {
-    public class SqlBulkInsertGenerator : SqlGenerator
+    public class SqlBulkInsertGenerator : GeneratorBase
     {
         
 
-        public SqlBulkInsertGenerator(TSqlObject table, string author = null, IEnumerable<string> grantExecuteTo = null)
-            : base(table, author, grantExecuteTo)
+        public SqlBulkInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table)
+            : base(generatorSettings, table)
         {
         }
 
@@ -22,6 +22,10 @@ namespace SqlGenerator.StoredProcedures
             var allColumns = Table.GetAllColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             var identityColumns = allColumns.Where(col => col.GetProperty<bool>(Column.IsIdentity));
+
+            var grantToExecute = (TableSettings != null) ? 
+                TableSettings.SqlBulkInsertSettings.GrantExecuteToRoles:
+                GeneratorSettings.GlobalSettings.SqlDeleteSettings.GrantExecuteToRoles;
 
             var tableTypeName = $"[dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}]";
 
@@ -33,7 +37,7 @@ namespace SqlGenerator.StoredProcedures
                 }));
             
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                GrantExecuteTo.Select(roleName =>
+                grantToExecute.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkInsert] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
@@ -42,7 +46,7 @@ namespace SqlGenerator.StoredProcedures
             string output =
 $@" 
 -- =================================================================
--- Author: {this.Author}
+-- Author: {this.GeneratorSettings.AuthorName}
 -- Description:	Bulk Insert Procedure for the table {Table.Name} 
 -- =================================================================
 

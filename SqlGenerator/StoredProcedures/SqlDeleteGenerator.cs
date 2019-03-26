@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.StoredProcedures
 {
-    public class SqlDeleteGenerator : SqlGenerator
+    public class SqlDeleteGenerator : GeneratorBase
     {
 
 
-        public SqlDeleteGenerator(TSqlObject table, string author = null, IEnumerable<string> grantExecuteTo = null)
-            : base(table, author, grantExecuteTo)
+        public SqlDeleteGenerator(GeneratorSettings generatorSettings, TSqlObject table)
+            : base(generatorSettings, table)
         {
         }
 
@@ -34,8 +34,12 @@ namespace SqlGenerator.StoredProcedures
                 return $"[{colName}] = @{colName}";
             }));
 
+            var grantToExecute = (TableSettings != null) ?
+                TableSettings.SqlDeleteSettings.GrantExecuteToRoles :
+                GeneratorSettings.GlobalSettings.SqlDeleteSettings.GrantExecuteToRoles;
+
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                GrantExecuteTo.Select(roleName =>
+                grantToExecute.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_delete] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
@@ -44,7 +48,7 @@ namespace SqlGenerator.StoredProcedures
             string output =
 $@" 
 -- =================================================================
--- Author: {this.Author}
+-- Author: {GeneratorSettings.AuthorName}
 -- Description:	Delete Procedure for the table {Table.Name} 
 -- =================================================================
 

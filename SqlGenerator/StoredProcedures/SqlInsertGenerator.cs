@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.StoredProcedures
 {
-    public class SqlInsertGenerator : SqlGenerator
+    public class SqlInsertGenerator : GeneratorBase
     {
 
-        public SqlInsertGenerator(TSqlObject table, string author = null, IEnumerable<string> grantExecuteTo = null)
-            : base(table, author, grantExecuteTo)
+        public SqlInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table)
+            : base(generatorSettings, table)
         {
         }
 
@@ -54,8 +54,12 @@ namespace SqlGenerator.StoredProcedures
                })
             );
 
+            var grantToExecute = (TableSettings != null) ?
+               TableSettings.SqlInsertSettings.GrantExecuteToRoles :
+               GeneratorSettings.GlobalSettings.SqlInsertSettings.GrantExecuteToRoles;
+
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                GrantExecuteTo.Select(roleName =>
+                grantToExecute.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_insert] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
@@ -64,7 +68,7 @@ namespace SqlGenerator.StoredProcedures
             string output =
 $@" 
 -- =================================================================
--- Author: {this.Author}
+-- Author: {GeneratorSettings.AuthorName}
 -- Description:	Insert Procedure for the table {Table.Name} 
 -- =================================================================
 
