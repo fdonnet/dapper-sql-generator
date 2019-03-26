@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DotNetClient\CsCodeGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
     <Compile Include="DotNetClient\CsEntityClassGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />

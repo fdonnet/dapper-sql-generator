@@ -58,7 +58,7 @@ $@"
 -- Description:	Entity class for the table {Table.Name} 
 -- =================================================================
 
-namespace { _settings.EntitiesNamespace } {{
+namespace { _settings.Namespace } {{
   
     public class { TSqlModelHelper.PascalCase(Table.Name.Parts[1]) } : ICloneable
     {{ 

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
-    public class CsRepositoryClassGeneratorSettings : CsCodeGeneratorSettings
+    public class CsCodeGeneratorSettings
     {
-
+        public string Namespace { get; set; } = "Project";
     }
 }
