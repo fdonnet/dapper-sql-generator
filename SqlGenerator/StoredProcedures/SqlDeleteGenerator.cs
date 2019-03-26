@@ -9,11 +9,12 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlDeleteGenerator : GeneratorBase
     {
-
+        private readonly SqlDeleteGeneratorSettings _settings;
 
         public SqlDeleteGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlDeleteSettings ?? GeneratorSettings.GlobalSettings.SqlDeleteSettings;
         }
 
 
@@ -34,12 +35,8 @@ namespace SqlGenerator.StoredProcedures
                 return $"[{colName}] = @{colName}";
             }));
 
-            var grantToExecute = (TableSettings != null) ?
-                TableSettings.SqlDeleteSettings.GrantExecuteToRoles :
-                GeneratorSettings.GlobalSettings.SqlDeleteSettings.GrantExecuteToRoles;
-
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                grantToExecute.Select(roleName =>
+                _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_delete] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")

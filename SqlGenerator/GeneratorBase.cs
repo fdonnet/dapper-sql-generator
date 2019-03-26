@@ -22,10 +22,9 @@ namespace SqlGenerator
             TableName = table.Name.Parts[1];
 
             //Table settings easy accessor
-            if (!string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName))
-                TableSettings = generatorSettings.TablesSettings[TableName];
-            else
-                TableSettings = null;
+            TableSettings = !string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName)
+                ? generatorSettings.TablesSettings[TableName]
+                : null;
 
         }
 

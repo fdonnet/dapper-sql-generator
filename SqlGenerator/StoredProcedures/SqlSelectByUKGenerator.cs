@@ -9,9 +9,12 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlSelectByUKGenerator : GeneratorBase
     {
+        private readonly SqlSelectByUKGeneratorSettings _settings;
+
         public SqlSelectByUKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlSelectByUKSettings ?? GeneratorSettings.GlobalSettings.SqlSelectByUKSettings;
         }
 
         public override string Generate()
@@ -56,12 +59,8 @@ namespace SqlGenerator.StoredProcedures
                     })
                 );
 
-                var grantToExecute = (TableSettings != null) ?
-                TableSettings.SqlSelectByUKSettings.GrantExecuteToRoles :
-                GeneratorSettings.GlobalSettings.SqlSelectByUKSettings.GrantExecuteToRoles;
-
                 var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                    grantToExecute.Select(roleName =>
+                    _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{ukFieldNames}] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")

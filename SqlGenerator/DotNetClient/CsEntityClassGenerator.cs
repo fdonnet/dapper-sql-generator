@@ -9,17 +9,12 @@ namespace SqlGenerator.DotNetClient
 {
     public class CsEntityClassGenerator : GeneratorBase
     {
-         public string ClassNamespace { get; private set; } = "DTO";
-
-        public bool WithStandardDecorator { get; private set; } = true;
-
+        private readonly CsEntityClassGeneratorSettings _settings;
 
         public CsEntityClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            this.ClassNamespace = (TableSettings != null) ? 
-                TableSettings.CsEntitySettings.EntitiesNamespace : 
-                GeneratorSettings.GlobalSettings.CsEntitySettings.EntitiesNamespace;
+            _settings = TableSettings?.CsEntitySettings ?? GeneratorSettings.GlobalSettings.CsEntitySettings;
 
             //todo to be implemented
             //this.WithStandardDecorator = withStandarDecorator ?? this.WithStandardDecorator;
@@ -37,23 +32,21 @@ namespace SqlGenerator.DotNetClient
                 var memberType = TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
 
                 var decorators = "";
-                if(WithStandardDecorator)
+                if (memberType == "string")
                 {
-                    if (memberType == "string")
+                    var colLen = col.GetProperty<int>(Column.Length);
+                    if (colLen > 0)
                     {
-                        var colLen = col.GetProperty<int>(Column.Length);
-                        if (colLen > 0)
-                        {
-                            decorators += $"[StringLength({colLen})]"
-                                + Environment.NewLine + "        ";
-                        }
-                    }
-                    if (!isNullable)
-                    {
-                        decorators += $"[Required]"
-                                + Environment.NewLine + "        ";
+                        decorators += $"[StringLength({colLen})]"
+                            + Environment.NewLine + "        ";
                     }
                 }
+                if (!isNullable)
+                {
+                    decorators += $"[Required]"
+                            + Environment.NewLine + "        ";
+                }
+
 
                 return $"{decorators}public {memberType} {memberName} {{ get; set; }}";
             }));
@@ -61,11 +54,11 @@ namespace SqlGenerator.DotNetClient
             string output =
 $@" 
 -- =================================================================
--- Author: {GeneratorSettings.GlobalSettings}
+-- Author: {GeneratorSettings.AuthorName}
 -- Description:	Entity class for the table {Table.Name} 
 -- =================================================================
 
-namespace { ClassNamespace } {{
+namespace { _settings.EntitiesNamespace } {{
   
     public class { TSqlModelHelper.PascalCase(Table.Name.Parts[1]) } : ICloneable
     {{ 

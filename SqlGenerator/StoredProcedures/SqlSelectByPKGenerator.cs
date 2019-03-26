@@ -9,11 +9,12 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlSelectByPKGenerator : GeneratorBase
     {
-
+        private readonly SqlSelectByPKGeneratorSettings _settings;
 
         public SqlSelectByPKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlSelectByPKSettings ?? GeneratorSettings.GlobalSettings.SqlSelectByPKSettings;
         }
 
 
@@ -46,12 +47,8 @@ namespace SqlGenerator.StoredProcedures
                 })
             );
 
-            var grantToExecute = (TableSettings != null) ?
-               TableSettings.SqlSelectByPKSettings.GrantExecuteToRoles :
-               GeneratorSettings.GlobalSettings.SqlSelectByPKSettings.GrantExecuteToRoles;
-
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                grantToExecute.Select(roleName =>
+                _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldNames}] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")

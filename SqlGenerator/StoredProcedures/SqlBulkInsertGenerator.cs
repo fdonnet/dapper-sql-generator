@@ -9,11 +9,12 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlBulkInsertGenerator : GeneratorBase
     {
-        
+        private readonly SqlBulkInsertGeneratorSettings _settings;
 
         public SqlBulkInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlBulkInsertSettings ?? GeneratorSettings.GlobalSettings.SqlBulkInsertSettings;
         }
 
 
@@ -22,10 +23,6 @@ namespace SqlGenerator.StoredProcedures
             var allColumns = Table.GetAllColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             var identityColumns = allColumns.Where(col => col.GetProperty<bool>(Column.IsIdentity));
-
-            var grantToExecute = (TableSettings != null) ? 
-                TableSettings.SqlBulkInsertSettings.GrantExecuteToRoles:
-                GeneratorSettings.GlobalSettings.SqlDeleteSettings.GrantExecuteToRoles;
 
             var tableTypeName = $"[dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}]";
 
@@ -37,7 +34,7 @@ namespace SqlGenerator.StoredProcedures
                 }));
             
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                grantToExecute.Select(roleName =>
+                _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkInsert] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")

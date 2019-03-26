@@ -8,6 +8,6 @@ namespace SqlGenerator.DotNetClient
 {
     public class CsRepositoryClassGeneratorSettings
     {
-
+        public string RepositoryNamespace { get; set; } = "Project.Entities";
     }
 }

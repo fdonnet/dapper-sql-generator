@@ -9,21 +9,20 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlSelectAllGenerator : GeneratorBase
     {
+        private readonly SqlSelectAllGeneratorSettings _settings;
 
         public SqlSelectAllGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlSelectAllSettings ?? GeneratorSettings.GlobalSettings.SqlSelectAllSettings;
+
         }
 
 
         public override string Generate()
         {
-            var grantToExecute = (TableSettings != null) ?
-               TableSettings.SqlSelectAllSettings.GrantExecuteToRoles :
-               GeneratorSettings.GlobalSettings.SqlSelectAllSettings.GrantExecuteToRoles;
-
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                grantToExecute.Select(roleName =>
+                _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectAll] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")

@@ -9,13 +9,16 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlUpdateGenerator : GeneratorBase
     {
+        private readonly SqlUpdateGeneratorSettings _settings;
 
-        public IEnumerable<string> DoNotUpdateColumns { get; private set; } = new string[0]; 
+        //public IEnumerable<string> DoNotUpdateColumns { get; private set; } = new string[0]; 
 
 
         public SqlUpdateGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlUpdateSettings ?? GeneratorSettings.GlobalSettings.SqlUpdateSettings;
+
             //todo to be implemented
             //this.DoNotUpdateColumns = doNotUpdateColumns ?? this.DoNotUpdateColumns;
         }
@@ -24,7 +27,8 @@ namespace SqlGenerator.StoredProcedures
         public override string Generate()
         {
             var allColumns = Table.GetAllColumns();
-            allColumns = allColumns.Where(col => !DoNotUpdateColumns.Any(colName => col.Name.Parts[2] == colName));
+            //TODO
+            //allColumns = allColumns.Where(col => !DoNotUpdateColumns.Any(colName => col.Name.Parts[2] == colName));
 
             var pkColumns = Table.GetPrimaryKeyColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
@@ -50,13 +54,8 @@ namespace SqlGenerator.StoredProcedures
                 return $"[{colName}] = @{colName}";
             }));
 
-
-            var grantToExecute = (TableSettings != null) ?
-               TableSettings.SqlUpdateSettings.GrantExecuteToRoles :
-               GeneratorSettings.GlobalSettings.SqlUpdateSettings.GrantExecuteToRoles;
-
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                grantToExecute.Select(roleName =>
+                _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_update] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")

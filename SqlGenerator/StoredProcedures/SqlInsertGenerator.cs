@@ -9,10 +9,12 @@ namespace SqlGenerator.StoredProcedures
 {
     public class SqlInsertGenerator : GeneratorBase
     {
+        private readonly SqlInsertGeneratorSettings _settings;
 
         public SqlInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
+            _settings = TableSettings?.SqlInsertSettings ?? GeneratorSettings.GlobalSettings.SqlInsertSettings;
         }
 
 
@@ -54,12 +56,8 @@ namespace SqlGenerator.StoredProcedures
                })
             );
 
-            var grantToExecute = (TableSettings != null) ?
-               TableSettings.SqlInsertSettings.GrantExecuteToRoles :
-               GeneratorSettings.GlobalSettings.SqlInsertSettings.GrantExecuteToRoles;
-
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
-                grantToExecute.Select(roleName =>
+                _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
                     + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_insert] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
