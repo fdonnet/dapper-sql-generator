@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator
 {
+    /// <summary>
+    /// The settings container
+    /// </summary>
     public class GeneratorSettings
     {
         public string ConfigPath { get; set; } = "base.json";
