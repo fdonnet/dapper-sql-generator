@@ -2,6 +2,7 @@
 using SqlGenerator.StoredProcedures;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace SqlGenerator.UI
         private Settings _curGlobalSettings = null;
         private TableSettings _curTableSettings = null;
         private bool _initialLoading = true;
+        private List<FieldValue> _fieldKeyValueListForCustomTypes;
 
 
         // IEnumerable<CheckListBox> _roleCheckListBoxes;
@@ -75,8 +77,9 @@ namespace SqlGenerator.UI
         /// Init if table settings component (override settings at table lvl)
         /// </summary>
         /// <param name="tableName"></param>
-        public void InitTableSettings(string tableName)
+        public void InitTableSettings(TSqlObject table)
         {
+            var tableName = table.Name.Parts[1];
             _isGlobalSettings = false;
             _initialLoading = true;
 
@@ -98,6 +101,7 @@ namespace SqlGenerator.UI
 
             tabCustomDeco.Visibility = Visibility.Visible;
             tabCustomField.Visibility = Visibility.Visible;
+            LoadCustomGrids(table);
 
             _initialLoading = false;
         }
@@ -108,8 +112,21 @@ namespace SqlGenerator.UI
 
         }
 
+        private void LoadCustomGrids(TSqlObject table)
+        {
+            _fieldKeyValueListForCustomTypes = TSqlModelHelper.GetAllColumns(table)
+                                                            .Select(c => new FieldValue()
+                                                            {
+                                                                FieldName = c.Name.Parts[2],
+                                                                Value = null
+                                                            }).ToList();
 
-                             
+            grdCustomFieldTypes.ItemsSource = _fieldKeyValueListForCustomTypes;
+
+
+        }
+
+
         /// <summary>
         /// Extract IEnumerable of strings (role names) from a checklist box
         /// </summary>
@@ -199,6 +216,29 @@ namespace SqlGenerator.UI
         private void ChkGenerateBulkInsertSp_Unchecked(object sender, RoutedEventArgs e)
         {
             chkGenerateTableType.IsChecked = false;
+        }
+
+        /// <summary>
+        /// Nested class used to bind table field values
+        /// </summary>
+        private class FieldValue
+        {
+            public string FieldName { get; set; }
+            public string Value { get; set; }
+        }
+
+        /// <summary>
+        /// Save value in settings for field custom fields
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GrdCustomFieldTypes_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+
+                _curTableSettings.CsEntitySettings.FieldNameCustomTypes =
+                 _fieldKeyValueListForCustomTypes.Where(f => !string.IsNullOrEmpty(f.Value))
+                 .ToDictionary(d => d.FieldName, d => d.Value);
+
         }
     }
 }

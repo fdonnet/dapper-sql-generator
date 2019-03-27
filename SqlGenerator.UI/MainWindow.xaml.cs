@@ -332,7 +332,7 @@ namespace SqlGenerator.UI
                     chkOverrideSettings.IsChecked = true;
 
                     //To be sure the correct settings are loaded
-                    ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]);
+                    ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]));
                     chkOverrideSettings.Content = $"Override global settings for table: " +
                         $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
 
@@ -354,11 +354,10 @@ namespace SqlGenerator.UI
         /// <param name="e"></param>
         private void ChkOverrideSettings_Checked(object sender, RoutedEventArgs e)
         {
-            var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
             ucTableSettings.Visibility = Visibility.Visible;
-            ucTableSettings.InitTableSettings(tableName);
+            ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]));
             chkOverrideSettings.Content = $"Override global settings for table: " +
-                $"{tableName.ToUpper()}";
+                $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
 
         }
 

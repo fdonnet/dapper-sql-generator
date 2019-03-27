@@ -45,7 +45,11 @@ namespace SqlGenerator.DotNetClient
                 var memberName = TSqlModelHelper.PascalCase(col.Name.Parts[2]);
                 var colDataType = col.GetColumnSqlDataType(false);
                 var isNullable = col.IsColumnNullable();
-                var memberType = TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
+
+                //Search for custom member type or use the conversion from Sql Types
+                var memberType = _settings.FieldNameCustomTypes.ContainsKey(colName) 
+                                   ? _settings.FieldNameCustomTypes[colName]
+                                    :TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
 
                 //Decorators
                 var decorators = "";

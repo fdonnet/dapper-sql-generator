@@ -14,5 +14,7 @@ namespace SqlGenerator.DotNetClient
         public bool StandardStringLengthDecorator { get; set; } = true;
         public bool StandardJsonIgnoreDecorator { get; set; } = false;
         public string FieldNamesWithJsonIgnoreDecorator { get; set; } = null;
+
+        public Dictionary<string, string> FieldNameCustomTypes { get; set; } = null;
     }
 }
