@@ -13,29 +13,32 @@ namespace SqlGenerator
     /// </summary>
     public class GeneratorSettings
     {
-        public string ConfigPath { get; set; } = "base.json";
+
         public string AuthorName { get; set; } = "MSSQL-Dapper Generator";
 
+        public string OutputPath_SQLProcedures { get; set; } = "MSSQLDapperGenerator.Procedures.sql";
+
+        public string OutputPath_CsEntityClasses { get; set; } = "MSSQLDapperGenerator.Entities.cs";
+
+        public string OutputPath_CsRepositoryClasses { get; set; } = "MSSQLDapperGenerator.Repositories.cs";
+
         public Settings GlobalSettings { get; set; } = new Settings();
+
         public Dictionary<string, TableSettings> TablesSettings { get; set; } = new Dictionary<string, TableSettings>();
 
-        public void SaveConfig()
+
+        public void SaveToFile(string configPath)
         {
-            File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(this));
+            File.WriteAllText(configPath, JsonConvert.SerializeObject(this));
         }
 
-    }
 
-    /// <summary>
-    /// Extension to load config => return the new settings container object from file
-    /// </summary>
-    public static class GeneratorGlobalSettingsExt
-    {
-        public static GeneratorSettings LoadConfig(this GeneratorSettings configObjectToLoad)
+        public static GeneratorSettings LoadFromFile(string configPath)
         {
             return JsonConvert.DeserializeObject
-                <GeneratorSettings>(File.ReadAllText(configObjectToLoad.ConfigPath));
-
+                <GeneratorSettings>(File.ReadAllText(configPath));
         }
+
     }
+
 }

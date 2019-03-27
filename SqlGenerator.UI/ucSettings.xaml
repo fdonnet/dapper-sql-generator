@@ -9,28 +9,40 @@
              d:DesignHeight="450" d:DesignWidth="800"
              DataContextChanged="UserControl_DataContextChanged">
     <TabControl MaxHeight="500">
-        <TabItem Header="Stored procedures">
 
-            <TabControl MaxHeight="400">
+        <TabItem Header="T-SQL Stored Procedures">
+            <TabControl MaxHeight="400" Margin="5">
+                
+                <TabControl.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Padding" Value="0,5,0,10"></Setter>
+                    </Style>
+                </TabControl.Resources>
+
                 <TabItem Header="General">
-                    <StackPanel Margin="0,10,0,5">
-                        <Label>Check the types of stored procedures/table types you want to generate:</Label>
-                        <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate delete SP</CheckBox>
-                        <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate insert SP</CheckBox>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Name="chkGenerateBulkInsertSp" Checked="ChkGenerateBulkInsertSp_Checked" Unchecked="ChkGenerateBulkInsertSp_Unchecked" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate bulk insert SP</CheckBox>
-                            <CheckBox Name="chkGenerateTableType" Margin="20,0,0,0" IsEnabled="False"  IsChecked="{Binding Path=GenerateTableType, Mode=TwoWay}">Generate table type</CheckBox>
+                    <StackPanel Margin="5">
+                        <StackPanel.Resources>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="Margin" Value="0,0,0,5"></Setter>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label>Check the types of stored procedure that you want to generate:</Label>
+                        <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate Delete SP</CheckBox>
+                        <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate Insert SP</CheckBox>
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox Name="chkGenerateBulkInsertSp" Checked="ChkGenerateBulkInsertSp_Checked" Unchecked="ChkGenerateBulkInsertSp_Unchecked" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate Bulk Insert SP</CheckBox>
+                            <CheckBox Name="chkGenerateTableType" Margin="20,0,0,5" IsEnabled="False"  IsChecked="{Binding Path=GenerateTableType, Mode=TwoWay}">Generate Table Type</CheckBox>
                         </StackPanel>
                         
-                        <CheckBox Name="chkGenerateUpdateSp" IsChecked="{Binding Path=GenerateUpdateSP, Mode=TwoWay}">Generate update SP</CheckBox>
-                        <CheckBox Name="chkGenerateSelectAllSp" IsChecked="{Binding Path=GenerateSelectAllSP, Mode=TwoWay}">Generate select all SP</CheckBox>
-                        <CheckBox Name="chkGenerateSelectByPk" IsChecked="{Binding Path=GenerateSelectByPk, Mode=TwoWay}">Generate select by pk SP</CheckBox>
-                        <CheckBox Name="chkGenerateSelectByUK" IsChecked="{Binding Path=GenerateSelectByUK, Mode=TwoWay}">Generate select by uk SP</CheckBox>
+                        <CheckBox Name="chkGenerateUpdateSp" IsChecked="{Binding Path=GenerateUpdateSP, Mode=TwoWay}">Generate Update SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectAllSp" IsChecked="{Binding Path=GenerateSelectAllSP, Mode=TwoWay}">Generate Select All SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectByPk" IsChecked="{Binding Path=GenerateSelectByPk, Mode=TwoWay}">Generate Select by PK SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectByUK" IsChecked="{Binding Path=GenerateSelectByUK, Mode=TwoWay}">Generate Select by UK SP</CheckBox>
                         
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Delete">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Delete SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlDelete"
                                            DataContext="{Binding Path=SqlDeleteSettings}" 
@@ -41,7 +53,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Insert">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Insert SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlInsert"
                                            DataContext="{Binding Path=SqlInsertSettings}" 
@@ -52,7 +64,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Bulk Insert">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Bulk Insert SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlBulkInsert" 
                                            DataContext="{Binding Path=SqlBulkInsertSettings}" 
@@ -63,7 +75,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Update">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Update SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlUpdate" 
                                            DataContext="{Binding Path=SqlUpdateSettings}" 
@@ -74,7 +86,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Select All">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Select All SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlSelectAll" 
                                            DataContext="{Binding Path=SqlSelectAllSettings}" 
@@ -85,7 +97,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Select By PK">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Select By PK SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlSelectByPK" 
                                            DataContext="{Binding Path=SqlSelectByPKSettings}" 
@@ -96,7 +108,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Select By UK">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on Select By UK SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlSelectByUK" 
                                            DataContext="{Binding Path=SqlSelectByUKSettings}" 
@@ -107,7 +119,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Table Type">
-                    <StackPanel>
+                    <StackPanel Margin="5">
                         <Label>Select role(s) to grant "execute" on SQL Table Type:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlTableType" 
                                            DataContext="{Binding Path=SqlTableTypeSettings}" 
@@ -117,10 +129,11 @@
                                            DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
                     </StackPanel>
                 </TabItem>
-            </TabControl>
+            </TabControl>            
         </TabItem>
-        <TabItem Header="Entities">
-            <TabControl>
+        
+        <TabItem Header="C# Entities">
+            <TabControl Margin="5">
                 <TabItem Header="General">
                     <Grid Margin="5,10,10,0">
                         <Grid.RowDefinitions>
@@ -166,6 +179,9 @@
             </TabControl>
 
         </TabItem>
-        <TabItem Header="Repositories"></TabItem>
+        
+        <TabItem Header="C# Repositories">
+            
+        </TabItem>
     </TabControl>
 </UserControl>

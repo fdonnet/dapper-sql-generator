@@ -76,7 +76,7 @@ namespace SqlGenerator.UI
         }
 
         /// <summary>
-        /// Load all the model tables
+        /// Show all tables in the model
         /// </summary>
         private void LoadTablesList()
         {
@@ -272,13 +272,12 @@ namespace SqlGenerator.UI
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                Settings.ConfigPath = saveFileDialog.FileName;
-                Settings.SaveConfig();
+                var configPath = saveFileDialog.FileName;
+                Settings.SaveToFile(configPath);
                 MessageBox.Show("Configuration(all settings) saved successfully", 
                      "Info", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            }
-           
+            }           
         }
 
         /// <summary>
@@ -295,8 +294,8 @@ namespace SqlGenerator.UI
 
             if (openFileDialog.ShowDialog() == true)
             {
-                Settings.ConfigPath = openFileDialog.FileName;
-                Settings = Settings.LoadConfig();
+                var configPath = openFileDialog.FileName;
+                Settings = GeneratorSettings.LoadFromFile(configPath);
                 DataContext = Settings;
                 ucGlobalSettings.InitGlobalSettings();
 
@@ -378,5 +377,66 @@ namespace SqlGenerator.UI
             chkOverrideSettings.Content = "Override global settings";
             ucTableSettings.Visibility = Visibility.Hidden;
         }
+
+        /// <summary>
+        /// Open a save dialog, to browse and select output path for SQL stored procedures
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonBrowseOutputPath_SQLProcedures_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "T-SQL script file (*.sql)|*.sql"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var outPath = saveFileDialog.FileName;
+                Settings.OutputPath_SQLProcedures = outPath;
+                txtOutputPath_SQLProcedures.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+            }
+        }
+
+        /// <summary>
+        /// Open a save dialog, to browse and select output path for C# entity classes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonBrowseOutputPath_CsEntityClasses_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "C# source code file (*.cs)|*.cs"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var outPath = saveFileDialog.FileName;
+                Settings.OutputPath_CsEntityClasses = outPath;
+                txtOutputPath_CsEntityClasses.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+            }
+        }
+
+        /// <summary>
+        /// Open a save dialog, to browse and select output path for C# Dapper repositories
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonBrowseOutputPath_CsRepositoryClasses_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "C# source code file (*.cs)|*.cs"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var outPath = saveFileDialog.FileName;
+                Settings.OutputPath_CsRepositoryClasses = outPath;
+                txtOutputPath_CsRepositoryClasses.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+            }
+        }
+
     }
 }
