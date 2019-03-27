@@ -187,7 +187,23 @@
                         </DataGrid>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Custom field decorator" Name="tabCustomDeco"></TabItem>
+                <TabItem Header="Custom field decorator" Name="tabCustomDeco">
+                    <StackPanel>
+                        <Label>Define a custom c# decorator on specific fields to add more info format "[Decorator]:</Label>
+                        <DataGrid Name="grdCustomFieldDecorators" AutoGenerateColumns="False" CanUserAddRows="False" 
+                              CanUserDeleteRows="False" CanUserReorderColumns="False" CellEditEnding="GrdCustomFieldDecorators_CellEditEnding"
+                              IsSynchronizedWithCurrentItem="true">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Field name" IsReadOnly="True" MinWidth="200" Binding="{Binding Path=FieldName, Mode=OneWay}">
+
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Custom c# type" MinWidth="200" Binding="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </TabItem>
             </TabControl>
 
         </TabItem>

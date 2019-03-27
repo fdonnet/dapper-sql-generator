@@ -31,6 +31,7 @@ namespace SqlGenerator.UI
         private TableSettings _curTableSettings = null;
         private bool _initialLoading = true;
         private List<FieldValue> _fieldKeyValueListForCustomTypes;
+        private List<FieldValue> _fieldKeyValueListForCustomDecorators;
 
 
         // IEnumerable<CheckListBox> _roleCheckListBoxes;
@@ -112,8 +113,13 @@ namespace SqlGenerator.UI
 
         }
 
+        /// <summary>
+        /// Load the custom types and decorators grid
+        /// </summary>
+        /// <param name="table"></param>
         private void LoadCustomGrids(TSqlObject table)
         {
+            //Types
             _fieldKeyValueListForCustomTypes = TSqlModelHelper.GetAllColumns(table)
                                                             .Select(c => new FieldValue()
                                                             {
@@ -123,7 +129,15 @@ namespace SqlGenerator.UI
 
             grdCustomFieldTypes.ItemsSource = _fieldKeyValueListForCustomTypes;
 
+            //Decorators
+            _fieldKeyValueListForCustomDecorators = TSqlModelHelper.GetAllColumns(table)
+                                                .Select(c => new FieldValue()
+                                                {
+                                                    FieldName = c.Name.Parts[2],
+                                                    Value = null
+                                                }).ToList();
 
+            grdCustomFieldDecorators.ItemsSource = _fieldKeyValueListForCustomDecorators;
         }
 
 
@@ -219,16 +233,7 @@ namespace SqlGenerator.UI
         }
 
         /// <summary>
-        /// Nested class used to bind table field values
-        /// </summary>
-        private class FieldValue
-        {
-            public string FieldName { get; set; }
-            public string Value { get; set; }
-        }
-
-        /// <summary>
-        /// Save value in settings for field custom fields
+        /// Save values in settings for field custom fields
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -239,6 +244,27 @@ namespace SqlGenerator.UI
                  _fieldKeyValueListForCustomTypes.Where(f => !string.IsNullOrEmpty(f.Value))
                  .ToDictionary(d => d.FieldName, d => d.Value);
 
+        }
+
+        /// <summary>
+        /// Save values in settings for field custom decorators
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GrdCustomFieldDecorators_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            _curTableSettings.CsEntitySettings.FieldNameCustomDecorators =
+                 _fieldKeyValueListForCustomDecorators.Where(f => !string.IsNullOrEmpty(f.Value))
+                 .ToDictionary(d => d.FieldName, d => d.Value);
+        }
+
+        /// <summary>
+        /// Nested class used to bind table field values
+        /// </summary>
+        private class FieldValue
+        {
+            public string FieldName { get; set; }
+            public string Value { get; set; }
         }
     }
 }

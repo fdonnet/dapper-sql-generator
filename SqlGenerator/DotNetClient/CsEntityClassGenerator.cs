@@ -45,7 +45,7 @@ namespace SqlGenerator.DotNetClient
                 var memberName = TSqlModelHelper.PascalCase(col.Name.Parts[2]);
                 var colDataType = col.GetColumnSqlDataType(false);
                 var isNullable = col.IsColumnNullable();
-                bool isPk = (TSqlModelHelper.GetPrimaryKeyColumns(Table).Where(c => c.Name.Parts[2] == colName).SingleOrDefault()!=null) ? true : false;
+                bool isPk = (TSqlModelHelper.GetPrimaryKeyColumns(Table).Where(c => c.Name.Parts[2] == colName).SingleOrDefault() != null) ? true : false;
 
                 //Search for custom member type or use the conversion from Sql Types
                 var memberType = (_settings.FieldNameCustomTypes != null && _settings.FieldNameCustomTypes.ContainsKey(colName)
@@ -87,6 +87,17 @@ namespace SqlGenerator.DotNetClient
                     {
                         decorators += $"[JsonIgnore]"
                                 + Environment.NewLine + "        ";
+                    }
+                }
+
+                //Custom field decorator
+                if (_settings.FieldNameCustomDecorators != null && _settings.FieldNameCustomDecorators.Count > 0)
+                {
+                    string customDecorator;
+                    if (_settings.FieldNameCustomDecorators.TryGetValue(colName, out customDecorator))
+                    {
+                        decorators += customDecorator
+                                    + Environment.NewLine + "        ";
                     }
                 }
 
