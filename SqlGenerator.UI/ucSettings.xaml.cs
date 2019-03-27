@@ -33,25 +33,9 @@ namespace SqlGenerator.UI
         private List<FieldValue> _fieldKeyValueListForCustomTypes;
         private List<FieldValue> _fieldKeyValueListForCustomDecorators;
 
-
-        // IEnumerable<CheckListBox> _roleCheckListBoxes;
-
-
         public ucSettings()
         {
             InitializeComponent();
-
-            //_roleCheckListBoxes = new CheckListBox[]
-            //{
-            //    lstRolesForSqlInsert,
-            //    lstRolesForSqlBulkInsert,
-            //    lstRolesForSqlUpdate,
-            //    lstRolesForSqlDelete,
-            //    lstRolesForSqlSelectAll,
-            //    lstRolesForSqlSelectByPK,
-            //    lstRolesForSqlSelectByUK,
-            //    lstRolesForSqlTableType
-            //};
         }
 
         /// <summary>

@@ -22,13 +22,13 @@ namespace SqlGenerator.DotNetClient
             var allColumns = Table.GetAllColumns();
 
             //ICloneable
-            var iCloneableStr = "public object Clone()" + Environment.NewLine +
+            var iCloneableFuncStr = "public object Clone()" + Environment.NewLine +
                                 "        {" + Environment.NewLine +
                                 "           return this.MemberwiseClone();" + Environment.NewLine +
                                 "        }";
 
             var iCloneable = _settings.ImplementICloneable ? " : ICloneable" : null;
-            var iCloneableFunc = _settings.ImplementICloneable ? iCloneableStr : null;
+            var iCloneableFunc = _settings.ImplementICloneable ? iCloneableFuncStr : null;
 
             //Custom interface names
             string interfaceNames = null;

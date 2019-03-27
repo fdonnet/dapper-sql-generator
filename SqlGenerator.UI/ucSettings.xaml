@@ -26,7 +26,7 @@
                                 <Setter Property="Margin" Value="0,0,0,5"></Setter>
                             </Style>
                         </StackPanel.Resources>
-                        <Label>Check the types of stored procedure that you want to generate:</Label>
+                        <Label>Check the types of stored procedure you want to generate:</Label>
                         <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate Delete SP</CheckBox>
                         <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate Insert SP</CheckBox>
                         <StackPanel Orientation="Vertical">
@@ -197,7 +197,7 @@
                                 <DataGridTextColumn Header="Field name" IsReadOnly="True" MinWidth="200" Binding="{Binding Path=FieldName, Mode=OneWay}">
 
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="Custom c# type" MinWidth="200" Binding="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+                                <DataGridTextColumn Header="Custom c# decorator" MinWidth="200" Binding="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
 
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
