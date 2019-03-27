@@ -124,18 +124,28 @@ namespace SqlGenerator.UI
                                                             .Select(c => new FieldValue()
                                                             {
                                                                 FieldName = c.Name.Parts[2],
-                                                                Value = null
+                                                                Value = (_curTableSettings.CsEntitySettings.FieldNameCustomTypes !=null 
+                                                                    && _curTableSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(c.Name.Parts[2]))
+                                                                    ? _curTableSettings.CsEntitySettings.FieldNameCustomTypes[c.Name.Parts[2]]
+                                                                    : null
                                                             }).ToList();
+
+            //Check if existing config 
 
             grdCustomFieldTypes.ItemsSource = _fieldKeyValueListForCustomTypes;
 
+            
             //Decorators
             _fieldKeyValueListForCustomDecorators = TSqlModelHelper.GetAllColumns(table)
                                                 .Select(c => new FieldValue()
                                                 {
                                                     FieldName = c.Name.Parts[2],
-                                                    Value = null
+                                                    Value = (_curTableSettings.CsEntitySettings.FieldNameCustomDecorators != null
+                                                                    && _curTableSettings.CsEntitySettings.FieldNameCustomDecorators.ContainsKey(c.Name.Parts[2]))
+                                                                    ? _curTableSettings.CsEntitySettings.FieldNameCustomDecorators[c.Name.Parts[2]]
+                                                                    : null
                                                 }).ToList();
+
 
             grdCustomFieldDecorators.ItemsSource = _fieldKeyValueListForCustomDecorators;
         }
