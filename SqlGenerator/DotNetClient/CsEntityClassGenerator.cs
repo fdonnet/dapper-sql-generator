@@ -81,9 +81,9 @@ namespace SqlGenerator.DotNetClient
                 if (_settings.StandardJsonIgnoreDecorator)
                 {
                     var colFound = _settings.FieldNamesWithJsonIgnoreDecorator
-                                        .Split(',').Where(c => c == colName).SingleOrDefault();
+                                        .Split(',').Any(c => c == colName);
 
-                    if (colFound != null)
+                    if (colFound)
                     {
                         decorators += $"[JsonIgnore]"
                                 + Environment.NewLine + "        ";
