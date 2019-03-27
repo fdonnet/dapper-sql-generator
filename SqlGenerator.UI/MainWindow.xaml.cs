@@ -33,6 +33,8 @@ namespace SqlGenerator.UI
         public MainWindow()
         {
             InitializeComponent();
+            buttonBrowse.IsEnabled = true;
+            ucGlobalSettings.IsEnabled = false;
             Settings = new GeneratorSettings();
             DataContext = Settings;
         }
@@ -59,6 +61,7 @@ namespace SqlGenerator.UI
                     LoadTablesList();
                     Roles = Model.GetAllRoles();
                     ucGlobalSettings.InitGlobalSettings();
+                    ucGlobalSettings.IsEnabled = true;
                     IsEnabled = true;
                     buttonLoadConfig.IsEnabled = true;
                     buttonSaveConfig.IsEnabled = true;
