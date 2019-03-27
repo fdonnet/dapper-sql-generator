@@ -437,5 +437,9 @@ namespace SqlGenerator.UI
             }
         }
 
+        private void ButtonGenerateAllFiles_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
