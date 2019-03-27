@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SqlGenerator.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="850" Width="1350">
+        Title="MS SQL Dapper Generator" Height="750" Width="1300" Background="#f0f0f7">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="5*"></ColumnDefinition>
+            <ColumnDefinition Width="7*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Column="0">
-            <StackPanel Margin="10,5,10,5">
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"> 
+            <StackPanel Margin="10,5,10,15">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"></ColumnDefinition>
@@ -46,6 +46,49 @@
                 </StackPanel>
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
                 <Label Margin="0,15,0,0" FontWeight="Bold">Output settings:</Label>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition MaxWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label>Select output path for T-SQL stored procedures:</Label>
+                    <TextBox Name="txtOutputPath_SQLProcedures" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_SQLProcedures, Mode=TwoWay}"></TextBox>
+                    <Button Name="buttonBrowseOutputPath_SQLProcedures" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_SQLProcedures_Click" >Browse</Button>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition MaxWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label>Select output path for C# entity classes:</Label>
+                    <TextBox Name="txtOutputPath_CsEntityClasses" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_CsEntityClasses, Mode=TwoWay}"></TextBox>
+                    <Button Name="buttonBrowseOutputPath_CsEntityClasses" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_CsEntityClasses_Click" >Browse</Button>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition MaxWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label>Select output path for C# entity classes:</Label>
+                    <TextBox Name="txtOutputPath_CsRepositoryClasses" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_CsRepositoryClasses, Mode=TwoWay}"></TextBox>
+                    <Button Name="buttonBrowseOutputPath_CsRepositoryClasses" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_CsRepositoryClasses_Click" >Browse</Button>
+                </Grid>
+
             </StackPanel>
         </ScrollViewer>
         <TabControl Grid.Column="1" Margin="10,5,10,5">
