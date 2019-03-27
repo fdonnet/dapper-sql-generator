@@ -19,7 +19,7 @@ namespace SqlGenerator.DotNetClient
 
         public override string Generate()
         {
-            var allColumns = Table.GetAllColumns().Where(col => !col.GetProperty<bool>(Column.IsIdentity));
+            var allColumns = Table.GetAllColumns();
 
             //ICloneable
             var iCloneableStr = "public object Clone()" + Environment.NewLine +
@@ -45,11 +45,13 @@ namespace SqlGenerator.DotNetClient
                 var memberName = TSqlModelHelper.PascalCase(col.Name.Parts[2]);
                 var colDataType = col.GetColumnSqlDataType(false);
                 var isNullable = col.IsColumnNullable();
+                bool isPk = (TSqlModelHelper.GetPrimaryKeyColumns(Table).Where(c => c.Name.Parts[2] == colName).SingleOrDefault()!=null) ? true : false;
 
                 //Search for custom member type or use the conversion from Sql Types
-                var memberType = _settings.FieldNameCustomTypes.ContainsKey(colName) 
-                                   ? _settings.FieldNameCustomTypes[colName]
-                                    :TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
+                var memberType = (_settings.FieldNameCustomTypes !=null) ?(_settings.FieldNameCustomTypes.ContainsKey(colName) 
+                                                                           ? _settings?.FieldNameCustomTypes[colName]
+                                                                          :TSqlModelHelper.GetDotNetDataType(colDataType, isNullable))
+                                                                : TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
 
                 //Decorators
                 var decorators = "";
@@ -70,7 +72,7 @@ namespace SqlGenerator.DotNetClient
                 //Requiered
                 if (_settings.StandardRequieredDecorator)
                 {
-                    if (!isNullable)
+                    if (!isNullable && !isPk)
                     {
                         decorators += $"[Required]"
                                 + Environment.NewLine + "        ";
