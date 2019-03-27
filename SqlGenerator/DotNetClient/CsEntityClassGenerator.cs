@@ -48,11 +48,9 @@ namespace SqlGenerator.DotNetClient
                 bool isPk = (TSqlModelHelper.GetPrimaryKeyColumns(Table).Where(c => c.Name.Parts[2] == colName).SingleOrDefault()!=null) ? true : false;
 
                 //Search for custom member type or use the conversion from Sql Types
-                var memberType = (_settings.FieldNameCustomTypes !=null) ?(_settings.FieldNameCustomTypes.ContainsKey(colName) 
+                var memberType = (_settings.FieldNameCustomTypes != null && _settings.FieldNameCustomTypes.ContainsKey(colName)
                                                                            ? _settings?.FieldNameCustomTypes[colName]
-                                                                          :TSqlModelHelper.GetDotNetDataType(colDataType, isNullable))
-                                                                : TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
-
+                                                                          : TSqlModelHelper.GetDotNetDataType(colDataType, isNullable));
                 //Decorators
                 var decorators = "";
                 //String length
