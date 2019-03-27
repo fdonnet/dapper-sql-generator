@@ -15,38 +15,76 @@ namespace SqlGenerator.DotNetClient
             : base(generatorSettings, table)
         {
             _settings = TableSettings?.CsEntitySettings ?? GeneratorSettings.GlobalSettings.CsEntitySettings;
-
-            //todo to be implemented
-            //this.WithStandardDecorator = withStandarDecorator ?? this.WithStandardDecorator;
         }
 
         public override string Generate()
         {
             var allColumns = Table.GetAllColumns().Where(col => !col.GetProperty<bool>(Column.IsIdentity));
 
+            //ICloneable
+            var iCloneableStr = "public object Clone()" + Environment.NewLine +
+                                "        {" + Environment.NewLine +
+                                "           return this.MemberwiseClone();" + Environment.NewLine +
+                                "        }";
+
+            var iCloneable = _settings.ImplementICloneable ? " : ICloneable" : null;
+            var iCloneableFunc = _settings.ImplementICloneable ? iCloneableStr : null;
+
+            //Custom interface names
+            string interfaceNames = null;
+            if (!string.IsNullOrEmpty(_settings.ImplementCustomInterfaceNames))
+            {
+                interfaceNames = (_settings.ImplementICloneable) ? ", " + _settings.ImplementCustomInterfaceNames
+                                : " : " + _settings.ImplementCustomInterfaceNames;
+
+            }
+
             var memberDeclarations = String.Join(Environment.NewLine + "        ", allColumns.Select(col =>
             {
+                var colName = col.Name.Parts[2];
                 var memberName = TSqlModelHelper.PascalCase(col.Name.Parts[2]);
                 var colDataType = col.GetColumnSqlDataType(false);
                 var isNullable = col.IsColumnNullable();
                 var memberType = TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
 
+                //Decorators
                 var decorators = "";
-                if (memberType == "string")
+                //String length
+                if (_settings.StandardStringLengthDecorator)
                 {
-                    var colLen = col.GetProperty<int>(Column.Length);
-                    if (colLen > 0)
+                    if (memberType == "string")
                     {
-                        decorators += $"[StringLength({colLen})]"
-                            + Environment.NewLine + "        ";
+                        var colLen = col.GetProperty<int>(Column.Length);
+                        if (colLen > 0)
+                        {
+                            decorators += $"[StringLength({colLen})]"
+                                + Environment.NewLine + "        ";
+                        }
                     }
                 }
-                if (!isNullable)
+
+                //Requiered
+                if (_settings.StandardRequieredDecorator)
                 {
-                    decorators += $"[Required]"
-                            + Environment.NewLine + "        ";
+                    if (!isNullable)
+                    {
+                        decorators += $"[Required]"
+                                + Environment.NewLine + "        ";
+                    }
                 }
 
+                //Json ignore
+                if (_settings.StandardJsonIgnoreDecorator)
+                {
+                    var colFound = _settings.FieldNamesWithJsonIgnoreDecorator
+                                        .Split(',').Where(c => c == colName).SingleOrDefault();
+
+                    if (colFound != null)
+                    {
+                        decorators += $"[JsonIgnore]"
+                                + Environment.NewLine + "        ";
+                    }
+                }
 
                 return $"{decorators}public {memberType} {memberName} {{ get; set; }}";
             }));
@@ -60,17 +98,12 @@ $@"
 
 namespace { _settings.Namespace } {{
   
-    public class { TSqlModelHelper.PascalCase(Table.Name.Parts[1]) } : ICloneable
+    public class { TSqlModelHelper.PascalCase(Table.Name.Parts[1]) }{iCloneable}{interfaceNames}
     {{ 
         
         { memberDeclarations }
 
-
-        public object Clone()
-        {{
-            return this.MemberwiseClone();
-        }}
-
+        {iCloneableFunc}
     }}
 }}
 

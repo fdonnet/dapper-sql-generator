@@ -17,13 +17,16 @@
                         <Label>Check the types of stored procedures/table types you want to generate:</Label>
                         <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate delete SP</CheckBox>
                         <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate insert SP</CheckBox>
-                        <CheckBox Name="chkGenerateBulkInsertSp" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate bulk insert SP</CheckBox>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Name="chkGenerateBulkInsertSp" Checked="ChkGenerateBulkInsertSp_Checked" Unchecked="ChkGenerateBulkInsertSp_Unchecked" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate bulk insert SP</CheckBox>
+                            <CheckBox Name="chkGenerateTableType" Margin="20,0,0,0" IsEnabled="False"  IsChecked="{Binding Path=GenerateTableType, Mode=TwoWay}">Generate table type</CheckBox>
+                        </StackPanel>
+                        
                         <CheckBox Name="chkGenerateUpdateSp" IsChecked="{Binding Path=GenerateUpdateSP, Mode=TwoWay}">Generate update SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectAllSp" IsChecked="{Binding Path=GenerateSelectAllSP, Mode=TwoWay}">Generate select all SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectByPk" IsChecked="{Binding Path=GenerateSelectByPk, Mode=TwoWay}">Generate select by pk SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectByUK" IsChecked="{Binding Path=GenerateSelectByUK, Mode=TwoWay}">Generate select by uk SP</CheckBox>
-                        <Label></Label>
-                        <CheckBox Name="chkGenerateTableType" IsChecked="{Binding Path=GenerateTableType, Mode=TwoWay}">Generate table type</CheckBox>
+                        
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Delete">
@@ -130,7 +133,7 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
                             <Label MinWidth="230">Entities project namespace:</Label>
-                            <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.EntitiesNamespace, Mode=TwoWay}"></TextBox>
+                            <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.Namespace, Mode=TwoWay}"></TextBox>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
                             <Label  MinWidth="230">Custom interface names (separator ","):</Label>
@@ -154,7 +157,11 @@
                         </StackPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Custom field type" Name="tabCustomField"></TabItem>
+                <TabItem Header="Custom field type" Name="tabCustomField">
+                    <DataGrid>
+                                             
+                    </DataGrid>
+                </TabItem>
                 <TabItem Header="Custom field decorator" Name="tabCustomDeco"></TabItem>
             </TabControl>
 

@@ -181,5 +181,24 @@ namespace SqlGenerator.UI
             }
         }
 
+        /// <summary>
+        /// Check the table type when bulk insert SP
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChkGenerateBulkInsertSp_Checked(object sender, RoutedEventArgs e)
+        {
+            chkGenerateTableType.IsChecked = true;
+        }
+
+        /// <summary>
+        /// Uncheck the table type when bulk insert SP unchecked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChkGenerateBulkInsertSp_Unchecked(object sender, RoutedEventArgs e)
+        {
+            chkGenerateTableType.IsChecked = false;
+        }
     }
 }
