@@ -211,7 +211,20 @@
         <TabItem Header="C# Repositories">
             <TabControl>
                 <TabItem Header="Base repo">
-                    
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="30"></RowDefinition>
+                            <RowDefinition MaxHeight="30"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="200">Namespace for base repo:</Label>
+                            <TextBox Name="txtBaseRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.Namespace, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="280">Connection string name in your appsettings.json:</Label>
+                            <TextBox Name="txtRepoConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.ConnectionStringName, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Entities repo">
                     

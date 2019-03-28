@@ -19,7 +19,7 @@ namespace SqlGenerator
             //Global and top lvl settings
             GeneratorSettings = generatorSettings;
             Table = table;
-            TableName = table.Name.Parts[1];
+            TableName = table?.Name.Parts[1];
 
             //Table settings easy accessor
             TableSettings = !string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName)

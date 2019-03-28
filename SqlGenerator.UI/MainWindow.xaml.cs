@@ -444,5 +444,16 @@ namespace SqlGenerator.UI
         {
 
         }
+
+        private void ButtonGenerateBaseRepo_Click(object sender, RoutedEventArgs e)
+        {
+
+                string output = string.Empty;
+                var gen = new CsRepositoryBaseGenerator(Settings, null);
+                output = gen.Generate();
+
+                txtOutput.Text = output;
+
+        }
     }
 }

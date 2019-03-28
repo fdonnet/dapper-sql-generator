@@ -66,6 +66,8 @@
     <Compile Include="DotNetClient\CsCodeGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
     <Compile Include="DotNetClient\CsEntityClassGeneratorSettings.cs" />
+    <Compile Include="DotNetClient\CsRepositoryBaseGenerator.cs" />
+    <Compile Include="DotNetClient\CsRepositoryBaseSettings.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGeneratorSettings.cs" />
     <Compile Include="GeneratorSettings.cs" />

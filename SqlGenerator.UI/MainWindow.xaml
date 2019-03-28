@@ -117,6 +117,7 @@
                             <Button x:Name="buttonGenerateSelectByUk" Click="ButtonGenerateSelectByUK_Click" Margin="3,0,3,0" Padding="5,5">Select By UK</Button>
                             <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" Margin="3,0,3,0" Padding="5,5">Table Type</Button>
                             <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click" Margin="3,0,3,0" Padding="5,5">.NET Entity Class</Button>
+                            <Button x:Name="buttonGenerateBaseRepo" Click="ButtonGenerateBaseRepo_Click" Margin="3,0,3,0" Padding="5,5">Base repo</Button>
                         </StackPanel>
                         <TextBox Grid.Row="1"  x:Name="txtOutput" AcceptsReturn="True" 
                              VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console" Margin="3,5,3,5" Padding="2,5,2,2">
