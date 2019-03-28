@@ -213,6 +213,10 @@ namespace { _settings.Namespace} {{
             return output;
         }
 
+        /// <summary>
+        /// Get by PK template
+        /// </summary>
+        /// <returns></returns>
         private string PrintGetByPKMethod()
         {
             string spParams = String.Join(Environment.NewLine,
