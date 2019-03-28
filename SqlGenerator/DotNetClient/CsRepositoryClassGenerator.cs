@@ -10,12 +10,15 @@ namespace SqlGenerator.DotNetClient
     public class CsRepositoryClassGenerator : GeneratorBase
     {
         private readonly CsRepositoryClassGeneratorSettings _settings;
+        private readonly Settings _globalSettings;
 
         public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
 
             _settings = TableSettings?.CsRepositorySettings ?? GeneratorSettings.GlobalSettings.CsRepositorySettings;
+            _globalSettings = TableSettings ?? GeneratorSettings.GlobalSettings;
+
         }
 
 
@@ -23,45 +26,31 @@ namespace SqlGenerator.DotNetClient
         {
             var allColumns = Table.GetAllColumns().Where(col => !col.GetProperty<bool>(Column.IsIdentity));
 
-            var memberDeclarations = String.Join(Environment.NewLine + "        ", allColumns.Select(col =>
-            {
-                var memberName = TSqlModelHelper.PascalCase(col.Name.Parts[2]);
-                var colDataType = col.GetColumnSqlDataType(false);
-                var isNullable = col.IsColumnNullable();
-                var memberType = TSqlModelHelper.GetDotNetDataType(colDataType, isNullable);
+            string output = InterfaceDeclaration();
 
-                var decorators = "";
-                if (memberType == "string")
-                {
-                    var colLen = col.GetProperty<int>(Column.Length);
-                    if (colLen > 0)
-                    {
-                        decorators += $"[StringLength({colLen})]"
-                            + Environment.NewLine + "        ";
-                    }
-                }
-                if (!isNullable)
-                {
-                    decorators += $"[Required]"
-                            + Environment.NewLine + "        ";
-                }
+            return output;
+        }
 
-                return $"{decorators}public {memberType} {memberName} {{ get; set; }}";
-            }));
+        private string InterfaceDeclaration()
+        {
+            var interfaceName = "I" + TSqlModelHelper.PascalCase(Table.Name.Parts[1]) + "Repo";
+            var entityName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]);
+
+            var methodDeclarations = String.Join(Environment.NewLine + "        ", GetMethodsSignaturesForInterface(entityName));
 
             string output =
 $@" 
 -- =================================================================
 -- Author: {GeneratorSettings.AuthorName}
--- Description:	Entity class for the table {Table.Name} 
+-- Description:	Interface for the repo {interfaceName} 
 -- =================================================================
 
 namespace { _settings.Namespace} {{
   
-    public class { TSqlModelHelper.PascalCase(Table.Name.Parts[1]) } : ICloneable
+    public partial interface { interfaceName } : IBaseRepo
     {{ 
         
-        { memberDeclarations }
+        { methodDeclarations }
 
     }}
 }}
@@ -69,6 +58,34 @@ namespace { _settings.Namespace} {{
 ";
 
             return output;
+        }
+
+        private IEnumerable<string> GetMethodsSignaturesForInterface(string entityName)
+        {
+            if (_globalSettings.GenerateBulkInsertSP)
+                yield return ""; //To be defined
+
+            if (_globalSettings.GenerateSelectAllSP)
+                yield return $"Task<IEnumerable<{entityName}>> GetAll();";
+
+            if (_globalSettings.GenerateSelectByPk)
+                yield return $"Task<{entityName}> GetById(int id);"; //only works with ID as a pk, hard coded, need to be changed to support composit PK
+
+            if(_globalSettings.GenerateSelectByUK)
+            {
+                //TODO
+            }
+
+            if(_globalSettings.GenerateInsertSP)
+                yield return $"Task<int> Insert({entityName} my{entityName});";
+
+            if (_globalSettings.GenerateUpdateSP)
+                yield return $"Task<bool> Update({entityName} my{entityName});";
+
+            if (_globalSettings.GenerateDeleteSP)
+                yield return $"Task<bool> Delete(int id);"; //only work with and int id as pk, hard coded need to be changed
+
+
         }
 
 

@@ -104,21 +104,27 @@
                 <TabItem Name="tabPreview" Header="Preview">
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
-                            <RowDefinition MaxHeight="35"></RowDefinition>
+                            <RowDefinition MaxHeight="70"></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="3,5,3,2">
-                            <Button x:Name="buttonGenerateDelete" Click="ButtonGenerateDelete_Click" Margin="3,0,3,0" Padding="5,5">Delete</Button>
-                            <Button x:Name="buttonGenerateInsert" Click="ButtonGenerateInsert_Click" Margin="3,0,3,0" Padding="5,5">Insert</Button>
-                            <Button x:Name="buttonGenerateBulkInsert" Click="ButtonGenerateBulkInsert_Click" Margin="3,0,3,0" Padding="5,5">Bulk Insert</Button>
-                            <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" Margin="3,0,3,0" Padding="5,5">Update</Button>
-                            <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click" Margin="3,0,3,0" Padding="5,5">Select All</Button>
-                            <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" Margin="3,0,3,0" Padding="5,5">Select By PK</Button>
-                            <Button x:Name="buttonGenerateSelectByUk" Click="ButtonGenerateSelectByUK_Click" Margin="3,0,3,0" Padding="5,5">Select By UK</Button>
-                            <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" Margin="3,0,3,0" Padding="5,5">Table Type</Button>
-                            <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click" Margin="3,0,3,0" Padding="5,5">.NET Entity Class</Button>
-                            <Button x:Name="buttonGenerateBaseRepo" Click="ButtonGenerateBaseRepo_Click" Margin="3,0,3,0" Padding="5,5">Base repo</Button>
+                        <StackPanel Grid.Row="0" Orientation="Vertical">
+                            <StackPanel  Orientation="Horizontal" Margin="3,5,3,2">
+                                <Button x:Name="buttonGenerateDelete" Click="ButtonGenerateDelete_Click" Margin="3,0,3,0" Padding="5,5">Delete</Button>
+                                <Button x:Name="buttonGenerateInsert" Click="ButtonGenerateInsert_Click" Margin="3,0,3,0" Padding="5,5">Insert</Button>
+                                <Button x:Name="buttonGenerateBulkInsert" Click="ButtonGenerateBulkInsert_Click" Margin="3,0,3,0" Padding="5,5">Bulk Insert</Button>
+                                <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" Margin="3,0,3,0" Padding="5,5">Update</Button>
+                                <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click" Margin="3,0,3,0" Padding="5,5">Select All</Button>
+                                <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" Margin="3,0,3,0" Padding="5,5">Select By PK</Button>
+                                <Button x:Name="buttonGenerateSelectByUk" Click="ButtonGenerateSelectByUK_Click" Margin="3,0,3,0" Padding="5,5">Select By UK</Button>
+                                <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" Margin="3,0,3,0" Padding="5,5">Table Type</Button>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal" Margin="3,5,3,2">
+                                <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click" Margin="3,0,3,0" Padding="5,5">.NET Entity Class</Button>
+                                <Button x:Name="buttonGenerateBaseRepo" Click="ButtonGenerateBaseRepo_Click" Margin="3,0,3,0" Padding="5,5">Base repo</Button>
+                                <Button x:Name="buttonGenerateClassRepo" Click="ButtonGenerateClassRepo_Click" Margin="3,0,3,0" Padding="5,5">Repo</Button>
+                            </StackPanel>
                         </StackPanel>
+                        
                         <TextBox Grid.Row="1"  x:Name="txtOutput" AcceptsReturn="True" 
                              VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console" Margin="3,5,3,5" Padding="2,5,2,2">
                             Select one or more tables and click on the preview buttons...</TextBox>

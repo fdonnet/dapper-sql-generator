@@ -455,5 +455,23 @@ namespace SqlGenerator.UI
                 txtOutput.Text = output;
 
         }
+
+        private void ButtonGenerateClassRepo_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new CsRepositoryClassGenerator(Settings, table);
+
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
     }
 }
