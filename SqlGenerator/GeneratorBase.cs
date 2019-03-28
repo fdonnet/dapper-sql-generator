@@ -12,7 +12,7 @@ namespace SqlGenerator
         public GeneratorSettings GeneratorSettings { get; private set; }
         public TSqlObject Table { get; private set; }
         protected string TableName { get; set; }
-        protected TableSettings TableSettings { get; set; }
+        protected Settings TableSettings { get; set; }
 
         public GeneratorBase(GeneratorSettings generatorSettings, TSqlObject table)
         {

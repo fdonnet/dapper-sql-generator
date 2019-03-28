@@ -1,4 +1,5 @@
-﻿using SqlGenerator.DotNetClient;
+﻿using Newtonsoft.Json;
+using SqlGenerator.DotNetClient;
 using SqlGenerator.StoredProcedures;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace SqlGenerator
 {
     public class Settings
     {
+        //Only used when table settings
+        public string TableName = new Guid().ToString();
 
         //Generation options - Sql
         public bool GenerateDeleteSP { get; set; } = true;
@@ -40,5 +43,24 @@ namespace SqlGenerator
         public CsEntityClassGeneratorSettings CsEntitySettings { get; set; } = new CsEntityClassGeneratorSettings();
         public CsRepositoryClassGeneratorSettings CsRepositorySettings { get; set; } = new CsRepositoryClassGeneratorSettings();
 
+    }
+
+    /// <summary>
+    /// Extension to clone global settings in table settings 
+    /// (return a new table settings object filled with global settings info) 
+    /// </summary>
+    public static class SettingsExt
+    {
+        /// <summary>
+        /// Deep clone via JSON => LOL
+        /// </summary>
+        /// <param name="tableSettings"></param>
+        /// <param name="globalSettings"></param>
+        /// <returns></returns>
+        public static Settings CopySettings(this Settings settings, Settings globalSettings)
+        {
+            string tmp = JsonConvert.SerializeObject(globalSettings);
+            return JsonConvert.DeserializeObject<Settings>(tmp);
+        }
     }
 }

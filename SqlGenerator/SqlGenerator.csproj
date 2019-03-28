@@ -88,7 +88,6 @@
     <Compile Include="StoredProcedures\SqlTableTypeGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlUpdateGenerator.cs" />
     <Compile Include="StoredProcedures\SqlUpdateGeneratorSettings.cs" />
-    <Compile Include="TableSettings.cs" />
     <Compile Include="TSqlModelHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

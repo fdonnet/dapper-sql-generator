@@ -209,7 +209,14 @@
         </TabItem>
         
         <TabItem Header="C# Repositories">
-            
+            <TabControl>
+                <TabItem Header="Base repo">
+                    
+                </TabItem>
+                <TabItem Header="Entities repo">
+                    
+                </TabItem>
+            </TabControl>
         </TabItem>
     </TabControl>
 </UserControl>

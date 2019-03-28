@@ -24,7 +24,7 @@ namespace SqlGenerator
 
         public Settings GlobalSettings { get; set; } = new Settings();
 
-        public Dictionary<string, TableSettings> TablesSettings { get; set; } = new Dictionary<string, TableSettings>();
+        public Dictionary<string, Settings> TablesSettings { get; set; } = new Dictionary<string, Settings>();
 
 
         public void SaveToFile(string configPath)

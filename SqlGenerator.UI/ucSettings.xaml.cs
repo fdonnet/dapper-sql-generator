@@ -28,7 +28,7 @@ namespace SqlGenerator.UI
         private MainWindow _parent;
         private bool _isGlobalSettings = true;
         private Settings _curGlobalSettings = null;
-        private TableSettings _curTableSettings = null;
+        private Settings _curTableSettings = null;
         private bool _initialLoading = true;
         private List<FieldValue> _fieldKeyValueListForCustomTypes;
         private List<FieldValue> _fieldKeyValueListForCustomDecorators;
@@ -75,7 +75,7 @@ namespace SqlGenerator.UI
 
             if (_curTableSettings == null)
             {
-                _curTableSettings = _curTableSettings.CopyFromGlobalSettings(_parent.Settings.GlobalSettings);
+                _curTableSettings = _curTableSettings.CopySettings(_parent.Settings.GlobalSettings);
                 _curTableSettings.TableName = tableName;
 
                 _parent.Settings.TablesSettings.Add(_curTableSettings.TableName, _curTableSettings);
