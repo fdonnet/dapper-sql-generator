@@ -40,11 +40,11 @@ namespace { _settings.Namespace } {{
         Task<bool> OpenConnection();
         bool ForceCloseConnection();
         void DetachConnection();
-        IDbConnection GetActualConnection();
-        IDbTransaction GetActualTransaction();
+        IDbConnection GetCurrentConnection();
+        IDbTransaction GetCurrentTransaction();
         void SetExternalTransaction(IDbTransaction externalOpenTransaction);
         Task<bool> OpenTransaction();
-        void CommitTrans();
+        void CommitTransaction();
         void RollbackTransaction();
     }}
 
@@ -117,7 +117,7 @@ namespace { _settings.Namespace } {{
         /// Get the actual connection of the repo
         /// </summary>
         /// <returns></returns>
-        public IDbConnection GetActualConnection()
+        public IDbConnection GetCurrentConnection()
         {{
             return _cn;
         }}
@@ -126,7 +126,7 @@ namespace { _settings.Namespace } {{
         /// Get the acutal transaction of the repo (throw an exception if not present)
         /// </summary>
         /// <returns></returns>
-        public IDbTransaction GetActualTransaction()
+        public IDbTransaction GetCurrentTransaction()
         {{
             if (_isMyOwnActiveTrans)
                 return _trans;
@@ -172,7 +172,7 @@ namespace { _settings.Namespace } {{
         /// the operations that are linked with it. => transaction shared between repos will commit all the operations
         /// linked to the particular transaction)
         /// </summary>
-        public void CommitTrans()
+        public void CommitTransaction()
         {{
             if (_isMyOwnActiveTrans)
             {{
