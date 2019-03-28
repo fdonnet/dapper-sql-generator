@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
-    public class CsRepositoryBaseSettings : CsCodeGeneratorSettings
+    public class CsRepositoryBaseGeneratorSettings : CsCodeGeneratorSettings
     {
         public string ConnectionStringName { get; set; } = "Default";
     }

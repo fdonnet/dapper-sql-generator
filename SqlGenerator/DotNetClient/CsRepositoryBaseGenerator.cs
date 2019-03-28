@@ -9,7 +9,7 @@ namespace SqlGenerator.DotNetClient
 {
     public class CsRepositoryBaseGenerator : GeneratorBase
     {
-        private readonly CsRepositoryBaseSettings _settings;
+        private readonly CsRepositoryBaseGeneratorSettings _settings;
 
         public CsRepositoryBaseGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)

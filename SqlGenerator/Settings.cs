@@ -41,7 +41,7 @@ namespace SqlGenerator
 
         //C# dapper settings
         public CsEntityClassGeneratorSettings CsEntitySettings { get; set; } = new CsEntityClassGeneratorSettings();
-        public CsRepositoryBaseSettings CsRespositoryBaseSettings { get; set; } = new CsRepositoryBaseSettings();
+        public CsRepositoryBaseGeneratorSettings CsRespositoryBaseSettings { get; set; } = new CsRepositoryBaseGeneratorSettings();
         public CsRepositoryClassGeneratorSettings CsRepositorySettings { get; set; } = new CsRepositoryClassGeneratorSettings();
 
 
