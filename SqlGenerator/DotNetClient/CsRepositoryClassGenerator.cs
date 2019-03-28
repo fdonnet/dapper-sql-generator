@@ -111,7 +111,7 @@ namespace { _settings.Namespace} {{
         }
 
         /// <summary>
-        /// Get all methods signature for the interface based on the actual config
+        /// Get all methods signatures for the interface based on the actual config
         /// yc SqlStored proc config and Entity config
         /// </summary>
         /// <param name="pkColumns"></param>
@@ -133,27 +133,8 @@ namespace { _settings.Namespace} {{
             {
                 foreach (var ukColumns in _uks)
                 {
-                    var ukFieldNames = String.Join("And",
-                    ukColumns.Select(col =>
-                    {
-                        var colName = col.Name.Parts[2];
-                        return $"{TSqlModelHelper.PascalCase(colName)}";
-                    }));
-
-                    var ukFieldsWithType = String.Join(", ",
-                        ukColumns.Select(col =>
-                     {
-                         var colName = col.Name.Parts[2];
-                         var colDataType = col.GetColumnSqlDataType(false);
-                         //Search for custom member type or use the conversion from Sql Types
-                         var memberType = (_globalSettings.CsEntitySettings.FieldNameCustomTypes != null
-                                  && _globalSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(colName)
-                                                         ? _globalSettings.CsEntitySettings?.FieldNameCustomTypes[colName]
-                                                        : TSqlModelHelper.GetDotNetDataType(colDataType, false));
-
-                         return $"{memberType} {FirstCharacterToLower(TSqlModelHelper.PascalCase(colName))}";
-                     })
-                   );
+                    var ukFieldNames = ConcatUkFieldNames(ukColumns);
+                    var ukFieldsWithType = ConcatUkFieldsWithTypes(ukColumns);
 
                     yield return $"Task<{_entityName}> GetBy{ukFieldNames}({ukFieldsWithType});";
                 }
@@ -287,7 +268,44 @@ namespace { _settings.Namespace} {{
                     );
         }
 
-        
+        /// <summary>
+        /// Contact all the field contained in a uk
+        /// </summary>
+        /// <param name="ukColumns">Pass the columns linked to the uk</param>
+        /// <returns></returns>
+        private string ConcatUkFieldNames(IEnumerable<TSqlObject> ukColumns)
+        {
+            return String.Join("And",
+                    ukColumns.Select(col =>
+                    {
+                        var colName = col.Name.Parts[2];
+                        return $"{TSqlModelHelper.PascalCase(colName)}";
+                    }));
+        }
+
+        /// <summary>
+        /// Concat all the uk fields with their types (for method signature)
+        /// </summary>
+        /// <param name="ukColumns"></param>
+        /// <returns></returns>
+        private string ConcatUkFieldsWithTypes(IEnumerable<TSqlObject> ukColumns)
+        {
+            return String.Join(", ",
+                        ukColumns.Select(col =>
+                        {
+                            var colName = col.Name.Parts[2];
+                            var colDataType = col.GetColumnSqlDataType(false);
+                            //Search for custom member type or use the conversion from Sql Types
+                            var memberType = (_globalSettings.CsEntitySettings.FieldNameCustomTypes != null
+                                     && _globalSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(colName)
+                                                            ? _globalSettings.CsEntitySettings?.FieldNameCustomTypes[colName]
+                                                           : TSqlModelHelper.GetDotNetDataType(colDataType, false));
+
+                            return $"{memberType} {FirstCharacterToLower(TSqlModelHelper.PascalCase(colName))}";
+                        })
+                   );
+        }
+
         /// <summary>
         /// Helper to convert first char to lower
         /// </summary>
