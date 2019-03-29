@@ -6,9 +6,9 @@ We dev this tool to help us in a real project. So it will help us for sure but w
 Use your Visual Studio Database Project (SSDT) to generate boring stuff to code. (good tables definition => good generation)
 
 **Based on your tables definition and your generator configuration:**
-- Generate all the standard stored procedures
-- Generate all the base C# entities
-- Generate the base data access layer
+- Generate standard stored procedures
+- Generate base C# entities
+- Generate base data access layer
 
 ## Limitations
 A lot....... (but you can help!)
