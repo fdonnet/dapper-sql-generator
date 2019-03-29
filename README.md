@@ -1,5 +1,9 @@
 # MSSQL - Dapper generator
-A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project. It's extensible and modifiable. If you create your own generators an generator-settings and share your results via a pull request, we will be very happy to integrate it. Don't hesitate to enhance the quality of our coding, some parts are very "quick and dirty" stuff.
+A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project. 
+
+It's extensible and modifiable. 
+
+If you create your own generators an generator-settings and share your results via a pull request, we will be very happy to integrate it. Don't hesitate to enhance the quality of our coding, some parts are very "quick and dirty" stuff.
 
 We dev this tool to help us in a real project. So it will help us for sure but we cannot guarantee it will help you ;).
 ## Goals
