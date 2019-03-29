@@ -1,5 +1,5 @@
 # MSSQL - Dapper generator
-A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project. 
+A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project (.netcore). 
 
 It's extensible and modifiable. 
 
@@ -19,6 +19,6 @@ A lot....... (but you can help!)
 - Only works with SqlServer DB and ~Visual Studio Database Project. The generator uses a .dacpac file as the model entry point to eat the tables definition.
 - You need to be on Windows to use the UI (WPF prj). Sorry for that guys. If you are on other systems, you can convert the logic layer and inject a JSON config file to the generator. It will work.
 - The C# entities generator suits our needs. We let you see if it will suit yours.
-- The C# repo generator targets **.netcore Dapper(async)** and it doesn't integrate a"repository" pattern. That's a choice and we will explain you why in more details in the repo section bellow... but you can change it or create a new generator for this part.
+- The C# repo generator targets **.netcore Dapper(async) -- ex: web api** and it doesn't integrate a"repository" pattern. That's a choice and we will explain you why in more details in the repo section bellow... but you can change it or create a new generator for this part.
 
 TO BE CONTINUED....
