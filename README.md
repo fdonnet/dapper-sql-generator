@@ -16,7 +16,7 @@ Use your Visual Studio Database Project (SSDT) to generate boring stuff to code.
 
 ## Limitations
 A lot....... (but you can help!)
-- Only works with SqlServer DB and ~Visual Studio Database Project. The generator uses a .dacpac file as the model entry point to eat the tables definition.
+- Only works with SqlServer DB and ~Visual Studio Database Project. The generator uses a .dacpac file as the model entry point to eat the tables definition. (your tables and fields need to be in lowercase and with _ to separate words (table: user_role, field: has_access will be transformed in C# in PascalCase, UserRole and HasAccess)...
 - You need to be on Windows to use the UI (WPF prj). Sorry for that guys. If you are on other systems, you can convert the logic layer and inject a JSON config file to the generator. It will work.
 - The C# entities generator suits our needs. We let you see if it will suit yours.
 - The C# repo generator targets **.netcore Dapper(async) -- ex: web api** and it doesn't integrate a"repository" pattern. That's a choice and we will explain you why in more details in the repo section bellow... but you can change it or create a new generator for this part.
