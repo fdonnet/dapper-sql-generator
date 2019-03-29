@@ -55,6 +55,7 @@ namespace SqlGenerator.UI
             tabCustomDeco.Visibility = Visibility.Hidden;
             tabCustomField.Visibility = Visibility.Hidden;
 
+
             _initialLoading = false;
         }
 

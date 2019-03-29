@@ -83,6 +83,9 @@
                                            MinHeight="150" 
                                            ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
                                            DataContextChanged="RolesCheckListBox_DataContextChanged" ></wpfx:CheckListBox>
+                        <!--Temp UI-->
+                         <Label>Exclude fields in update stored procedure field name with "," as separator</Label>
+                        <TextBox Name="txtUpdateSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlUpdateSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Select All">

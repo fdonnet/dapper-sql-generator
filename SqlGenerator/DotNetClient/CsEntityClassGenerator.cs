@@ -93,8 +93,7 @@ namespace SqlGenerator.DotNetClient
                 //Custom field decorator
                 if (_settings.FieldNameCustomDecorators != null && _settings.FieldNameCustomDecorators.Count > 0)
                 {
-                    string customDecorator;
-                    if (_settings.FieldNameCustomDecorators.TryGetValue(colName, out customDecorator))
+                    if (_settings.FieldNameCustomDecorators.TryGetValue(colName, out string customDecorator))
                     {
                         decorators += customDecorator
                                     + Environment.NewLine + "        ";

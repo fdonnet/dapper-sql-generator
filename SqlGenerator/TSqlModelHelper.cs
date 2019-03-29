@@ -216,6 +216,18 @@ namespace SqlGenerator
             return result;
         }
 
+        /// <summary>
+        /// Check if a column is identity
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        public static bool IsColumnIdentity(this TSqlObject column)
+        {
+            if (column == null) throw new ArgumentNullException(nameof(column));
+            bool result = column.GetProperty<bool>(Column.IsIdentity);
+            return result;
+        }
+
 
         /// <summary>
         /// Transforms a string in the form 'foo_bar' into a string in the form 'FooBar'

@@ -27,9 +27,6 @@ namespace SqlGenerator.StoredProcedures
         public override string Generate()
         {
             var allColumns = Table.GetAllColumns();
-            //TODO
-            //allColumns = allColumns.Where(col => !DoNotUpdateColumns.Any(colName => col.Name.Parts[2] == colName));
-
             var pkColumns = Table.GetPrimaryKeyColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
 
@@ -42,7 +39,12 @@ namespace SqlGenerator.StoredProcedures
                 })
             );
 
-            var updateClause_setStatements = String.Join(Environment.NewLine + "        , ", nonIdentityColumns.Select(col =>
+            //TODO Fields exclusion, generalize that for each type of SP (if really needed)
+            var tmpNonIdentiyColumns = _settings.FieldNamesExcluded != null
+                ? nonIdentityColumns.Where(c => !_settings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+                : nonIdentityColumns;
+
+            var updateClause_setStatements = String.Join(Environment.NewLine + "        , ", tmpNonIdentiyColumns.Select(col =>
             {
                 var colName = col.Name.Parts[2];
                 return $"[{colName}] = @{colName}";

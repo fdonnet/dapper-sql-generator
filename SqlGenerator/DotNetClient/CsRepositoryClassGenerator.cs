@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 
 namespace SqlGenerator.DotNetClient
 {
+    /// <summary>
+    /// TODO:    Bulk insert (SP ready)
+    ///          select by pklist (list of pk) easy if it's an id more complex if it's composite or other stuff
+    ///          select by uklist (same as pk list) => if really needed because it forces to create a DB type ??
+    ///          extended entities with attached children (maybe with an entity that inherits from the base and extend with child or list fo children)
+    ///                     *** to do that the select by pk list needs to be ready (simple for a single entity that has children, more complex when we retrieve several parent 
+    ///                     objects with all their children ==> all this things are ok in the dapper part but need to be genralized for the generator
+    ///          
+    /// 
+    /// </summary>
     public class CsRepositoryClassGenerator : GeneratorBase
     {
         private readonly CsRepositoryClassGeneratorSettings _settings;
@@ -16,6 +26,7 @@ namespace SqlGenerator.DotNetClient
         private string _entityName;
         private IEnumerable<TSqlObject> _pkColumns;
         private IEnumerable<IEnumerable<TSqlObject>> _uks;
+        private IEnumerable<TSqlObject> _allColumns;
         private string _pkFieldsNames;
         private string _pkFieldsWithTypes;
 
@@ -35,6 +46,7 @@ namespace SqlGenerator.DotNetClient
             _interfaceName = "I" + _className;
             _entityName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]);
             _pkColumns = Table.GetPrimaryKeyColumns();
+            _allColumns = TSqlModelHelper.GetAllColumns(Table);
             _pkFieldsNames = ConcatPkFieldNames();
             _pkFieldsWithTypes = ConcatPkFieldsWithTypes();
             _uks = Table.GetUniqueKeysWithColumns();
@@ -170,6 +182,24 @@ namespace { _settings.Namespace} {{
 
             if (_globalSettings.GenerateSelectByPk)
                 yield return PrintGetByPKMethod();
+
+            if (_globalSettings.GenerateSelectByUK)
+            {
+                foreach (var ukWihtColumns in _uks)
+                {
+                    yield return PrintGetByUkMethod(ukWihtColumns);
+                }
+            }
+
+            if (_globalSettings.GenerateInsertSP)
+                yield return PrintInsertMethod();
+
+            if (_globalSettings.GenerateUpdateSP)
+                yield return PrintUpdateMethod();
+
+            if (_globalSettings.GenerateDeleteSP)
+                yield return PrintDeleteMethod();
+
         }
 
 
@@ -200,7 +230,7 @@ namespace { _settings.Namespace} {{
         /// <returns></returns>
         private string PrintGetByPKMethod()
         {
-            string spParams = String.Join(Environment.NewLine,
+            string spParams = String.Join(Environment.NewLine + "            ",
                     _pkColumns.Select(col =>
                     {
                         var colName = col.Name.Parts[2];
@@ -226,9 +256,171 @@ namespace { _settings.Namespace} {{
             return output;
         }
 
+        /// <summary>
+        /// Get by Uk template
+        /// </summary>
+        /// <param name="ukColumns"></param>
+        /// <returns></returns>
+        private string PrintGetByUkMethod(IEnumerable<TSqlObject> ukColumns)
+        {
+            string spParams = String.Join(Environment.NewLine + "            ",
+                    ukColumns.Select(col =>
+                    {
+                        var colName = col.Name.Parts[2];
+                        var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
+                        return $@"p.Add(""@{colName}"",{colVariableName});";
+                    }));
+
+            string output = $@"
+        /// <summary>
+        /// Get by UK
+        /// </summary>
+        public async Task<{_entityName}> GetBy{ConcatUkFieldNames(ukColumns)}({ConcatUkFieldsWithTypes(ukColumns)})
+        {{
+            var p = new DynamicParameters();
+            {spParams}
+
+            var entity = await _cn.QuerySingleOrDefaultAsync<{_entityName}>
+            (""usp{_entityName}_selectBy{ConcatUkFieldNames(ukColumns)}"", commandType: CommandType.StoredProcedure);
+
+            return entity;
+        }}";
+
+            return output;
 
 
-        
+        }
+
+
+        //TODO to be tested with composite pk and with Non-Identity PK --- And in general
+        //TODO see if it's ok to not specify the db type and only the ouput direction
+        /// <summary>
+        /// Insert template
+        /// </summary>
+        /// <returns></returns>
+        private string PrintInsertMethod()
+        {
+            //Exclude de PK identity field to put "Direction Output" in Dapper params
+            bool isOneColumnIdentity = _pkColumns.Count() == 1 && TSqlModelHelper.IsColumnIdentity(_pkColumns.ToList()[0]);
+            var normalColumns = isOneColumnIdentity ? _allColumns.Except(_pkColumns) : _allColumns;
+
+            string returnType = isOneColumnIdentity
+                ? TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(_pkColumns.ToArray()[0]))
+                : "bool"; // return bool if insert ok  => we cannot return the new Id generated by Identity
+
+            //If the PK is one identity field + one another field, we are f...
+            string returnStatement = (returnType == "bool") 
+                ? "return true;" 
+                : $@"return p.Get<{returnType}> (""@{_pkColumns.ToArray()[0].Name.Parts[2]}"");";
+
+            string spPkParams = isOneColumnIdentity
+                    ? String.Join(Environment.NewLine + "            ",
+                        _pkColumns.Select(col =>
+                        {
+                            var colName = col.Name.Parts[2];
+                            var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
+                            return $@"p.Add(""@{colName}"",direction: ParameterDirection.Output);";
+                        }))
+                    : string.Empty; // no identity PK
+
+            string spNormalParams = String.Join(Environment.NewLine + "            ",
+                   normalColumns.Select(col =>
+                   {
+                       var colName = col.Name.Parts[2];
+                       var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
+                       return $@"p.Add(""@{colName}"",{colVariableName});";
+                   }));
+
+            string output = $@"
+        /// <summary>
+        /// Insert
+        /// </summary>
+        public async  Task<{returnType}> Insert({_entityName} {FirstCharacterToLower(_entityName)})
+        {{
+            var p = new DynamicParameters();
+            {spPkParams}
+            {spNormalParams}
+
+            var ok = await _cn.ExecuteAsync
+                (""usp{_entityName}_Insert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+
+            {returnStatement}
+        }}";
+
+            return output;
+
+        }
+
+        /// <summary>
+        /// Update template
+        /// </summary>
+        /// <returns></returns>
+        private string PrintUpdateMethod()
+        {
+            //TODO see to implement that/or better more globally (field exclusion for each type of method)
+            var tmpColumns = _globalSettings.SqlUpdateSettings.FieldNamesExcluded != null
+                            ? _allColumns.Where(c => !_globalSettings.SqlUpdateSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+                            : _allColumns;
+
+            string spParams = String.Join(Environment.NewLine + "            ",
+                    tmpColumns.Select(col =>
+                    {
+                        var colName = col.Name.Parts[2];
+                        var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
+                        return $@"p.Add(""@{colName}"",{colVariableName});";
+                    }));
+
+            string output = $@"
+        /// <summary>
+        /// Update
+        /// </summary>
+        public async Task<bool> Update({_entityName} {FirstCharacterToLower(_entityName)})
+        {{
+            var p = new DynamicParameters();
+            {spParams}
+
+            var ok = await _cn.ExecuteAsync
+                (""usp{_entityName}_Update"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+
+            return true;
+        }}";
+
+            return output;
+        }
+
+        /// <summary>
+        /// Delete template
+        /// </summary>
+        /// <returns></returns>
+        private string PrintDeleteMethod()
+        {
+            string spParams = String.Join(Environment.NewLine + "            ",
+                    _pkColumns.Select(col =>
+                    {
+                        var colName = col.Name.Parts[2];
+                        var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
+                        return $@"p.Add(""@{colName}"",{colVariableName});";
+                    }));
+
+            string output = $@"
+        /// <summary>
+        /// Delete
+        /// </summary>
+        public async Task<bool> Delete({_pkFieldsWithTypes})
+        {{
+            var p = new DynamicParameters();
+            {spParams}
+
+            var ok = await _cn.ExecuteAsync
+                (""usp{_entityName}_Delete"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+
+            return true;
+        }}";
+
+            return output;
+        }
+
+
         //-----------------------Tools & Helper----------------------------------------
 
         /// <summary>
@@ -313,10 +505,9 @@ namespace { _settings.Namespace} {{
         /// <returns></returns>
         public static string FirstCharacterToLower(string str)
         {
-            if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
-                return str;
-
-            return Char.ToLowerInvariant(str[0]) + str.Substring(1);
+            return String.IsNullOrEmpty(str) || Char.IsLower(str, 0) 
+                ? str 
+                : Char.ToLowerInvariant(str[0]) + str.Substring(1);
         }
 
     }
