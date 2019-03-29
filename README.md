@@ -7,8 +7,8 @@ Use your Visual Studio Database Project (SSDT) to generate boring stuff to code.
 
 **Based on your tables definition and your generator configuration:**
 - Generate all the standard stored procedures
-- Generate all the C# entities
-- Generate the data access layer
+- Generate all the base C# entities
+- Generate the base data access layer
 
 ## Limitations
 A lot....... (but you can help!)
