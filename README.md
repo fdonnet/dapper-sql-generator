@@ -3,7 +3,7 @@ A simple and not too ambitious tool that helps you to generate some important ge
 
 We dev this tool to help us in a real project. So it will help us for sure but we cannot guarantee it will help you ;).
 ## Goals
-Use your Visual Studio Database Project (SSDT) to generate boring stuff to code. (good tables defintion => good stuff generation)
+Use your Visual Studio Database Project (SSDT) to generate boring stuff to code. (good tables definition => good generation)
 
 **Based on your tables definition and your generator configuration:**
 - Generate all the standard stored procedures
