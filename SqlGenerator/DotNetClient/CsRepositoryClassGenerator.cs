@@ -157,8 +157,8 @@ namespace { _settings.Namespace} {{
                 yield return $"Task<int> Insert({_entityName} {FirstCharacterToLower(_entityName)});";
 
             //Bulk insert
-            //if (_globalSettings.GenerateBulkInsertSP)
-            //    yield return ""; //To be defined
+            if (_globalSettings.GenerateBulkInsertSP)
+                yield return $"Task<bool> InsertBulk(IEnumerable<{_entityName}> {FirstCharacterToLower(_entityName)}List)"; 
 
             //Update
             if (_globalSettings.GenerateUpdateSP)
@@ -429,7 +429,6 @@ namespace { _settings.Namespace} {{
             return output;
         }
 
-        //******************TODO : test this part and review that (the conversion from dotnet type to the temp Datatable with SqlDataType 
         /// <summary>
         /// BulkInsert template
         /// </summary>
