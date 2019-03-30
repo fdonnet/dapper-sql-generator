@@ -41,15 +41,19 @@ namespace SqlGenerator.StoredProcedures
                 }))
             );
 
+            var tmpNonIdentiyColumns = _settings.FieldNamesExcluded != null
+                ? nonIdentityColumns.Where(c => !_settings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+                : nonIdentityColumns;
+
             var insertClause_columns = String.Join(Environment.NewLine + "        , ",
-                nonIdentityColumns.Select(col =>
+                tmpNonIdentiyColumns.Select(col =>
             {
                 var colName = col.Name.Parts[2];
                 return $"[{colName}]";
             }));
 
             var insertClause_values = String.Join(Environment.NewLine + "        , ",
-                nonIdentityColumns.Select(col =>
+                tmpNonIdentiyColumns.Select(col =>
                {
                    var colName = col.Name.Parts[2];
                    return $"@{colName}";

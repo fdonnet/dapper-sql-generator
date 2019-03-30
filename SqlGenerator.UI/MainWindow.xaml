@@ -88,7 +88,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label>Select output path for C# entity classes:</Label>
+                    <Label>Select output path for C# repo classes:</Label>
                     <TextBox Name="txtOutputPath_CsRepositoryClasses" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_CsRepositoryClasses, Mode=TwoWay}"></TextBox>
                     <Button Name="buttonBrowseOutputPath_CsRepositoryClasses" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_CsRepositoryClasses_Click" >Browse</Button>
                 </Grid>

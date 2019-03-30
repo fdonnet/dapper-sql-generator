@@ -39,7 +39,6 @@ namespace SqlGenerator.StoredProcedures
                 })
             );
 
-            //TODO Fields exclusion, generalize that for each type of SP (if really needed)
             var tmpNonIdentiyColumns = _settings.FieldNamesExcluded != null
                 ? nonIdentityColumns.Where(c => !_settings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
                 : nonIdentityColumns;

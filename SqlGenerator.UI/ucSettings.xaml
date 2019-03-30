@@ -61,6 +61,8 @@
                                            MinHeight="150" 
                                            ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
                                            DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                        <Label>Exclude fields in insert stored procedure field names with "," as separator</Label>
+                        <TextBox Name="txtInsertSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlInsertSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Bulk Insert">
@@ -72,6 +74,9 @@
                                            MinHeight="150" 
                                            ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
                                            DataContextChanged="RolesCheckListBox_DataContextChanged" ></wpfx:CheckListBox>
+                        <!--Maybe to implement
+                        <Label>Exclude fields in bulk insert stored procedure field names with "," as separator</Label>
+                        <TextBox Name="txtBulkInsertSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlBulkInsertSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>-->
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Update">
@@ -83,8 +88,7 @@
                                            MinHeight="150" 
                                            ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
                                            DataContextChanged="RolesCheckListBox_DataContextChanged" ></wpfx:CheckListBox>
-                        <!--Temp UI-->
-                         <Label>Exclude fields in update stored procedure field name with "," as separator</Label>
+                        <Label>Exclude fields in update stored procedure field names with "," as separator</Label>
                         <TextBox Name="txtUpdateSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlUpdateSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>
                     </StackPanel>
                 </TabItem>
@@ -223,7 +227,7 @@
                             <Label MinWidth="200">Namespace for base repo:</Label>
                             <TextBox Name="txtBaseRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.Namespace, Mode=TwoWay}"></TextBox>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                        <StackPanel Name="panConnectionString" Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
                             <Label MinWidth="280">Connection string name in your appsettings.json:</Label>
                             <TextBox Name="txtRepoConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.ConnectionStringName, Mode=TwoWay}"></TextBox>
                         </StackPanel>

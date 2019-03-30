@@ -87,7 +87,13 @@ namespace SqlGenerator.UI
 
             tabCustomDeco.Visibility = Visibility.Visible;
             tabCustomField.Visibility = Visibility.Visible;
+
+            //Hide connection string option for table settings (only global)
+            panConnectionString.Visibility = Visibility.Hidden;
+
             LoadCustomGrids(table);
+
+
 
             _initialLoading = false;
         }
@@ -106,14 +112,14 @@ namespace SqlGenerator.UI
         {
             //Types
             _fieldKeyValueListForCustomTypes = TSqlModelHelper.GetAllColumns(table)
-                                                            .Select(c => new FieldValue()
-                                                            {
-                                                                FieldName = c.Name.Parts[2],
-                                                                Value = (_curTableSettings.CsEntitySettings.FieldNameCustomTypes !=null 
-                                                                    && _curTableSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(c.Name.Parts[2]))
-                                                                    ? _curTableSettings.CsEntitySettings.FieldNameCustomTypes[c.Name.Parts[2]]
-                                                                    : null
-                                                            }).ToList();
+                    .Select(c => new FieldValue()
+                    {
+                        FieldName = c.Name.Parts[2],
+                        Value = (_curTableSettings.CsEntitySettings.FieldNameCustomTypes !=null 
+                            && _curTableSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(c.Name.Parts[2]))
+                            ? _curTableSettings.CsEntitySettings.FieldNameCustomTypes[c.Name.Parts[2]]
+                            : null
+                    }).ToList();
 
             //Check if existing config 
 
@@ -122,14 +128,14 @@ namespace SqlGenerator.UI
             
             //Decorators
             _fieldKeyValueListForCustomDecorators = TSqlModelHelper.GetAllColumns(table)
-                                                .Select(c => new FieldValue()
-                                                {
-                                                    FieldName = c.Name.Parts[2],
-                                                    Value = (_curTableSettings.CsEntitySettings.FieldNameCustomDecorators != null
-                                                                    && _curTableSettings.CsEntitySettings.FieldNameCustomDecorators.ContainsKey(c.Name.Parts[2]))
-                                                                    ? _curTableSettings.CsEntitySettings.FieldNameCustomDecorators[c.Name.Parts[2]]
-                                                                    : null
-                                                }).ToList();
+                    .Select(c => new FieldValue()
+                    {
+                        FieldName = c.Name.Parts[2],
+                        Value = (_curTableSettings.CsEntitySettings.FieldNameCustomDecorators != null
+                                        && _curTableSettings.CsEntitySettings.FieldNameCustomDecorators.ContainsKey(c.Name.Parts[2]))
+                                        ? _curTableSettings.CsEntitySettings.FieldNameCustomDecorators[c.Name.Parts[2]]
+                                        : null
+                    }).ToList();
 
 
             grdCustomFieldDecorators.ItemsSource = _fieldKeyValueListForCustomDecorators;
@@ -193,7 +199,9 @@ namespace SqlGenerator.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RolesCheckListBox_ItemSelectionChanged(object sender, Xceed.Wpf.Toolkit.Primitives.ItemSelectionChangedEventArgs e)
+        private void RolesCheckListBox_ItemSelectionChanged(object sender, 
+            Xceed.Wpf.Toolkit.Primitives.ItemSelectionChangedEventArgs e)
+
         {
             if (!_initialLoading)
             {

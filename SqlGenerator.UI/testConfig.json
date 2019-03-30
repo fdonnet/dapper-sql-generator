@@ -1,0 +1,191 @@
+{
+  "AuthorName": "MSSQL-Dapper Generator",
+  "OutputPath_SQLProcedures": "MSSQLDapperGenerator.Procedures.sql",
+  "OutputPath_CsEntityClasses": "MSSQLDapperGenerator.Entities.cs",
+  "OutputPath_CsRepositoryClasses": "MSSQLDapperGenerator.Repositories.cs",
+  "GlobalSettings": {
+    "TableName": "00000000-0000-0000-0000-000000000000",
+    "GenerateDeleteSP": true,
+    "GenerateInsertSP": true,
+    "GenerateBulkInsertSP": true,
+    "GenerateUpdateSP": true,
+    "GenerateSelectAllSP": true,
+    "GenerateSelectByPk": true,
+    "GenerateSelectByUK": true,
+    "GenerateTableType": true,
+    "GenerateEntities": true,
+    "GenerateRepositories": true,
+    "SqlDeleteSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "SqlInsertSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "SqlBulkInsertSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "SqlUpdateSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": "inserted_on,inserted_by"
+    },
+    "SqlSelectAllSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "SqlSelectByPKSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "SqlSelectByUKSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "SqlTableTypeSettings": {
+      "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+      "FieldNamesExcluded": null
+    },
+    "CsEntitySettings": {
+      "ImplementICloneable": true,
+      "ImplementCustomInterfaceNames": "IAuditOptions",
+      "StandardRequieredDecorator": true,
+      "StandardStringLengthDecorator": true,
+      "StandardJsonIgnoreDecorator": true,
+      "FieldNamesWithJsonIgnoreDecorator": "udpated_on,updated_by,inserted_on,inserted_by",
+      "FieldNameCustomTypes": null,
+      "FieldNameCustomDecorators": null,
+      "Namespace": "Entities"
+    },
+    "CsRespositoryBaseSettings": {
+      "ConnectionStringName": "Default",
+      "Namespace": "DAL"
+    },
+    "CsRepositorySettings": { "Namespace": "Project" }
+  },
+  "TablesSettings": {
+    "enum_item": {
+      "TableName": "enum_item",
+      "GenerateDeleteSP": true,
+      "GenerateInsertSP": true,
+      "GenerateBulkInsertSP": true,
+      "GenerateUpdateSP": true,
+      "GenerateSelectAllSP": true,
+      "GenerateSelectByPk": true,
+      "GenerateSelectByUK": true,
+      "GenerateTableType": true,
+      "GenerateEntities": true,
+      "GenerateRepositories": true,
+      "SqlDeleteSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlInsertSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlBulkInsertSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlUpdateSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": "inserted_on,inserted_by"
+      },
+      "SqlSelectAllSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlSelectByPKSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlSelectByUKSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlTableTypeSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "CsEntitySettings": {
+        "ImplementICloneable": true,
+        "ImplementCustomInterfaceNames": "",
+        "StandardRequieredDecorator": true,
+        "StandardStringLengthDecorator": true,
+        "StandardJsonIgnoreDecorator": true,
+        "FieldNamesWithJsonIgnoreDecorator": "udpated_on,updated_by,inserted_on,inserted_by",
+        "FieldNameCustomTypes": null,
+        "FieldNameCustomDecorators": null,
+        "Namespace": "Entities"
+      },
+      "CsRespositoryBaseSettings": {
+        "ConnectionStringName": "Default",
+        "Namespace": "DAL"
+      },
+      "CsRepositorySettings": { "Namespace": "Project" }
+    },
+    "person": {
+      "TableName": "person",
+      "GenerateDeleteSP": true,
+      "GenerateInsertSP": true,
+      "GenerateBulkInsertSP": true,
+      "GenerateUpdateSP": true,
+      "GenerateSelectAllSP": true,
+      "GenerateSelectByPk": true,
+      "GenerateSelectByUK": true,
+      "GenerateTableType": true,
+      "GenerateEntities": true,
+      "GenerateRepositories": true,
+      "SqlDeleteSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlInsertSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlBulkInsertSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlUpdateSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": "inserted_on,inserted_by"
+      },
+      "SqlSelectAllSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlSelectByPKSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlSelectByUKSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "SqlTableTypeSettings": {
+        "GrantExecuteToRoles": [ "role_admin", "role_app" ],
+        "FieldNamesExcluded": null
+      },
+      "CsEntitySettings": {
+        "ImplementICloneable": true,
+        "ImplementCustomInterfaceNames": "IAuditOptions",
+        "StandardRequieredDecorator": true,
+        "StandardStringLengthDecorator": true,
+        "StandardJsonIgnoreDecorator": true,
+        "FieldNamesWithJsonIgnoreDecorator": "udpated_on,updated_by,inserted_on,inserted_by",
+        "FieldNameCustomTypes": null,
+        "FieldNameCustomDecorators": null,
+        "Namespace": "Entities"
+      },
+      "CsRespositoryBaseSettings": {
+        "ConnectionStringName": "Default",
+        "Namespace": "DAL"
+      },
+      "CsRepositorySettings": { "Namespace": "Project" }
+    }
+  }
+}

@@ -132,7 +132,6 @@ namespace SqlGenerator
             }
         }
 
-
         /// <summary>
         /// Get the data type and its size (if applicable) from a table column 
         /// </summary>
