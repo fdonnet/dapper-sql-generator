@@ -430,7 +430,7 @@ namespace { _settings.Namespace} {{
         }
 
         //******************TODO : test this part and review that (the conversion from dotnet type to the temp Datatable with SqlDataType 
-                /// <summary>
+        /// <summary>
         /// BulkInsert template
         /// </summary>
         /// <returns></returns>
@@ -462,8 +462,9 @@ namespace { _settings.Namespace} {{
         /// <returns></returns>
         private string PrintTableTypeForBulkInsert()
         {
+            var removeIdentityColumns = _allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             string addColumns = String.Join(Environment.NewLine + "            ",
-                _allColumns.Select(c =>
+                removeIdentityColumns.Select(c =>
                 {
                     var colName = c.Name.Parts[2];
                     var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
