@@ -463,6 +463,7 @@ namespace { _settings.Namespace} {{
         private string PrintTableTypeForBulkInsert()
         {
             var removeIdentityColumns = _allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
+            string addRows = string.Empty;
             string addColumns = String.Join(Environment.NewLine + "            ",
                 removeIdentityColumns.Select(c =>
                 {
@@ -470,25 +471,15 @@ namespace { _settings.Namespace} {{
                     var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
                     //TODO Very bad, need to be reviewed
                     var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
+                    var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
+
+                    addRows += colSqlType == "int"
+                        ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
+                        : $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
+                    addRows += Environment.NewLine + "            ";
 
                     return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
                 }));
-
-            string addRows =
-                String.Join(Environment.NewLine + "            ",
-                removeIdentityColumns.Select(c =>
-                {
-                    //TODO Very bad, need to be reviewed 
-                    var colName = c.Name.Parts[2];
-                    var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
-                    var tmp = colSqlType == "int" ? "SqlInt32" : string.Empty;
-                    var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
-
-                    return colSqlType == "int"
-                        ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
-                        : $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
-                }));
-
 
             string output = $@"
         /// <summary>
