@@ -476,7 +476,7 @@ namespace { _settings.Namespace} {{
 
             string addRows =
                 String.Join(Environment.NewLine + "            ",
-                _allColumns.Select(c =>
+                removeIdentityColumns.Select(c =>
                 {
                     //TODO Very bad, need to be reviewed 
                     var colName = c.Name.Parts[2];
