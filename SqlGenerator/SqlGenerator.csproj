@@ -69,7 +69,14 @@
     <Compile Include="DotNetClient\CsRepositoryBaseGenerator.cs" />
     <Compile Include="DotNetClient\CsRepositoryBaseGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorBulkInsert.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorDelete.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorGetByPK.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorGetByUK.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorInsert.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGeneratorSettings.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorGetAll.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGeneratorUpdate.cs" />
     <Compile Include="GeneratorSettings.cs" />
     <Compile Include="GeneratorBase.cs" />
     <Compile Include="Settings.cs" />
