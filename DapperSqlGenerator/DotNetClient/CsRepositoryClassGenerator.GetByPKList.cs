@@ -49,10 +49,22 @@ namespace DapperSqlGenerator.DotNetClient
                     var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
                     var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
 
-                    addRows += colSqlType == "int"
-                        ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
-                        : $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
-                    addRows += Environment.NewLine + "            ";
+                    if (_pkColumns.Count() ==1)
+                    {
+                        addRows += colSqlType == "int"
+                        ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj);"
+                        : $@"              row[""{colName}""] = curObj;";
+                        addRows += Environment.NewLine + "            ";
+                    }
+                    else
+                    {
+                        //TODO by PK composite
+                        //addRows += colSqlType == "int"
+                        //? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
+                        //: $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
+                        //addRows += Environment.NewLine + "            ";
+                    }
+                    
 
                     return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
                 }));
