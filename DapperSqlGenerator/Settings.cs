@@ -35,6 +35,7 @@ namespace DapperSqlGenerator
         public SqlUpdateGeneratorSettings SqlUpdateSettings { get; set; } = new SqlUpdateGeneratorSettings();
         public SqlSelectAllGeneratorSettings SqlSelectAllSettings { get; set; } = new SqlSelectAllGeneratorSettings();
         public SqlSelectByPKGeneratorSettings SqlSelectByPKSettings { get; set; } = new SqlSelectByPKGeneratorSettings();
+        public SqlSelectByPKListGeneratorSettings SqlSelectByPKListSettings { get; set; } = new SqlSelectByPKListGeneratorSettings();
         public SqlSelectByUKGeneratorSettings SqlSelectByUKSettings { get; set; } = new SqlSelectByUKGeneratorSettings();
         public SqlTableTypeGeneratorSettings SqlTableTypeSettings { get; set; } = new SqlTableTypeGeneratorSettings();
 
