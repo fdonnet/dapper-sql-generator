@@ -1,0 +1,252 @@
+﻿<UserControl x:Class="DapperSqlGenerator.UI.ucSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DapperSqlGenerator.UI"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContextChanged="UserControl_DataContextChanged">
+    <TabControl MaxHeight="500">
+
+        <TabItem Header="T-SQL Stored Procedures">
+            <TabControl MaxHeight="400" Margin="5">
+                
+                <TabControl.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Padding" Value="0,5,0,10"></Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem Header="General">
+                    <StackPanel Margin="5">
+                        <StackPanel.Resources>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="Margin" Value="0,0,0,5"></Setter>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label>Check the types of stored procedure you want to generate:</Label>
+                        <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate Delete SP</CheckBox>
+                        <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate Insert SP</CheckBox>
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox Name="chkGenerateBulkInsertSp" Checked="ChkGenerateBulkInsertSp_Checked" Unchecked="ChkGenerateBulkInsertSp_Unchecked" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate Bulk Insert SP</CheckBox>
+                            <CheckBox Name="chkGenerateTableType" Margin="20,0,0,5" IsEnabled="False"  IsChecked="{Binding Path=GenerateTableType, Mode=TwoWay}">Generate Table Type</CheckBox>
+                        </StackPanel>
+                        
+                        <CheckBox Name="chkGenerateUpdateSp" IsChecked="{Binding Path=GenerateUpdateSP, Mode=TwoWay}">Generate Update SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectAllSp" IsChecked="{Binding Path=GenerateSelectAllSP, Mode=TwoWay}">Generate Select All SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectByPk" IsChecked="{Binding Path=GenerateSelectByPk, Mode=TwoWay}">Generate Select by PK SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectByUK" IsChecked="{Binding Path=GenerateSelectByUK, Mode=TwoWay}">Generate Select by UK SP</CheckBox>
+                        
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Delete">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Delete SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlDelete"
+                                           DataContext="{Binding Path=SqlDeleteSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged" ></wpfx:CheckListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Insert">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Insert SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlInsert"
+                                           DataContext="{Binding Path=SqlInsertSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                        <Label>Exclude fields in insert stored procedure field names with "," as separator</Label>
+                        <TextBox Name="txtInsertSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlInsertSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Bulk Insert">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Bulk Insert SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlBulkInsert" 
+                                           DataContext="{Binding Path=SqlBulkInsertSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged" ></wpfx:CheckListBox>
+                        <!--Maybe to implement
+                        <Label>Exclude fields in bulk insert stored procedure field names with "," as separator</Label>
+                        <TextBox Name="txtBulkInsertSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlBulkInsertSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>-->
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Update">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Update SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlUpdate" 
+                                           DataContext="{Binding Path=SqlUpdateSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged" ></wpfx:CheckListBox>
+                        <Label>Exclude fields in update stored procedure field names with "," as separator</Label>
+                        <TextBox Name="txtUpdateSPExcludedFields" Margin="0,0,45,0" Text="{Binding Path=SqlUpdateSettings.FieldNamesExcluded, Mode=TwoWay}"></TextBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Select All">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Select All SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlSelectAll" 
+                                           DataContext="{Binding Path=SqlSelectAllSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Select By PK">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Select By PK SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlSelectByPK" 
+                                           DataContext="{Binding Path=SqlSelectByPKSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Select By UK">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Select By UK SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlSelectByUK" 
+                                           DataContext="{Binding Path=SqlSelectByUKSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Table Type">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on SQL Table Type:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlTableType" 
+                                           DataContext="{Binding Path=SqlTableTypeSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>            
+        </TabItem>
+        
+        <TabItem Header="C# Entities">
+            <TabControl Margin="5">
+                <TabItem Header="General">
+                    <Grid Margin="5,10,10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="40"></RowDefinition>
+                            <RowDefinition MaxHeight="80"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="230">Entities project namespace:</Label>
+                            <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.Namespace, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label  MinWidth="230">Custom interface names (separator ","):</Label>
+                            <TextBox Name="txtCustomInterface" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.ImplementCustomInterfaceNames, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+
+                        <CheckBox  Grid.Row="2" Name="chkICloneable" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.ImplementICloneable, Mode=TwoWay}">Implement ICloneable interface</CheckBox>
+
+                        <CheckBox  Grid.Row="3" Name="chkRequieredDecorator" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardRequieredDecorator, Mode=TwoWay}">Standard [Requiered] decorator when NOT NULL</CheckBox>
+
+                        <CheckBox  Grid.Row="4" Name="chkStringLengthDecorator" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardStringLengthDecorator, Mode=TwoWay}">Standard [StringLength(LEN)] decorator when string</CheckBox>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="5" Margin="0,5,0,0">
+                            <CheckBox Name="chkJsonIgnoreDecorator" VerticalAlignment="Center" Margin="0,0,0,0" 
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardJsonIgnoreDecorator, Mode=TwoWay}">Standard [JsonIgnore] decorator when table field names are (separator ","):</CheckBox>
+                            <TextBox Name="txtJsonIgnoreFieldNames" VerticalAlignment="Center" MinWidth="240" Margin="20,5,0,2" 
+                                     Text="{Binding Path=CsEntitySettings.FieldNamesWithJsonIgnoreDecorator, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Custom field type" Name="tabCustomField">
+                    <StackPanel>
+                        <Label>Define a custom c# type on specific fields to override the default conversion:</Label>
+                        <DataGrid Name="grdCustomFieldTypes" AutoGenerateColumns="False" CanUserAddRows="False" 
+                              CanUserDeleteRows="False" CanUserReorderColumns="False" CellEditEnding="GrdCustomFieldTypes_CellEditEnding"
+                              IsSynchronizedWithCurrentItem="true">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Field name" IsReadOnly="True" MinWidth="200" Binding="{Binding Path=FieldName, Mode=OneWay}">
+
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Custom c# type" MinWidth="200" Binding="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Custom field decorator" Name="tabCustomDeco">
+                    <StackPanel>
+                        <Label>Define a custom c# decorator on specific fields to add more info format "[Decorator]:</Label>
+                        <DataGrid Name="grdCustomFieldDecorators" AutoGenerateColumns="False" CanUserAddRows="False" 
+                              CanUserDeleteRows="False" CanUserReorderColumns="False" CellEditEnding="GrdCustomFieldDecorators_CellEditEnding"
+                              IsSynchronizedWithCurrentItem="true">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Field name" IsReadOnly="True" MinWidth="200" Binding="{Binding Path=FieldName, Mode=OneWay}">
+
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Custom c# decorator" MinWidth="200" Binding="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+
+        </TabItem>
+        
+        <TabItem Header="C# Repositories">
+            <TabControl>
+                <TabItem Header="Base repo">
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="30"></RowDefinition>
+                            <RowDefinition MaxHeight="30"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="200">Namespace for base repo:</Label>
+                            <TextBox Name="txtBaseRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.Namespace, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Name="panConnectionString" Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="280">Connection string name in your appsettings.json:</Label>
+                            <TextBox Name="txtRepoConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.ConnectionStringName, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Entities repo">
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="30"></RowDefinition>
+                            <RowDefinition MaxHeight="30"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label>The repository generation depends on your choices in TSQL stored proc generation settings at Global and Table level !!</Label>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Label MinWidth="200">Namespace for class repo:</Label>
+                            <TextBox Name="txtRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRepositorySettings.Namespace, Mode=TwoWay}"></TextBox>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </TabItem>
+    </TabControl>
+</UserControl>
