@@ -27,8 +27,8 @@ namespace DapperSqlGenerator.UI
 
         private MainWindow _parent;
         private bool _isGlobalSettings = true;
-        private Settings _curGlobalSettings = null;
-        private Settings _curTableSettings = null;
+        private TableSettings _curGlobalSettings = null;
+        private TableSettings _curTableSettings = null;
         private bool _initialLoading = true;
         private List<FieldValue> _fieldKeyValueListForCustomTypes;
         private List<FieldValue> _fieldKeyValueListForCustomDecorators;

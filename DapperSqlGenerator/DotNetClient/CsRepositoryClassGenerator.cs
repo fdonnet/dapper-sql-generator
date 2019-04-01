@@ -20,7 +20,7 @@ namespace DapperSqlGenerator.DotNetClient
     public partial class CsRepositoryClassGenerator : GeneratorBase
     {
         private readonly CsRepositoryClassGeneratorSettings _settings;
-        private readonly Settings _globalSettings;
+        private readonly TableSettings _globalSettings;
         private string _className;
         private string _interfaceName;
         private string _entityName;
