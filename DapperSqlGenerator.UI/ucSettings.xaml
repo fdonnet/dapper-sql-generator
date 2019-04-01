@@ -37,6 +37,7 @@
                         <CheckBox Name="chkGenerateUpdateSp" IsChecked="{Binding Path=GenerateUpdateSP, Mode=TwoWay}">Generate Update SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectAllSp" IsChecked="{Binding Path=GenerateSelectAllSP, Mode=TwoWay}">Generate Select All SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectByPk" IsChecked="{Binding Path=GenerateSelectByPk, Mode=TwoWay}">Generate Select by PK SP</CheckBox>
+                        <CheckBox Name="chkGenerateSelectByPkList" IsChecked="{Binding Path=GenerateSelectByPkList, Mode=TwoWay}">Generate Select by PK List SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectByUK" IsChecked="{Binding Path=GenerateSelectByUK, Mode=TwoWay}">Generate Select by UK SP</CheckBox>
                         
                     </StackPanel>
@@ -108,6 +109,17 @@
                         <Label>Select role(s) to grant "execute" on Select By PK SP:</Label>
                         <wpfx:CheckListBox x:Name="lstRolesForSqlSelectByPK" 
                                            DataContext="{Binding Path=SqlSelectByPKSettings}" 
+                                           MaxHeight="200" 
+                                           MinHeight="150" 
+                                           ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
+                                           DataContextChanged="RolesCheckListBox_DataContextChanged"  ></wpfx:CheckListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Select By PK List">
+                    <StackPanel Margin="5">
+                        <Label>Select role(s) to grant "execute" on Select By PK List SP:</Label>
+                        <wpfx:CheckListBox x:Name="lstRolesForSqlSelectByPKList" 
+                                           DataContext="{Binding Path=SqlSelectByPKListSettings}" 
                                            MaxHeight="200" 
                                            MinHeight="150" 
                                            ItemSelectionChanged="RolesCheckListBox_ItemSelectionChanged"
