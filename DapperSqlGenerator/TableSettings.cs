@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DapperSqlGenerator
 {
-    public class Settings
+    public class TableSettings
     {
         //Only used when table settings
         public string TableName = new Guid().ToString();
@@ -59,10 +59,10 @@ namespace DapperSqlGenerator
         /// <param name="tableSettings"></param>
         /// <param name="globalSettings"></param>
         /// <returns></returns>
-        public static Settings CopySettings(this Settings settings, Settings globalSettings)
+        public static TableSettings CopySettings(this TableSettings settings, TableSettings globalSettings)
         {
             string tmp = JsonConvert.SerializeObject(globalSettings);
-            return JsonConvert.DeserializeObject<Settings>(tmp);
+            return JsonConvert.DeserializeObject<TableSettings>(tmp);
         }
     }
 }

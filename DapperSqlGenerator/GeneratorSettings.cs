@@ -16,15 +16,15 @@ namespace DapperSqlGenerator
 
         public string AuthorName { get; set; } = "MSSQL-Dapper Generator";
 
-        public string OutputPath_SQLProcedures { get; set; } = "MSSQLDapperGenerator.Procedures.sql";
+        public string OutputPath_SqlScripts { get; set; } = "MSSQLDapperGenerator.Scripts.sql";
 
         public string OutputPath_CsEntityClasses { get; set; } = "MSSQLDapperGenerator.Entities.cs";
 
         public string OutputPath_CsRepositoryClasses { get; set; } = "MSSQLDapperGenerator.Repositories.cs";
 
-        public Settings GlobalSettings { get; set; } = new Settings();
+        public TableSettings GlobalSettings { get; set; } = new TableSettings();
 
-        public Dictionary<string, Settings> TablesSettings { get; set; } = new Dictionary<string, Settings>();
+        public Dictionary<string, TableSettings> TablesSettings { get; set; } = new Dictionary<string, TableSettings>();
 
 
         public void SaveToFile(string configPath)

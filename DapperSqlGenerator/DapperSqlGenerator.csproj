@@ -77,9 +77,10 @@
     <Compile Include="DotNetClient\CsRepositoryClassGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetAll.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.Update.cs" />
+    <Compile Include="FileGeneratorHelper.cs" />
     <Compile Include="GeneratorSettings.cs" />
     <Compile Include="GeneratorBase.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="TableSettings.cs" />
     <Compile Include="StoredProcedures\SqlBulkInsertGenerator.cs" />
     <Compile Include="StoredProcedures\SqlBulkInsertGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlDeleteGeneratorSettings.cs" />

@@ -97,8 +97,8 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(Settings,table);
-                         output += gen.Generate();
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(Settings, table);
+                        output += gen.Generate();
                     }
                 }
                 txtOutput.Text = output;
@@ -133,7 +133,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(Settings,table);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(Settings, table);
                         output += gen.Generate();
                     }
                 }
@@ -150,7 +150,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(Settings,table);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(Settings, table);
                         output += gen.Generate();
                     }
                 }
@@ -167,7 +167,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(Settings,table);
+                        var gen = new SqlSelectAllGenerator(Settings, table);
                         output += gen.Generate();
                     }
                 }
@@ -201,7 +201,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(Settings,table);
+                        var gen = new SqlSelectByUKGenerator(Settings, table);
                         output += gen.Generate();
                     }
                 }
@@ -218,7 +218,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(Settings,table);
+                        var gen = new SqlUpdateGenerator(Settings, table);
 
                         output += gen.Generate();
                     }
@@ -236,7 +236,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(Settings,table);
+                        var gen = new SqlTableTypeGenerator(Settings, table);
 
                         output += gen.Generate();
                     }
@@ -277,10 +277,10 @@ namespace DapperSqlGenerator.UI
             {
                 var configPath = saveFileDialog.FileName;
                 Settings.SaveToFile(configPath);
-                MessageBox.Show("Configuration(all settings) saved successfully", 
+                MessageBox.Show("Configuration(all settings) saved successfully",
                      "Info", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            }           
+            }
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace DapperSqlGenerator.UI
             if (saveFileDialog.ShowDialog() == true)
             {
                 var outPath = saveFileDialog.FileName;
-                Settings.OutputPath_SQLProcedures = outPath;
+                Settings.OutputPath_SqlScripts = outPath;
                 txtOutputPath_SQLProcedures.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
             }
         }
@@ -440,19 +440,54 @@ namespace DapperSqlGenerator.UI
             }
         }
 
-        private void ButtonGenerateAllFiles_Click(object sender, RoutedEventArgs e)
+        private async void ButtonGenerateAllFiles_Click(object sender, RoutedEventArgs e)
         {
+            var ans = MessageBox.Show("Generation output could overwrite already existing files. Are you sure to continue?", 
+                "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
+            if (ans == MessageBoxResult.No)
+            {
+                return;
+            }
+
+            try
+            {
+                labelForButtonGenerateAllFiles.Visibility = Visibility.Hidden;
+                labelForProgBarGenerateAllFiles.Visibility = Visibility.Visible;
+                buttonGenerateAllFiles.Visibility = Visibility.Hidden;
+                progBarGenerateAllFiles.Visibility = Visibility.Visible;
+
+                // Write SQL file containing all generated scripts and stored procedures
+
+                // Write C# file containing all generated entity classes
+
+                // Write C# file containing all generated Dapper repositories
+
+                MessageBox.Show("Generation completed.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                labelForButtonGenerateAllFiles.Visibility = Visibility.Visible;
+                labelForProgBarGenerateAllFiles.Visibility = Visibility.Hidden;
+                buttonGenerateAllFiles.Visibility = Visibility.Visible;
+                progBarGenerateAllFiles.Visibility = Visibility.Hidden;
+
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"Error occurred: {exc.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+
+
 
         private void ButtonGenerateBaseRepo_Click(object sender, RoutedEventArgs e)
         {
 
-                string output = string.Empty;
-                var gen = new CsRepositoryBaseGenerator(Settings, null);
-                output = gen.Generate();
+            string output = string.Empty;
+            var gen = new CsRepositoryBaseGenerator(Settings, null);
+            output = gen.Generate();
 
-                txtOutput.Text = output;
+            txtOutput.Text = output;
 
         }
 
