@@ -1,5 +1,4 @@
-﻿using Microsoft.SqlServer.Dac.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,42 +8,40 @@ namespace DapperSqlGenerator.DotNetClient
 {
     public partial class CsRepositoryClassGenerator : GeneratorBase
     {
-        /// <summary>
-        /// BulkInsert template
-        /// </summary>
-        /// <returns></returns>
-        private string PrintBulkInsertMethod()
+
+        private string PrintGetByPKListMethod()
         {
+            
+            
+
             string output = $@"
         /// <summary>
-        /// Bulk insert
+        /// Select by PK List
         /// </summary>
-        public async Task<bool> InsertBulk(IEnumerable<{_entityName}> {FirstCharacterToLower(_entityName)}List)
+        public async Task<IEnumerable<{_entityName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)
         {{
             var p = new DynamicParameters();
-            p.Add(""@items"", Create{_entityName}DataTable({FirstCharacterToLower(_entityName)}List));
+            p.Add(""@pk_list"", Create{_entityName}PKDataTable(pkList));
 
             var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+                (""usp{_entityName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
 
             return true;
         }}";
 
-            return output + Environment.NewLine + PrintTableTypeForBulkInsert(); ;
+            return output + Environment.NewLine + PrintPKTypeForSelectByPKList();
         }
 
-        //TODO see if it's ok to use Dot net type or if we need to use true System.Data.SqlTypes to create the table type
-        //that will be injected for bulk insert
+        //TODO to be reviewed : for the moment doesn't support composite PK
         /// <summary>
-        /// Table type template for bulkinsert
+        /// 
         /// </summary>
         /// <returns></returns>
-        private string PrintTableTypeForBulkInsert()
+        private string PrintPKTypeForSelectByPKList()
         {
-            var removeIdentityColumns = _allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             string addRows = string.Empty;
             string addColumns = String.Join(Environment.NewLine + "            ",
-                removeIdentityColumns.Select(c =>
+                _pkColumns.Select(c =>
                 {
                     var colName = c.Name.Parts[2];
                     var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
@@ -62,15 +59,15 @@ namespace DapperSqlGenerator.DotNetClient
 
             string output = $@"
         /// <summary>
-        /// Create special db table for bulk insert
+        /// Create special db table for select by PK List
         /// </summary>
-        private object Create{_entityName}DataTable(IEnumerable<{_entityName}> {_entityName}List)
+        private object Create{_entityName}PKDataTable(IEnumerable<{PrintPkListMethodParams()}> pkList)
         {{
             DataTable dt = new DataTable();
             {addColumns}
 
-            if ({_entityName}List != null)
-                foreach (var curObj in {_entityName}List)
+            if (pkList != null)
+                foreach (var curObj in pkList)
                 {{
                     DataRow row = dt.NewRow();
                     {addRows}
@@ -82,5 +79,21 @@ namespace DapperSqlGenerator.DotNetClient
         }}";
             return output;
         }
+
+        /// <summary>
+        /// Method params for select by PK list
+        /// </summary>
+        /// <returns></returns>
+        private string PrintPkListMethodParams()
+        {
+            if (_pkColumns.Count() == 1)
+                return TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(_pkColumns.ToArray()[0], true));
+            else
+                return $"{_entityName}_PKType";
+ 
+        }
+
+
+
     }
 }
