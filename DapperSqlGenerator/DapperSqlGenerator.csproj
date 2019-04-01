@@ -92,6 +92,8 @@
     <Compile Include="StoredProcedures\SqlSelectAllGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlSelectByPKGenerator.cs" />
     <Compile Include="StoredProcedures\SqlSelectByPKGeneratorSettings.cs" />
+    <Compile Include="StoredProcedures\SqlSelectByPKListGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlSelectByPKListGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlSelectByUKGenerator.cs" />
     <Compile Include="StoredProcedures\SqlSelectByUKGeneratorSettings.cs" />
     <Compile Include="StoredProcedures\SqlTableTypeGenerator.cs" />

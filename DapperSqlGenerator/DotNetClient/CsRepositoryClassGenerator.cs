@@ -107,7 +107,7 @@ $@"
 -- Description:	Interface for the repo {_interfaceName} 
 -- =================================================================
 
-namespace { _settings.Namespace} {{
+namespace { _settings.Namespace } {{
   
     public partial interface { _interfaceName } : IBaseRepo
     {{ 
