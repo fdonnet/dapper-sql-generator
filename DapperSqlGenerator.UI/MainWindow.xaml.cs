@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace DapperSqlGenerator.UI
 {
@@ -27,7 +28,7 @@ namespace DapperSqlGenerator.UI
 
         TSqlModel Model { get; set; } = null;
         private string _dacpacPath = string.Empty;
-        public GeneratorSettings Settings;
+        public GeneratorSettings GeneratorSettings;
         public IEnumerable<TSqlObject> Roles;
 
         public MainWindow()
@@ -35,8 +36,8 @@ namespace DapperSqlGenerator.UI
             InitializeComponent();
             buttonBrowse.IsEnabled = true;
             ucGlobalSettings.IsEnabled = false;
-            Settings = new GeneratorSettings();
-            DataContext = Settings;
+            GeneratorSettings = new GeneratorSettings();
+            DataContext = GeneratorSettings;
         }
 
 
@@ -97,7 +98,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(Settings, table);
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -115,7 +116,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(Settings, table);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -133,7 +134,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(Settings, table);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -150,7 +151,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(Settings, table);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -167,7 +168,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(Settings, table);
+                        var gen = new SqlSelectAllGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -184,7 +185,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(Settings, table);
+                        var gen = new SqlSelectByPKGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -201,7 +202,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(Settings, table);
+                        var gen = new SqlSelectByUKGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
@@ -218,7 +219,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(Settings, table);
+                        var gen = new SqlUpdateGenerator(GeneratorSettings, table);
 
                         output += gen.Generate();
                     }
@@ -236,7 +237,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(Settings, table);
+                        var gen = new SqlTableTypeGenerator(GeneratorSettings, table);
 
                         output += gen.Generate();
                     }
@@ -276,7 +277,7 @@ namespace DapperSqlGenerator.UI
             if (saveFileDialog.ShowDialog() == true)
             {
                 var configPath = saveFileDialog.FileName;
-                Settings.SaveToFile(configPath);
+                GeneratorSettings.SaveToFile(configPath);
                 MessageBox.Show("Configuration(all settings) saved successfully",
                      "Info", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -298,8 +299,8 @@ namespace DapperSqlGenerator.UI
             if (openFileDialog.ShowDialog() == true)
             {
                 var configPath = openFileDialog.FileName;
-                Settings = GeneratorSettings.LoadFromFile(configPath);
-                DataContext = Settings;
+                GeneratorSettings = GeneratorSettings.LoadFromFile(configPath);
+                DataContext = GeneratorSettings;
                 ucGlobalSettings.InitGlobalSettings();
 
                 tabPreview.IsSelected = true;
@@ -329,7 +330,7 @@ namespace DapperSqlGenerator.UI
                 chkOverrideSettings.Visibility = Visibility.Visible;
 
                 //Check if the config already exists
-                if (Settings.TablesSettings.ContainsKey(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]))
+                if (GeneratorSettings.TablesSettings.ContainsKey(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]))
                 {
                     chkOverrideSettings.IsChecked = true;
 
@@ -372,9 +373,9 @@ namespace DapperSqlGenerator.UI
         {
             var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
 
-            bool toBeRemoved = Settings.TablesSettings.ContainsKey(tableName);
+            bool toBeRemoved = GeneratorSettings.TablesSettings.ContainsKey(tableName);
             if (toBeRemoved)
-                Settings.TablesSettings.Remove(tableName);
+                GeneratorSettings.TablesSettings.Remove(tableName);
 
             chkOverrideSettings.Content = "Override global settings";
             ucTableSettings.Visibility = Visibility.Hidden;
@@ -395,7 +396,7 @@ namespace DapperSqlGenerator.UI
             if (saveFileDialog.ShowDialog() == true)
             {
                 var outPath = saveFileDialog.FileName;
-                Settings.OutputPath_SqlScripts = outPath;
+                GeneratorSettings.OutputPath_SqlScripts = outPath;
                 txtOutputPath_SQLProcedures.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
             }
         }
@@ -415,7 +416,7 @@ namespace DapperSqlGenerator.UI
             if (saveFileDialog.ShowDialog() == true)
             {
                 var outPath = saveFileDialog.FileName;
-                Settings.OutputPath_CsEntityClasses = outPath;
+                GeneratorSettings.OutputPath_CsEntityClasses = outPath;
                 txtOutputPath_CsEntityClasses.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
             }
         }
@@ -435,7 +436,7 @@ namespace DapperSqlGenerator.UI
             if (saveFileDialog.ShowDialog() == true)
             {
                 var outPath = saveFileDialog.FileName;
-                Settings.OutputPath_CsRepositoryClasses = outPath;
+                GeneratorSettings.OutputPath_CsRepositoryClasses = outPath;
                 txtOutputPath_CsRepositoryClasses.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
             }
         }
@@ -456,12 +457,27 @@ namespace DapperSqlGenerator.UI
                 labelForProgBarGenerateAllFiles.Visibility = Visibility.Visible;
                 buttonGenerateAllFiles.Visibility = Visibility.Hidden;
                 progBarGenerateAllFiles.Visibility = Visibility.Visible;
+                progBarGenerateAllFiles.Value = 0;
 
-                // Write SQL file containing all generated scripts and stored procedures
 
-                // Write C# file containing all generated entity classes
+                // Write SQL file containing all generated scripts and stored procedures     
+                await Task.Run(() => FileGeneratorHelper.WriteSqlScriptsFileAsync(Model, GeneratorSettings, 
+                    (progress) => Dispatcher.Invoke(() => progBarGenerateAllFiles.Value = progress * 50 / 100)));
+
+                progBarGenerateAllFiles.Value = 50;
+
+                // Write C# file containing all generated entity classes   
+                await Task.Run(() => FileGeneratorHelper.WriteCsEntityClassesFileAsync(Model, GeneratorSettings,
+                    (progress) => Dispatcher.Invoke(() => progBarGenerateAllFiles.Value = 50 + progress * 10 / 100)));
+
+                progBarGenerateAllFiles.Value = 60;
+
 
                 // Write C# file containing all generated Dapper repositories
+                await Task.Run(() => FileGeneratorHelper.WriteCsRepositoryClassesFileAsync(Model, GeneratorSettings,
+                    (progress) => Dispatcher.Invoke(() => progBarGenerateAllFiles.Value = 60 + progress * 40 / 100)));
+
+                progBarGenerateAllFiles.Value = 100;
 
                 MessageBox.Show("Generation completed.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -484,7 +500,7 @@ namespace DapperSqlGenerator.UI
         {
 
             string output = string.Empty;
-            var gen = new CsRepositoryBaseGenerator(Settings, null);
+            var gen = new CsRepositoryBaseGenerator(GeneratorSettings, null);
             output = gen.Generate();
 
             txtOutput.Text = output;
@@ -500,7 +516,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new CsRepositoryClassGenerator(Settings, table);
+                        var gen = new CsRepositoryClassGenerator(GeneratorSettings, table);
 
                         output += gen.Generate();
                     }

@@ -29,10 +29,10 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
--- =================================================================
--- Author: {GeneratorSettings.AuthorName}
--- Description:	Base repository interface and class
--- =================================================================
+/// =================================================================
+/// Author: {GeneratorSettings.AuthorName}
+/// Description:	Base repository interface and class
+/// =================================================================
 namespace { _settings.Namespace } {{
   
     public interface IBaseRepo :IDisposable 
