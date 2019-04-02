@@ -45,7 +45,7 @@ It will save all the defined settings in a JSON file and you will be able to loa
 ## TSQL stored procedures generator
 In "General" tab, you can select what types of SP you want o generate.
 
-At global and table level you can specify a simple config:
+At global and table level you can specify:
 
 ![Alt text](/img/sqlsettings.png?raw=true "Stored proc settings")
 - The roles you want to grant "EXECUTE" on the SP (the roles need to be defined in your model .dacpac file).
