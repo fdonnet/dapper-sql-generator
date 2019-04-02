@@ -534,7 +534,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKListGenerator(Settings, table);
+                        var gen = new SqlSelectByPKListGenerator(GeneratorSettings, table);
                         output += gen.Generate();
                     }
                 }
