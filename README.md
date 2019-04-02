@@ -31,7 +31,7 @@ A lot....... (but you can help!)
 First step (load your .dacpac file)
 ![Alt text](/img/load.PNG?raw=true "Load your model")
 
-After that, you can define your settings at a global level (all tables) or at table level in the "Table generation settings" (right pan, near preview tab):
+After that, you can define your settings at a global level (all tables) or override for each table level in the "Table generation settings" (right pan, near preview tab):
 ![Alt text](/img/settings.png?raw=true "Settings")
 
 Some specific settings are only available at the "Table level". 
