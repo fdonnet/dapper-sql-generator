@@ -25,7 +25,7 @@ A lot....... (but you can help!)
 
 ## Generate
 ![Alt text](/img/output.png?raw=true "Generate output")
-- For TSQL stored procedures, select a folder in your Visual Studio Database tool (SSDT). You will be able to use the "compare tool" to update your database with the generated SPs.
+- For TSQL stored procedures, select a folder in your Visual Studio Database tool (SSDT) project. You will be able to use the "compare tool" to update your database with the generated SPs.
 - For C# entities, select the folder in your target project where are located your entities. (include the generated file in your Visual Studio solution)
 - For C# repo, select a folder where is located your target DAL layer. (include the generated file in your Visual Studio solution)
 
@@ -52,6 +52,7 @@ At global and table level you can specify:
 ![Alt text](/img/sqlsettings.png?raw=true "Stored proc settings")
 - The roles you want to grant "EXECUTE" on the SP (the roles need to be defined in your model .dacpac file).
 - For some SP types, you have the possibility to directly exclude some fields.
+- For "select by UK" generator, you need to specify unique constrain(s) in your sql table definition.
 
 ## C# Entities generator
 In the "General" tab:
