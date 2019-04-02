@@ -21,4 +21,10 @@ A lot....... (but you can help!)
 - The C# entities generator suits our needs. We let you see if it will suit yours.
 - The C# repo generator targets **.netcore Dapper(async)** (ex: DAL layer for webapi netcore project) and it doesn't integrate a"repository" pattern. That's a choice and we will explain you why in more details in the repo section bellow... but you can change it or create a new generator for this part.
 
-TO BE CONTINUED....
+## Generate
+![Alt text](/img/output.png?raw=true "Generate output")
+- For TSQL stored procedures, select a folder in your Visual Studio Database tool (SSDT). You will be able to use the "compare tool" to update your database with the generated SPs.
+- For C# entities, select the folder in your target project where are located your entities. (include the generated file in your Visual Studio solution)
+- For C# repo, select a folder where is located your target DAL layer. (include the generated file in your Visual Studio solution)
+
+## Generators (settings)
