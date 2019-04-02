@@ -180,7 +180,7 @@ From a method of your service/core layer:
 
 
 
-............Don't hesitate to play and make pull request...........
+............Don't hesitate to play and make pull requests...........
 
 
 
