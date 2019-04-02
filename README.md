@@ -73,13 +73,11 @@ At the table lvl settings, you can:
 ![Alt text](/img/entitiesfieldtype.png?raw=true "Field type settings") ![Alt text](/img/entitiescustomdeco.png?raw=true "Decorators settings")
 
 ## C# Repo generator
-It will generate ONE BaseRepo (interface + class) and a repo interface and class for each table (inheritance from the BaseRepo class). 
+It will generate ONE BaseRepo (interface + class) and a repo class for each table (+interface) (inheritance from the BaseRepo class). 
 
-The repo interface and class for each repo table **will be defined as "partial"**. 
+The repo for each table **will be defined as "partial"**. => You will be able to extend your functionnalities outside of the generated files.
 
-You will be able to extend your functionnalities outside of the generated file.
-
-You can define the connection string name that will be injected via netcore IConfiguration object in the BaseRepo settings:
+In the settings, you can define the connection string **name** that will be injected via netcore IConfiguration object in the BaseRepo settings:
 
 ![Alt text](/img/repoconstring.png?raw=true "Connection name")
 
@@ -102,7 +100,8 @@ protected BaseRepo(IConfiguration config)
 
 Only available, for the moment" with Dapper async implementation...
 
-In netcore, if you have a service layer, and an api layer (controller):
+In netcore, see some implementations bellow if you have a service layer, and an api layer (controller):
+
 - Inject your repos (testRepo, testRepo2) in the service constructor. 
 
 *You can see we have injected the IConfiguration too...*
