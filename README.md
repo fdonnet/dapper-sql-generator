@@ -40,4 +40,36 @@ We let you discover !
 When you are happy with your model settings, don't forget to save your config:
 ![Alt text](/img/save_config.png?raw=true "Save your config")
 
-It will save all the defined settings in a JSON file and you will be able to load it when your base model has been changed. (ex: new settings for new tables without loosing your old configuration) 
+It will save all the defined settings in a JSON file and you will be able to load it when your base model has been changed. (ex: new settings for new tables without loosing your old configuration)
+
+## TSQL stored procedures generator
+In "General" tab, you can select what types of SP you want o generate.
+
+At global and table level you can specify a simple config:
+
+![Alt text](/img/sqlsettings.png?raw=true "Stored proc settings")
+- The roles you want to grant "EXECUTE" on the SP (the roles need to be defined in your model .dacpac file).
+- For some SP types, you have the possibility to directly exclude some fields.
+
+## C# Entities generator
+In the "General" tab:
+
+![Alt text](/img/entitiesglobal.png?raw=true "Entities settings")
+
+*(All this settings, can be defined at the global level or can be overrided at the table lvl config)*
+
+- Define a namespace 
+- Implement interface(s) in the generated entity
+- Implement ICloneable (with a minimal .Clone() template function)
+- Set [Requiered] decorator 
+- Set [StringLength(LEN)] decorator 
+- Set [JsonIgnore] on some fields
+
+At the table lvl settings, you can:
+
+- Define a custom type (ex: if you have enum fields) or custom decorator for each table column:
+![Alt text](/img/entitiesfieldtype.png?raw=true "Field type settings") ![Alt text](/img/entitiescustomdeco.png?raw=true "Decorators settings")
+
+## C# Repo generator
+
+
