@@ -1,7 +1,7 @@
 ------------------------DRAFT----------------------
 
 # MSSQL - Dapper generator
-A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project (.netcore). 
+A simple and not too ambitious tool that helps you to generate some important generic layers for your MSSQL - C# (netcore) - Dapper project. 
 
 It's extensible and modifiable. 
 
