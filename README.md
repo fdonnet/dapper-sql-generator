@@ -28,3 +28,16 @@ A lot....... (but you can help!)
 - For C# repo, select a folder where is located your target DAL layer. (include the generated file in your Visual Studio solution)
 
 ## Generators (settings)
+First step (load your .dacpac file)
+![Alt text](/img/load.PNG?raw=true "Load your model")
+
+After that, you can define your settings at a global level (all tables) or at table level in the "Table generation settings" (right pan, near preview tab):
+![Alt text](/img/settings.png?raw=true "Settings")
+
+Some specific settings are only available at the "Table level". 
+We let you discover !
+
+When you are happy with your model settings, don't forget to save your config:
+![Alt text](/img/save_config.png?raw=true "Save your config")
+
+It will save all the defined settings in a JSON file and you will be able to load it when your base model has been changed. (ex: new settings for new tables without loosing your old configuration) 
