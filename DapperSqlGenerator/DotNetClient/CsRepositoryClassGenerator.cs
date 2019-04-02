@@ -66,10 +66,10 @@ namespace DapperSqlGenerator.DotNetClient
 
             string output =
            $@" 
--- =================================================================
--- Author: {GeneratorSettings.AuthorName}
--- Description:	Class for the repo {_className} 
--- =================================================================
+/// =================================================================
+/// Author: {GeneratorSettings.AuthorName}
+/// Description:	Class for the repo {_className} 
+/// =================================================================
 
 namespace { _settings.Namespace} {{
   
@@ -102,10 +102,10 @@ namespace { _settings.Namespace} {{
 
             string output =
 $@" 
--- =================================================================
--- Author: {GeneratorSettings.AuthorName}
--- Description:	Interface for the repo {_interfaceName} 
--- =================================================================
+/// =================================================================
+/// Author: {GeneratorSettings.AuthorName}
+/// Description:	Interface for the repo {_interfaceName} 
+/// =================================================================
 
 namespace { _settings.Namespace } {{
   

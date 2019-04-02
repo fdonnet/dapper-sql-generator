@@ -47,7 +47,7 @@ namespace DapperSqlGenerator.UI
             _initialLoading = true;
 
             _parent = (MainWindow)Application.Current.MainWindow;
-            _curGlobalSettings = _parent.Settings.GlobalSettings;
+            _curGlobalSettings = _parent.GeneratorSettings.GlobalSettings;
 
             // Set data context using global settings
             DataContext = _curGlobalSettings;
@@ -71,15 +71,15 @@ namespace DapperSqlGenerator.UI
 
             _parent = (MainWindow)Application.Current.MainWindow;
 
-            if (_parent.Settings.TablesSettings.TryGetValue(tableName, out _curTableSettings) == false)
+            if (_parent.GeneratorSettings.TablesSettings.TryGetValue(tableName, out _curTableSettings) == false)
                 _curTableSettings = null;
 
             if (_curTableSettings == null)
             {
-                _curTableSettings = _curTableSettings.CopySettings(_parent.Settings.GlobalSettings);
+                _curTableSettings = _curTableSettings.CopySettings(_parent.GeneratorSettings.GlobalSettings);
                 _curTableSettings.TableName = tableName;
 
-                _parent.Settings.TablesSettings.Add(_curTableSettings.TableName, _curTableSettings);
+                _parent.GeneratorSettings.TablesSettings.Add(_curTableSettings.TableName, _curTableSettings);
             }
 
             // Set data context using table settings (thus, overriding global settings)
