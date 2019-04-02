@@ -168,6 +168,9 @@ namespace { _settings.Namespace } {{
             if (_globalSettings.GenerateDeleteSP)
                 yield return $"Task<bool> Delete(int id);"; //only work with and int id as pk, hard coded need to be changed
 
+            if (_globalSettings.GenerateSelectByPkList)
+                yield return $"Task<IEnumerable<{ _entityName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)";
+
 
         }
 
@@ -202,6 +205,9 @@ namespace { _settings.Namespace } {{
 
             if (_globalSettings.GenerateBulkInsertSP)
                 yield return PrintBulkInsertMethod();
+
+            if (_globalSettings.GenerateSelectByPkList)
+                yield return PrintGetByPKListMethod();
 
         }
 

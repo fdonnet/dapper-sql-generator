@@ -17,7 +17,7 @@ namespace DapperSqlGenerator.DotNetClient
         {
             string output = $@"
         /// <summary>
-        /// Delete
+        /// Bulk insert
         /// </summary>
         public async Task<bool> InsertBulk(IEnumerable<{_entityName}> {FirstCharacterToLower(_entityName)}List)
         {{

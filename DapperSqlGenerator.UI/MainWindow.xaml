@@ -115,6 +115,7 @@
                                 <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" Margin="3,0,3,0" Padding="5,5">Update</Button>
                                 <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click" Margin="3,0,3,0" Padding="5,5">Select All</Button>
                                 <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" Margin="3,0,3,0" Padding="5,5">Select By PK</Button>
+                                <Button x:Name="buttonGenerateSelectByPKList" Click="ButtonGenerateSelectByPKList_Click" Margin="3,0,3,0" Padding="5,5">Select By PK List</Button>
                                 <Button x:Name="buttonGenerateSelectByUk" Click="ButtonGenerateSelectByUK_Click" Margin="3,0,3,0" Padding="5,5">Select By UK</Button>
                                 <Button x:Name="buttonGenerateTableType" Click="ButtonGenerateTableType_Click" Margin="3,0,3,0" Padding="5,5">Table Type</Button>
                             </StackPanel>

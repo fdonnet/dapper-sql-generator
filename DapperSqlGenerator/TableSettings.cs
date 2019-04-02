@@ -21,6 +21,7 @@ namespace DapperSqlGenerator
         public bool GenerateUpdateSP { get; set; } = true;
         public bool GenerateSelectAllSP { get; set; } = true;
         public bool GenerateSelectByPk { get; set; } = true;
+        public bool GenerateSelectByPkList { get; set; } = true;
         public bool GenerateSelectByUK { get; set; } = true;
         public bool GenerateTableType { get; set; } = true;
 

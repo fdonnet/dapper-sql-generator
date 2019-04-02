@@ -72,6 +72,7 @@
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.BulkInsert.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.Delete.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetByPK.cs" />
+    <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetByPKList.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetByUK.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.Insert.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGeneratorSettings.cs" />

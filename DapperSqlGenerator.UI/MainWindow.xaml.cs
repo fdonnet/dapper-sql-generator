@@ -524,5 +524,22 @@ namespace DapperSqlGenerator.UI
                 txtOutput.Text = output;
             }
         }
+
+        private void ButtonGenerateSelectByPKList_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectByPKListGenerator(Settings, table);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
     }
 }
