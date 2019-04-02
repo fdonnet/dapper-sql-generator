@@ -102,10 +102,10 @@ namespace { _settings.Namespace} {{
 
             string output =
 $@" 
--- =================================================================
--- Author: {GeneratorSettings.AuthorName}
--- Description:	Interface for the repo {_interfaceName} 
--- =================================================================
+/// =================================================================
+/// Author: {GeneratorSettings.AuthorName}
+/// Description:	Interface for the repo {_interfaceName} 
+/// =================================================================
 
 namespace { _settings.Namespace } {{
   
