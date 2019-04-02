@@ -61,7 +61,7 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label>Select output path for T-SQL stored procedures:</Label>
-                    <TextBox Name="txtOutputPath_SQLProcedures" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_SQLProcedures, Mode=TwoWay}"></TextBox>
+                    <TextBox Name="txtOutputPath_SQLProcedures" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_SqlScripts, Mode=TwoWay}"></TextBox>
                     <Button Name="buttonBrowseOutputPath_SQLProcedures" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_SQLProcedures_Click" >Browse</Button>
                 </Grid>
 
@@ -154,7 +154,7 @@
                             </TextBlock>
                         </Grid>
                         <Grid>
-                            <Button Padding="5" x:Name="buttonGenerateAllFiles" Click="ButtonGenerateAllFiles_Click">Launch generator</Button>
+                            <Button Padding="5" x:Name="buttonGenerateAllFiles" Click="ButtonGenerateAllFiles_Click" Height="28" VerticalAlignment="Top">Launch generator</Button>
                             <ProgressBar Value="50" x:Name="progBarGenerateAllFiles" Visibility="Hidden"></ProgressBar>
                         </Grid>
                     </StackPanel>

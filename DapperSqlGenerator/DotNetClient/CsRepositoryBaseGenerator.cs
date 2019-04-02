@@ -104,7 +104,10 @@ namespace { _settings.Namespace } {{
         }}
 
         /// <summary>
-        /// Used to detach the connection of the repo
+        /// Used to detach the connection of the repo 
+        /// !!! Warning if the current connection is not linked to another repo 
+        /// don't forget to close it. 
+        /// Dangerous if it's the last link to the connection,be carefull !!!
         /// Can be called when a connection has been shared with another repo (ex:transaction)
         /// </summary>
         public void DetachConnection()
