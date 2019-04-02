@@ -1,3 +1,5 @@
+------------------------DRAFT----------------------
+
 # MSSQL - Dapper generator
 A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project (.netcore). 
 
@@ -71,5 +73,113 @@ At the table lvl settings, you can:
 ![Alt text](/img/entitiesfieldtype.png?raw=true "Field type settings") ![Alt text](/img/entitiescustomdeco.png?raw=true "Decorators settings")
 
 ## C# Repo generator
+It will generate ONE BaseRepo (interface + class) and a repo interface and class for each table (inheritance from the BaseRepo class). 
+
+The repo interface and class for each repo table **will be defined as "partial"**. 
+
+You will be able to extend your functionnalities outside of the generated file.
+
+You can define the connection string name that will be injected via netcore IConfiguration object in the BaseRepo settings:
+
+![Alt text](/img/repoconstring.png?raw=true "Connection name")
+
+! **It's the connection name, not the connection string...** !
+
+BaseRepo constructor:
+
+```csharp
+protected BaseRepo(IConfiguration config)
+ {
+    _config = config;
+    DefaultTypeMap.MatchNamesWithUnderscores = true;
+    _cn = new SqlConnection(_config.GetConnectionString("Default"));
+ }
+```
+ 
+### No Repository pattern => only a simple DAL you can extend
+
+*Biased approach... maybe it will not fit your needs....*
+
+Only available, for the moment" with Dapper async implementation...
+
+In netcore, if you have a service layer, and an api layer (controller):
+- Inject your repos (testRepo, testRepo2) in the service constructor. 
+
+*You can see we have injected the IConfiguration too...*
+
+```csharp
+ private readonly ILogger<ServiceTest> _log;
+ private readonly IConfiguration _config;
+ private readonly ITestRepo _testRepo;
+ private readonly ITest2Repo _testRepo2;
+
+ public ServiceTest(ILogger<ApplicationManager> logger, IConfiguration config, 
+    ITestRepo testRepo, ITest2Repo testRepo2)
+ {
+     _log = logger;
+     _config = config;
+     _testRepo = testRepo;
+     _testRepo2 = testRepo2;
+ }
+```
+
+In your controller, inject your service ServiceTest:
+```csharp
+private readonly ILogger<MyController> _log;
+private readonly IConfiguration _config;
+private readonly IServiceTest _serviceTest;
+
+public MyController(ILogger<MyController> logger, IConfiguration config,
+    IServiceTest serviceTest)
+
+{
+    _log = logger;
+    _config = config;
+    _serviceTest = serviceTest;
+}
+```
+
+In your netcore startup / configure services function:
+- Add your repos as transient
+- And your service as scoped or transient
+```csharp
+services.AddTransient<ITestRepo, TestRepo>();
+services.AddTransient<ITest2Repo, Test2Repo>();
+
+services.AddScoped<IServiceTest, ServiceTest>();
+```
+
+netcore, so good. Your repos will be injected automatically via your service injection in the controller.
+You will be able to use your DAL in your service layer.
+
+Reminder: You can extend your interface and repo class via another "partial" file. It allows you to re-generate your base definition via the tool anytime.
+
+#### And if I need a transaction between repos ?
+From a method of your service/core layer:
+```csharp
+ //_testRepo and testRepo2 => repos injected in the service class contructor
+ //open a transaction
+ var openTrans = await _testRepo.OpenTransaction();
+
+ //operation on the first repo
+ var test = new TestEntity() { Name = "TEST" };
+ var result = await _testRepo.Insert(test);
+
+ //Pass the transaction to the second repo
+ _testRepo2.SetExternalTransaction(_testRepo.GetActualTransaction());
+
+ //run the operation on second repo
+ var test2 = new Test2Entity() { Name = "TEST2" };
+  var result2 = await _testRepo2.Insert(test2);
+
+ //Commit trans
+ _testRepo.CommitTrans();
+```
+
+
+
+
+............Don't hesitate to play and make pull request...........
+
 
 
