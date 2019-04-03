@@ -177,7 +177,7 @@ $@"
                 yield return $"Task<bool> Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
 
             if (TableSettings.GenerateSelectByPkList)
-                yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{_entityClassName}_PKType> pkList);";
+                yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassName}_PKType> pkList);";
 
 
         }

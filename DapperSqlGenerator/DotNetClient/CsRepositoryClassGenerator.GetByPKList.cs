@@ -18,7 +18,7 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Select by PK List
         /// </summary>
-        public async Task<IEnumerable<{_entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{_entityClassName}_PKType> pkList)
+        public async Task<IEnumerable<{_entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassName}_PKType> pkList)
         {{
             var p = new DynamicParameters();
             p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
