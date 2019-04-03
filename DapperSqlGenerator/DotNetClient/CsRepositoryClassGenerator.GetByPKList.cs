@@ -9,6 +9,10 @@ namespace DapperSqlGenerator.DotNetClient
     public partial class CsRepositoryClassGenerator : GeneratorBase
     {
 
+        /// <summary>
+        /// Get by PK List, (normally) it can be used with composite PK
+        /// </summary>
+        /// <returns></returns>
         private string PrintGetByPKListMethod()
         {
 

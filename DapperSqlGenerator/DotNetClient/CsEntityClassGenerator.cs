@@ -166,6 +166,8 @@ namespace { _settings.Namespace } {{
 /// =================================================================
 /// Author: {GeneratorSettings.AuthorName}
 /// Description: PK class for the table {Table.Name} 
+/// It's bit heavy (a lot of useless types in the DB) but you can
+/// use get by PKList even if your pk is a composite one...
 /// =================================================================
     public class {TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PKType
     {{ 

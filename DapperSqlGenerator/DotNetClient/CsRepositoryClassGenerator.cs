@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 namespace DapperSqlGenerator.DotNetClient
 {
     /// <summary>
-    /// TODO:    ***Bulk insert (SP ready) (DRAFT is ok)
-    ///          select by pklist (list of pk) easy if it's an id more complex if it's composite or other stuff
-    ///          select by uklist (same as pk list) => if really needed because it forces to create a DB type ??
+    /// TODO:       select by uklist (same as pk list) => if really needed because it forces to create a DB type ??
     ///          extended entities with attached children (maybe with an entity that inherits from the base and extend with child or list fo children)
     ///                     *** to do that the select by pk list needs to be ready (simple for a single entity that has children, more complex when we retrieve several parent 
     ///                     objects with all their children ==> all this things are ok in the dapper part but need to be genralized for the generator
