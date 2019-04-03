@@ -19,13 +19,13 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Bulk insert
         /// </summary>
-        public async Task<bool> InsertBulk(IEnumerable<{_entityName}> {FirstCharacterToLower(_entityName)}List)
+        public async Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List)
         {{
             var p = new DynamicParameters();
-            p.Add(""@items"", Create{_entityName}DataTable({FirstCharacterToLower(_entityName)}List));
+            p.Add(""@items"", Create{_entityClassName}DataTable({FirstCharacterToLower(_entityClassName)}List));
 
-            var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+            var ok = await _dbContext.Connection.ExecuteAsync
+                (""usp{_entityClassName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
             return true;
         }}";
@@ -42,38 +42,51 @@ namespace DapperSqlGenerator.DotNetClient
         private string PrintTableTypeForBulkInsert()
         {
             var removeIdentityColumns = _allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
-            string addRows = string.Empty;
+
+            // Hint: 'addRows' will be filled in addColumns 
+            string addRows = String.Join(Environment.NewLine + "                    ",
+                removeIdentityColumns.Select(c =>
+                {
+                    var colName = c.Name.Parts[2];
+                    var colIsNullable = c.IsColumnNullable();
+                    var colSqlType = TSqlModelHelper.GetDotNetDataType_SystemDataSqlTypes(TSqlModelHelper.GetColumnSqlDataType(c, false));
+
+                    // TODO: Better check if column type in settings is an enum
+                    var forceIntForEnum = colSqlType == "SqlInt32" ? "(int)" : string.Empty;
+
+                    if (!colIsNullable || colSqlType == "SqlString" || colSqlType == "SqlBinary")
+                        return $@"row[""{colName}""] = new {colSqlType}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});";                   
+                    else
+                        return $@"row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)} == null ? "
+                            + $@"{colSqlType}.Null"
+                            + $@" : new {colSqlType}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)}.Value);";
+                })
+            );
+            
             string addColumns = String.Join(Environment.NewLine + "            ",
                 removeIdentityColumns.Select(c =>
                 {
                     var colName = c.Name.Parts[2];
-                    var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
-                    //TODO Very bad, need to be reviewed
-                    var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
-                    var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
-
-                    addRows += colSqlType == "int"
-                        ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
-                        : $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
-                    addRows += Environment.NewLine + "            ";
-
-                    return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
-                }));
+                    var colSqlType = TSqlModelHelper.GetDotNetDataType_SystemDataSqlTypes(TSqlModelHelper.GetColumnSqlDataType(c, false));
+                    return $@"dt.Columns.Add(""{colName}"", typeof({colSqlType}));";
+                })
+            );
 
             string output = $@"
         /// <summary>
         /// Create special db table for bulk insert
         /// </summary>
-        private object Create{_entityName}DataTable(IEnumerable<{_entityName}> {_entityName}List)
+        private object Create{_entityClassName}DataTable(IEnumerable<{_entityClassFullName}> {_entityClassName}List)
         {{
             DataTable dt = new DataTable();
             {addColumns}
 
-            if ({_entityName}List != null)
-                foreach (var curObj in {_entityName}List)
+            if ({_entityClassName}List != null)
+                foreach (var curObj in {_entityClassName}List)
                 {{
                     DataRow row = dt.NewRow();
                     {addRows}
+
                     dt.Rows.Add(row);
                 }}
 

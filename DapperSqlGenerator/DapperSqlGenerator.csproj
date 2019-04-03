@@ -66,8 +66,8 @@
     <Compile Include="DotNetClient\CsCodeGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
     <Compile Include="DotNetClient\CsEntityClassGeneratorSettings.cs" />
-    <Compile Include="DotNetClient\CsRepositoryBaseGenerator.cs" />
-    <Compile Include="DotNetClient\CsRepositoryBaseGeneratorSettings.cs" />
+    <Compile Include="DotNetClient\CsDbContextGenerator.cs" />
+    <Compile Include="DotNetClient\CsDbContextGeneratorSettings.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.BulkInsert.cs" />
     <Compile Include="DotNetClient\CsRepositoryClassGenerator.Delete.cs" />

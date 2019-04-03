@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DapperSqlGenerator.DotNetClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +22,8 @@ namespace DapperSqlGenerator
         public string OutputPath_CsEntityClasses { get; set; } = "MSSQLDapperGenerator.Entities.cs";
 
         public string OutputPath_CsRepositoryClasses { get; set; } = "MSSQLDapperGenerator.Repositories.cs";
+        
+        public CsDbContextGeneratorSettings CsDbContextSettings { get; set; } = new CsDbContextGeneratorSettings();
 
         public TableSettings GlobalSettings { get; set; } = new TableSettings();
 

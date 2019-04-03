@@ -500,7 +500,7 @@ namespace DapperSqlGenerator.UI
         {
 
             string output = string.Empty;
-            var gen = new CsRepositoryBaseGenerator(GeneratorSettings, null);
+            var gen = new CsDbContextGenerator(GeneratorSettings, Model);
             output = gen.Generate();
 
             txtOutput.Text = output;

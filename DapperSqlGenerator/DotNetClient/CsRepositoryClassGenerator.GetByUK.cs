@@ -10,7 +10,7 @@ namespace DapperSqlGenerator.DotNetClient
     public partial class CsRepositoryClassGenerator : GeneratorBase
     {
         /// <summary>
-        /// Get by Uk template
+        /// Get by Unique key template
         /// </summary>
         /// <param name="ukColumns"></param>
         /// <returns></returns>
@@ -28,13 +28,13 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Get by UK
         /// </summary>
-        public async Task<{_entityName}> GetBy{ConcatUkFieldNames(ukColumns)}({ConcatUkFieldsWithTypes(ukColumns)})
+        public async Task<{_entityClassFullName}> GetBy{ConcatUkFieldNames(ukColumns)}({ConcatUkFieldsWithTypes(ukColumns)})
         {{
             var p = new DynamicParameters();
             {spParams}
 
-            var entity = await _cn.QuerySingleOrDefaultAsync<{_entityName}>
-            (""usp{_entityName}_selectBy{ConcatUkFieldNames(ukColumns)}"", commandType: CommandType.StoredProcedure);
+            var entity = await _dbContext.Connection.QuerySingleOrDefaultAsync<{_entityClassFullName}>
+            (""usp{_entityClassName}_selectBy{ConcatUkFieldNames(ukColumns)}"", commandType: CommandType.StoredProcedure);
 
             return entity;
         }}";

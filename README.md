@@ -1,7 +1,7 @@
 ------------------------DRAFT----------------------
 
 # MSSQL - Dapper generator
-A simple and not too ambitious tool that helps you to generate some important generic layers for your C# project (.netcore). 
+A simple and not too ambitious tool that helps you to generate some important generic layers for your MSSQL - C# (netcore) - Dapper project. 
 
 It's extensible and modifiable. 
 
@@ -21,7 +21,8 @@ A lot....... (but you can help!)
 - Only works with SqlServer DB and ~Visual Studio Database Project. The generator uses a .dacpac file as the model entry point to eat the tables definition. (your tables and fields need to be in lowercase and with _ to separate words (table: user_role, field: has_access will be transformed in C# in PascalCase, UserRole and HasAccess)...
 - You need to be on Windows to use the UI (WPF prj). Sorry for that guys. If you are on other systems, you can convert the logic layer and inject a JSON config file to the generator. It will work.
 - The C# entities generator suits our needs. We let you see if it will suit yours.
-- The C# repo generator targets **.netcore Dapper(async)** (ex: DAL layer for webapi netcore project) and it doesn't integrate a"repository" pattern. That's a choice and we will explain you why in more details in the repo section bellow... but you can change it or create a new generator for this part.
+- The C# repo generator targets **.netcore Dapper(async)** (ex: DAL layer for webapi netcore project) and it doesn't integrate a"repository" pattern. That's a choice... but you can change it or create a new generator for this part.
+- No "get entity with children" function (maybe if we will have more time, or if someone want to help). We know how to do it but it's not a small job to automate it.
 
 ## Generate
 ![Alt text](/img/output.png?raw=true "Generate output")
@@ -179,7 +180,7 @@ From a method of your service/core layer:
 
 
 
-............Don't hesitate to play and make pull request...........
+............Don't hesitate to play and make pull requests...........
 
 
 

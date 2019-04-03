@@ -9,24 +9,40 @@ namespace DapperSqlGenerator
 {
     public abstract class GeneratorBase
     {
-        public GeneratorSettings GeneratorSettings { get; private set; }
-        public TSqlObject Table { get; private set; }
-        protected string TableName { get; set; }
-        protected TableSettings TableSettings { get; set; }
+        public GeneratorSettings GeneratorSettings { get; protected set; }
 
-        public GeneratorBase(GeneratorSettings generatorSettings, TSqlObject table)
+        public TableSettings TableSettings { get; protected set; }
+
+        public TSqlModel Model { get; protected set; }
+
+        public TSqlObject Table { get; protected set; }
+
+        public string TableName { get; protected set; }
+
+
+        public GeneratorBase(GeneratorSettings generatorSettings, TSqlModel model = null, TSqlObject table = null)
         {
-            //Global and top lvl settings
+            // Top level settings
             GeneratorSettings = generatorSettings;
-            Table = table;
-            TableName = table?.Name.Parts[1];
 
-            //Table settings easy accessor
-            TableSettings = !string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName)
-                ? generatorSettings.TablesSettings[TableName]
-                : null;
+            if (model != null)
+            {
+                Model = model;
+            }
+
+            if (table != null)
+            {
+                Table = table;
+                TableName = table.Name.Parts[1];
+
+                // Table generation settings - easy accessor
+                TableSettings = !string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName)
+                    ? generatorSettings.TablesSettings[TableName]
+                    : generatorSettings.GlobalSettings;
+            }
 
         }
+
 
         public abstract string Generate();
 

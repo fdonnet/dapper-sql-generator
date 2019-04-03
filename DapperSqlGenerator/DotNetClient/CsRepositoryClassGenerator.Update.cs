@@ -14,29 +14,31 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintUpdateMethod()
         {
-            var tmpColumns = _globalSettings.SqlUpdateSettings.FieldNamesExcluded != null
-                            ? _allColumns.Where(c => !_globalSettings.SqlUpdateSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+            var paramName = FirstCharacterToLower(_entityClassName);
+
+            var tmpColumns = TableSettings.SqlUpdateSettings.FieldNamesExcluded != null
+                            ? _allColumns.Where(c => !TableSettings.SqlUpdateSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
                             : _allColumns;
 
             string spParams = String.Join(Environment.NewLine + "            ",
                     tmpColumns.Select(col =>
                     {
                         var colName = col.Name.Parts[2];
-                        var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
-                        return $@"p.Add(""@{colName}"",{colVariableName});";
+                        var entityProp = TSqlModelHelper.PascalCase(colName);
+                        return $@"p.Add(""@{colName}"", {paramName}.{entityProp});";
                     }));
 
             string output = $@"
         /// <summary>
         /// Update
         /// </summary>
-        public async Task<bool> Update({_entityName} {FirstCharacterToLower(_entityName)})
+        public async Task<bool> Update({_entityClassFullName} {paramName})
         {{
             var p = new DynamicParameters();
             {spParams}
 
-            var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_Update"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+            var ok = await _dbContext.Connection.ExecuteAsync
+                (""usp{_entityClassName}_Update"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
             return true;
         }}";

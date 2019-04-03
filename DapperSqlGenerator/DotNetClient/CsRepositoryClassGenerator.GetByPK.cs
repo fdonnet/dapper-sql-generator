@@ -26,13 +26,13 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Get by PK
         /// </summary>
-        public async Task<{_entityName}> GetBy{_pkFieldsNames}({_pkFieldsWithTypes})
+        public async Task<{_entityClassFullName}> GetBy{_pkFieldsNames}({_pkFieldsWithTypes})
         {{
             var p = new DynamicParameters();
             {spParams}
 
-            var entity = await _cn.QuerySingleOrDefaultAsync<{_entityName}>
-            (""usp{_entityName}_selectBy{_pkFieldsNames}"", commandType: CommandType.StoredProcedure);
+            var entity = await _dbContext.Connection.QuerySingleOrDefaultAsync<{_entityClassFullName}>
+            (""usp{_entityClassName}_selectBy{_pkFieldsNames}"", commandType: CommandType.StoredProcedure);
 
             return entity;
         }}";

@@ -48,6 +48,31 @@
                     <Label MinWidth="50">Author:</Label>
                     <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
                 </StackPanel>
+
+                <Label Margin="0,15,0,0" FontWeight="Bold">DB Context settings:</Label>
+                <Grid Margin="0,0,0,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="30"></RowDefinition>
+                        <RowDefinition MaxHeight="30"></RowDefinition>
+                        <RowDefinition MaxHeight="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30.8"></ColumnDefinition>
+                        <ColumnDefinition Width="249.2"/>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" MinWidth="200" Grid.ColumnSpan="2" Margin="0,0,0,25.2" Grid.RowSpan="2">Namespace for DB context class:</Label>
+                    <TextBox Grid.Row="0" Grid.Column="2" Name="txtDbContextNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.Namespace, Mode=TwoWay}" Margin="0,4,-0.2,3.6"></TextBox>
+
+                    <Label Grid.Row="1" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2" Margin="0,0.4,0,0.2">Name of DB Context class:</Label>
+                    <TextBox Grid.Row="1" Grid.Column="2" Name="txtDbContextClassName" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.ClassName, Mode=TwoWay}" Margin="0,3.4,-0.2,4.2"></TextBox>
+
+                    <Label Grid.Row="2" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2" Margin="0,0.4,0,0.2">Connection string name in App settings:</Label>
+                    <TextBox Grid.Row="2" Grid.Column="2" Name="txtDbContextConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.ConnectionStringName, Mode=TwoWay}" Margin="0,3.4,-0.2,4.2"></TextBox>
+
+                </Grid>
+
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
                 <Label Margin="0,15,0,0" FontWeight="Bold">Output settings:</Label>
 

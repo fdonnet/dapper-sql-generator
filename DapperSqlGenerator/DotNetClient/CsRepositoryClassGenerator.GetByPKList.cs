@@ -18,15 +18,15 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Select by PK List
         /// </summary>
-        public async Task<IEnumerable<{_entityName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)
+        public async Task<IEnumerable<{_entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)
         {{
             var p = new DynamicParameters();
-            p.Add(""@pk_list"", Create{_entityName}PKDataTable(pkList));
+            p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
 
-            var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+            var entities = await _dbContext.Connection.QueryAsync<{_entityClassFullName}>
+                (""usp{_entityClassName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
-            return true;
+            return entities;
         }}";
 
             return output + Environment.NewLine + PrintPKTypeForSelectByPKList();
@@ -39,18 +39,8 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintPKTypeForSelectByPKList()
         {
+            string addRows = string.Empty;
             string addColumns = String.Join(Environment.NewLine + "            ",
-                _pkColumns.Select(c =>
-                {
-                    var colName = c.Name.Parts[2];
-                    var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
-                    var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
- 
-                    return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
-                }));
-
-            string addRows =
-                String.Join(Environment.NewLine + "            ",
                 _pkColumns.Select(c =>
                 {
                     var colName = c.Name.Parts[2];
@@ -59,11 +49,12 @@ namespace DapperSqlGenerator.DotNetClient
                     var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
                     var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
 
-                    if (_pkColumns.Count() == 1)
+                    if (_pkColumns.Count() ==1)
                     {
-                        return colSqlType == "int"
+                        addRows += colSqlType == "int"
                         ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj);"
                         : $@"              row[""{colName}""] = curObj;";
+                        addRows += Environment.NewLine + "            ";
                     }
                     else
                     {
@@ -73,7 +64,7 @@ namespace DapperSqlGenerator.DotNetClient
                         //: $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
                         //addRows += Environment.NewLine + "            ";
                     }
-
+                    
 
                     return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
                 }));
@@ -82,7 +73,7 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Create special db table for select by PK List
         /// </summary>
-        private object Create{_entityName}PKDataTable(IEnumerable<{PrintPkListMethodParams()}> pkList)
+        private object Create{_entityClassName}PKDataTable(IEnumerable<{PrintPkListMethodParams()}> pkList)
         {{
             DataTable dt = new DataTable();
             {addColumns}
@@ -110,7 +101,7 @@ namespace DapperSqlGenerator.DotNetClient
             if (_pkColumns.Count() == 1)
                 return TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(_pkColumns.ToArray()[0], true));
             else
-                return $"{_entityName}_PKType"; //Need to be implemented
+                return $"{_entityClassName}_PKType";
  
         }
 

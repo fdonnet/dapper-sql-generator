@@ -77,10 +77,10 @@ namespace DapperSqlGenerator
 
                 foreach (var currTable in tables)
                 {
-                    string sql = "";
+                    string cs = "";
 
-                    sql = new CsEntityClassGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    cs = new CsEntityClassGenerator(generatorSettings, currTable).Generate();
+                    writer.WriteLine(cs);
 
                     await writer.FlushAsync();
                     progress += 100.0 / tablesCount;
@@ -106,12 +106,17 @@ namespace DapperSqlGenerator
                 writer.AutoFlush = false;
                 // Flush stream after every table
 
+                string cs = "";
+
+                cs = new CsDbContextGenerator(generatorSettings, model).Generate();
+                writer.WriteLine(cs);
+                await writer.FlushAsync();
+
                 foreach (var currTable in tables)
                 {
-                    string sql = "";
 
-                    sql = new CsRepositoryClassGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    cs = new CsRepositoryClassGenerator(generatorSettings, currTable).Generate();
+                    writer.WriteLine(cs);
 
                     await writer.FlushAsync();
                     progress += 100.0 / tablesCount;

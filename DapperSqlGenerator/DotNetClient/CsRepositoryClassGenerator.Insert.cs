@@ -16,6 +16,8 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintInsertMethod()
         {
+            var paramName = FirstCharacterToLower(_entityClassName);
+
             //Exclude de PK identity field to put "Direction Output" in Dapper params
             bool isOneColumnIdentity = _pkColumns.Count() == 1 && TSqlModelHelper.IsColumnIdentity(_pkColumns.ToList()[0]);
             var normalColumns = isOneColumnIdentity ? _allColumns.Except(_pkColumns) : _allColumns;
@@ -30,26 +32,25 @@ namespace DapperSqlGenerator.DotNetClient
                 : $@"return p.Get<{returnType}> (""@{_pkColumns.ToArray()[0].Name.Parts[2]}"");";
 
             string spPkParams = isOneColumnIdentity
-                    ? String.Join(Environment.NewLine + "            ",
-                        _pkColumns.Select(col =>
-                        {
-                            var colName = col.Name.Parts[2];
-                            var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
-                            return $@"p.Add(""@{colName}"",direction: ParameterDirection.Output);";
-                        }))
-                    : string.Empty; // no identity PK
+                ? String.Join(Environment.NewLine + "            ",
+                    _pkColumns.Select(col =>
+                    {
+                        var colName = col.Name.Parts[2];
+                        return $@"p.Add(""@{colName}"", direction: ParameterDirection.Output);";
+                    }))
+                : string.Empty; // no identity PK
 
             //Excluded columns in the SP
-            var tmpColumns = _globalSettings.SqlInsertSettings.FieldNamesExcluded != null
-                        ? normalColumns.Where(c => !_globalSettings.SqlInsertSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
-                        : normalColumns;
+            var tmpColumns = TableSettings.SqlInsertSettings.FieldNamesExcluded != null
+                ? normalColumns.Where(c => !TableSettings.SqlInsertSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+                : normalColumns;
 
             string spNormalParams = String.Join(Environment.NewLine + "            ",
                    tmpColumns.Select(col =>
                    {
                        var colName = col.Name.Parts[2];
-                       var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
-                       return $@"p.Add(""@{colName}"",{colVariableName});";
+                       var entityProp = TSqlModelHelper.PascalCase(colName);
+                       return $@"p.Add(""@{colName}"", {paramName}.{entityProp});";
                    }));
 
 
@@ -58,15 +59,15 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Insert
         /// </summary>
-        public async  Task<{returnType}> Insert({_entityName} {FirstCharacterToLower(_entityName)})
+        public async  Task<{returnType}> Insert({_entityClassFullName} {paramName})
         {{
             var p = new DynamicParameters();
             {spPkParams}
             {spNormalParams}
 
-            var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_Insert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
-
+            var ok = await _dbContext.Connection.ExecuteAsync
+                (""usp{_entityClassName}_Insert"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
+            
             {returnStatement}
         }}";
 
