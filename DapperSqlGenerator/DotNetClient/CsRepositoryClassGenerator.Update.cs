@@ -14,8 +14,8 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintUpdateMethod()
         {
-            var tmpColumns = _globalSettings.SqlUpdateSettings.FieldNamesExcluded != null
-                            ? _allColumns.Where(c => !_globalSettings.SqlUpdateSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+            var tmpColumns = TableSettings.SqlUpdateSettings.FieldNamesExcluded != null
+                            ? _allColumns.Where(c => !TableSettings.SqlUpdateSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
                             : _allColumns;
 
             string spParams = String.Join(Environment.NewLine + "            ",
@@ -23,20 +23,20 @@ namespace DapperSqlGenerator.DotNetClient
                     {
                         var colName = col.Name.Parts[2];
                         var colVariableName = FirstCharacterToLower(TSqlModelHelper.PascalCase(colName));
-                        return $@"p.Add(""@{colName}"",{colVariableName});";
+                        return $@"p.Add(""@{colName}"", {colVariableName});";
                     }));
 
             string output = $@"
         /// <summary>
         /// Update
         /// </summary>
-        public async Task<bool> Update({_entityName} {FirstCharacterToLower(_entityName)})
+        public async Task<bool> Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)})
         {{
             var p = new DynamicParameters();
             {spParams}
 
             var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_Update"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+                (""usp{_entityClassName}_Update"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
 
             return true;
         }}";

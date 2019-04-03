@@ -20,12 +20,13 @@ namespace DapperSqlGenerator.DotNetClient
     public partial class CsRepositoryClassGenerator : GeneratorBase
     {
         private readonly CsRepositoryClassGeneratorSettings _settings;
-        private readonly TableSettings _globalSettings;
-        private string _className;
-        private string _interfaceName;
-        private string _entityName;
+
+        private string _repoClassName;
+        private string _repoInterfaceName;
+        private string _entityClassFullName;
+        private string _entityClassName;
         private IEnumerable<TSqlObject> _pkColumns;
-        private IEnumerable<IEnumerable<TSqlObject>> _uks;
+        private IEnumerable<IEnumerable<TSqlObject>> _uniqueKeys;
         private IEnumerable<TSqlObject> _allColumns;
         private string _pkFieldsNames;
         private string _pkFieldsWithTypes;
@@ -33,24 +34,24 @@ namespace DapperSqlGenerator.DotNetClient
         public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-
-            _settings = TableSettings?.CsRepositorySettings ?? GeneratorSettings.GlobalSettings.CsRepositorySettings;
-            _globalSettings = TableSettings ?? GeneratorSettings.GlobalSettings;
-
+            _settings = TableSettings.CsRepositorySettings;
         }
 
 
         public override string Generate()
         {
-            _className = TSqlModelHelper.PascalCase(Table.Name.Parts[1]) + "Repo";
-            _interfaceName = "I" + _className;
-            _entityName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]);
+            _repoClassName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]) + "Repo";
+            _repoInterfaceName = "I" + _repoClassName;
+
+            // For entity class, we use a fully qualified name (which avoids us to manage 'using' statements)
+            _entityClassFullName = TableSettings.CsEntitySettings.Namespace + "." + TSqlModelHelper.PascalCase(Table.Name.Parts[1]);
+            _entityClassName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]);
+
             _pkColumns = Table.GetPrimaryKeyColumns();
             _allColumns = TSqlModelHelper.GetAllColumns(Table);
             _pkFieldsNames = ConcatPkFieldNames();
             _pkFieldsWithTypes = ConcatPkFieldsWithTypes();
-            _uks = Table.GetUniqueKeysWithColumns();
-
+            _uniqueKeys = Table.GetUniqueKeysWithColumns();
 
             return InterfaceDeclaration() + ClassDeclaration(); ;
         }
@@ -68,14 +69,14 @@ namespace DapperSqlGenerator.DotNetClient
            $@" 
 /// =================================================================
 /// Author: {GeneratorSettings.AuthorName}
-/// Description:	Class for the repo {_className} 
+/// Description:	Class for the repo {_repoClassName} 
 /// =================================================================
 
 namespace { _settings.Namespace} {{
   
-    public partial class {_className} : BaseRepo, {_interfaceName}
+    public partial class {_repoClassName} : BaseRepo, {_repoInterfaceName}
     {{
-        public {_className}(IConfiguration config) : base(config)
+        public {_repoClassName}(IConfiguration config) : base(config)
         {{
         }}
         
@@ -98,18 +99,18 @@ namespace { _settings.Namespace} {{
             //Var needed to generate
 
             var methodDeclarations = String.Join(Environment.NewLine + "        ",
-                GetMethodsSignaturesForInterface());
+                GetMethodSignaturesForInterface());
 
             string output =
 $@" 
 /// =================================================================
 /// Author: {GeneratorSettings.AuthorName}
-/// Description:	Interface for the repo {_interfaceName} 
+/// Description:	Interface for the repo {_repoInterfaceName} 
 /// =================================================================
 
 namespace { _settings.Namespace } {{
   
-    public partial interface { _interfaceName } : IBaseRepo
+    public partial interface { _repoInterfaceName } : IBaseRepo
     {{ 
         
         { methodDeclarations }
@@ -126,50 +127,48 @@ namespace { _settings.Namespace } {{
         /// Get all methods signatures for the interface based on the actual config
         /// yc SqlStored proc config and Entity config
         /// </summary>
-        /// <param name="pkColumns"></param>
-        /// <param name="uks"></param>
         /// <returns></returns>
-        private IEnumerable<string> GetMethodsSignaturesForInterface()
+        private IEnumerable<string> GetMethodSignaturesForInterface()
 
         {
             //Get all
-            if (_globalSettings.GenerateSelectAllSP)
-                yield return $"Task<IEnumerable<{_entityName}>> GetAll();";
+            if (TableSettings.GenerateSelectAllSP)
+                yield return $"Task<IEnumerable<{_entityClassFullName}>> GetAll();";
 
-            //Get by PK
-            if (_globalSettings.GenerateSelectByPk)
-                yield return $"Task<{_entityName}> GetBy{_pkFieldsNames}({_pkFieldsWithTypes});";
+            //Get by Primary key
+            if (TableSettings.GenerateSelectByPk)
+                yield return $"Task<{_entityClassFullName}> GetBy{_pkFieldsNames}({_pkFieldsWithTypes});";
 
-            //Get by uks
-            if (_globalSettings.GenerateSelectByUK)
+            //Get by Unique key
+            if (TableSettings.GenerateSelectByUK)
             {
-                foreach (var ukColumns in _uks)
+                foreach (var ukColumns in _uniqueKeys)
                 {
                     var ukFieldNames = ConcatUkFieldNames(ukColumns);
                     var ukFieldsWithType = ConcatUkFieldsWithTypes(ukColumns);
 
-                    yield return $"Task<{_entityName}> GetBy{ukFieldNames}({ukFieldsWithType});";
+                    yield return $"Task<{_entityClassFullName}> GetBy{ukFieldNames}({ukFieldsWithType});";
                 }
             }
 
             //Insert
-            if (_globalSettings.GenerateInsertSP)
-                yield return $"Task<int> Insert({_entityName} {FirstCharacterToLower(_entityName)});";
+            if (TableSettings.GenerateInsertSP)
+                yield return $"Task<int> Insert({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Bulk insert
-            if (_globalSettings.GenerateBulkInsertSP)
-                yield return $"Task<bool> InsertBulk(IEnumerable<{_entityName}> {FirstCharacterToLower(_entityName)}List)"; 
+            if (TableSettings.GenerateBulkInsertSP)
+                yield return $"Task<bool> InsertBulk(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List)";
 
             //Update
-            if (_globalSettings.GenerateUpdateSP)
-                yield return $"Task<bool> Update({_entityName} {FirstCharacterToLower(_entityName)});";
+            if (TableSettings.GenerateUpdateSP)
+                yield return $"Task<bool> Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Delete
-            if (_globalSettings.GenerateDeleteSP)
-                yield return $"Task<bool> Delete(int id);"; //only work with and int id as pk, hard coded need to be changed
+            if (TableSettings.GenerateDeleteSP)
+                yield return $"Task<bool> Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
 
-            if (_globalSettings.GenerateSelectByPkList)
-                yield return $"Task<IEnumerable<{ _entityName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)";
+            if (TableSettings.GenerateSelectByPkList)
+                yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)";
 
 
         }
@@ -180,38 +179,38 @@ namespace { _settings.Namespace } {{
         /// <returns></returns>
         private IEnumerable<string> GetMethodsForClass()
         {
-            if (_globalSettings.GenerateSelectAllSP)
+            if (TableSettings.GenerateSelectAllSP)
                 yield return PrintGetAllMethod();
 
-            if (_globalSettings.GenerateSelectByPk)
+            if (TableSettings.GenerateSelectByPk)
                 yield return PrintGetByPKMethod();
 
-            if (_globalSettings.GenerateSelectByUK)
+            if (TableSettings.GenerateSelectByUK)
             {
-                foreach (var ukWihtColumns in _uks)
+                foreach (var ukWithColumns in _uniqueKeys)
                 {
-                    yield return PrintGetByUkMethod(ukWihtColumns);
+                    yield return PrintGetByUkMethod(ukWithColumns);
                 }
             }
 
-            if (_globalSettings.GenerateInsertSP)
+            if (TableSettings.GenerateInsertSP)
                 yield return PrintInsertMethod();
 
-            if (_globalSettings.GenerateUpdateSP)
+            if (TableSettings.GenerateUpdateSP)
                 yield return PrintUpdateMethod();
 
-            if (_globalSettings.GenerateDeleteSP)
+            if (TableSettings.GenerateDeleteSP)
                 yield return PrintDeleteMethod();
 
-            if (_globalSettings.GenerateBulkInsertSP)
+            if (TableSettings.GenerateBulkInsertSP)
                 yield return PrintBulkInsertMethod();
 
-            if (_globalSettings.GenerateSelectByPkList)
+            if (TableSettings.GenerateSelectByPkList)
                 yield return PrintGetByPKListMethod();
 
         }
 
-          //-----------------------Tools & Helper----------------------------------------
+        //-----------------------Tools & Helper----------------------------------------
 
         /// <summary>
         /// Concat all the actual pk fields names in a string with "And" as a separator
@@ -239,11 +238,12 @@ namespace { _settings.Namespace } {{
                       {
                           var colName = col.Name.Parts[2];
                           var colDataType = col.GetColumnSqlDataType(false);
+
                           //Search for custom member type or use the conversion from Sql Types
-                          var memberType = (_globalSettings.CsEntitySettings.FieldNameCustomTypes != null
-                                    && _globalSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(colName)
-                                                           ? _globalSettings.CsEntitySettings?.FieldNameCustomTypes[colName]
-                                                          : TSqlModelHelper.GetDotNetDataType(colDataType, false));
+                          var memberType = (TableSettings.CsEntitySettings.FieldNameCustomTypes != null
+                                    && TableSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(colName)
+                                        ? TableSettings.CsEntitySettings?.FieldNameCustomTypes[colName]
+                                        : TSqlModelHelper.GetDotNetDataType(colDataType, false));
 
                           return $"{memberType} {FirstCharacterToLower(TSqlModelHelper.PascalCase(colName))}";
                       })
@@ -258,11 +258,11 @@ namespace { _settings.Namespace } {{
         private string ConcatUkFieldNames(IEnumerable<TSqlObject> ukColumns)
         {
             return String.Join("And",
-                    ukColumns.Select(col =>
-                    {
-                        var colName = col.Name.Parts[2];
-                        return $"{TSqlModelHelper.PascalCase(colName)}";
-                    }));
+                ukColumns.Select(col =>
+                {
+                    var colName = col.Name.Parts[2];
+                    return $"{TSqlModelHelper.PascalCase(colName)}";
+                }));
         }
 
         /// <summary>
@@ -277,11 +277,12 @@ namespace { _settings.Namespace } {{
                         {
                             var colName = col.Name.Parts[2];
                             var colDataType = col.GetColumnSqlDataType(false);
+
                             //Search for custom member type or use the conversion from Sql Types
-                            var memberType = (_globalSettings.CsEntitySettings.FieldNameCustomTypes != null
-                                     && _globalSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(colName)
-                                                            ? _globalSettings.CsEntitySettings?.FieldNameCustomTypes[colName]
-                                                           : TSqlModelHelper.GetDotNetDataType(colDataType, false));
+                            var memberType = (TableSettings.CsEntitySettings.FieldNameCustomTypes != null
+                                     && TableSettings.CsEntitySettings.FieldNameCustomTypes.ContainsKey(colName)
+                                        ? TableSettings.CsEntitySettings?.FieldNameCustomTypes[colName]
+                                        : TSqlModelHelper.GetDotNetDataType(colDataType, false));
 
                             return $"{memberType} {FirstCharacterToLower(TSqlModelHelper.PascalCase(colName))}";
                         })

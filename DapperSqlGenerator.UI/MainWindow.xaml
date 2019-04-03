@@ -48,6 +48,26 @@
                     <Label MinWidth="50">Author:</Label>
                     <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
                 </StackPanel>
+
+                <Label Margin="0,15,0,0" FontWeight="Bold">Base repository settings:</Label>
+                <Grid Margin="0,0,0,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="30"></RowDefinition>
+                        <RowDefinition MaxHeight="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" MinWidth="200">Namespace for base repository class:</Label>
+                    <TextBox Grid.Row="0" Grid.Column="1" Name="txtBaseRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.Namespace, Mode=TwoWay}"></TextBox>
+
+                    <Label Grid.Row="1" Grid.Column="0" MinWidth="280">Connection string name in your appsettings.json:</Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" Name="txtRepoConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.ConnectionStringName, Mode=TwoWay}"></TextBox>
+
+                </Grid>
+
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
                 <Label Margin="0,15,0,0" FontWeight="Bold">Output settings:</Label>
 

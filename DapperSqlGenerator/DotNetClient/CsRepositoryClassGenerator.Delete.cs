@@ -32,7 +32,7 @@ namespace DapperSqlGenerator.DotNetClient
             {spParams}
 
             var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_Delete"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+                (""usp{_entityClassName}_Delete"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
 
             return true;
         }}";

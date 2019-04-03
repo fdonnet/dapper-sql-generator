@@ -17,7 +17,7 @@ namespace DapperSqlGenerator.StoredProcedures
         public SqlUpdateGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            _settings = TableSettings?.SqlUpdateSettings ?? GeneratorSettings.GlobalSettings.SqlUpdateSettings;
+            _settings = TableSettings?.SqlUpdateSettings;
 
             //todo to be implemented
             //this.DoNotUpdateColumns = doNotUpdateColumns ?? this.DoNotUpdateColumns;

@@ -14,7 +14,7 @@ namespace DapperSqlGenerator.StoredProcedures
         public SqlSelectByUKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            _settings = TableSettings?.SqlSelectByUKSettings ?? GeneratorSettings.GlobalSettings.SqlSelectByUKSettings;
+            _settings = TableSettings?.SqlSelectByUKSettings;
         }
 
         public override string Generate()

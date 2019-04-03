@@ -40,8 +40,8 @@ namespace DapperSqlGenerator.DotNetClient
                     : string.Empty; // no identity PK
 
             //Excluded columns in the SP
-            var tmpColumns = _globalSettings.SqlInsertSettings.FieldNamesExcluded != null
-                        ? normalColumns.Where(c => !_globalSettings.SqlInsertSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+            var tmpColumns = TableSettings.SqlInsertSettings.FieldNamesExcluded != null
+                        ? normalColumns.Where(c => !TableSettings.SqlInsertSettings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
                         : normalColumns;
 
             string spNormalParams = String.Join(Environment.NewLine + "            ",
@@ -58,15 +58,15 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Insert
         /// </summary>
-        public async  Task<{returnType}> Insert({_entityName} {FirstCharacterToLower(_entityName)})
+        public async  Task<{returnType}> Insert({_entityClassFullName} {FirstCharacterToLower(_entityClassName)})
         {{
             var p = new DynamicParameters();
             {spPkParams}
             {spNormalParams}
 
             var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_Insert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
-
+                (""usp{_entityClassName}_Insert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+            
             {returnStatement}
         }}";
 

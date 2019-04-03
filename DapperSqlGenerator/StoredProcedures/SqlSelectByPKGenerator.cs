@@ -14,7 +14,7 @@ namespace DapperSqlGenerator.StoredProcedures
         public SqlSelectByPKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            _settings = TableSettings?.SqlSelectByPKSettings ?? GeneratorSettings.GlobalSettings.SqlSelectByPKSettings;
+            _settings = TableSettings?.SqlSelectByPKSettings;
         }
 
 

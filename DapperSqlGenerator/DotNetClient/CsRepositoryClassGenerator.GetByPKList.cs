@@ -18,13 +18,13 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Select by PK List
         /// </summary>
-        public async Task<IEnumerable<{_entityName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)
+        public async Task<IEnumerable<{_entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)
         {{
             var p = new DynamicParameters();
-            p.Add(""@pk_list"", Create{_entityName}PKDataTable(pkList));
+            p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
 
             var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+                (""usp{_entityClassName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
 
             return true;
         }}";
@@ -73,7 +73,7 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Create special db table for select by PK List
         /// </summary>
-        private object Create{_entityName}PKDataTable(IEnumerable<{PrintPkListMethodParams()}> pkList)
+        private object Create{_entityClassName}PKDataTable(IEnumerable<{PrintPkListMethodParams()}> pkList)
         {{
             DataTable dt = new DataTable();
             {addColumns}
@@ -101,7 +101,7 @@ namespace DapperSqlGenerator.DotNetClient
             if (_pkColumns.Count() == 1)
                 return TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(_pkColumns.ToArray()[0], true));
             else
-                return $"{_entityName}_PKType";
+                return $"{_entityClassName}_PKType";
  
         }
 

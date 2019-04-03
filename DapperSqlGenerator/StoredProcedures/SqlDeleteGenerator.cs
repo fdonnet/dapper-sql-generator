@@ -14,7 +14,7 @@ namespace DapperSqlGenerator.StoredProcedures
         public SqlDeleteGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            _settings = TableSettings?.SqlDeleteSettings ?? GeneratorSettings.GlobalSettings.SqlDeleteSettings;
+            _settings = TableSettings?.SqlDeleteSettings;
         }
 
 

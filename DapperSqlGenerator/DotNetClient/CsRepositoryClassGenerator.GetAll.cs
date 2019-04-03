@@ -18,10 +18,10 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Get all
         /// </summary>
-        public async Task<IEnumerable<{_entityName}>> GetAll()
+        public async Task<IEnumerable<{_entityClassFullName}>> GetAll()
         {{
-            var entities = await _cn.QueryAsync<{_entityName}>
-            (""usp{_entityName}_selectAll"", commandType: CommandType.StoredProcedure);
+            var entities = await _cn.QueryAsync<{_entityClassFullName}>
+            (""usp{_entityClassName}_selectAll"", commandType: CommandType.StoredProcedure);
 
             return entities;
         }}";

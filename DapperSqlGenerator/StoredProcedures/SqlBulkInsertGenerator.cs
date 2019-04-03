@@ -18,7 +18,7 @@ namespace DapperSqlGenerator.StoredProcedures
         public SqlBulkInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            _settings = TableSettings?.SqlBulkInsertSettings ?? GeneratorSettings.GlobalSettings.SqlBulkInsertSettings;
+            _settings = TableSettings?.SqlBulkInsertSettings;
         }
 
 

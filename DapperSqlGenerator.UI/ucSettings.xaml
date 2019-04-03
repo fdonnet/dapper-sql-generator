@@ -173,17 +173,17 @@
                         </StackPanel>
 
                         <CheckBox  Grid.Row="2" Name="chkICloneable" VerticalAlignment="Center" Margin="0,5,0,0" 
-                                   IsChecked="{Binding Path=CsEntitySettings.ImplementICloneable, Mode=TwoWay}">Implement ICloneable interface</CheckBox>
+                                   IsChecked="{Binding Path=CsEntitySettings.ImplementICloneable, Mode=TwoWay}">Implement System.ICloneable interface</CheckBox>
 
                         <CheckBox  Grid.Row="3" Name="chkRequieredDecorator" VerticalAlignment="Center" Margin="0,5,0,0" 
-                                   IsChecked="{Binding Path=CsEntitySettings.StandardRequieredDecorator, Mode=TwoWay}">Standard [Requiered] decorator when NOT NULL</CheckBox>
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardRequiredDecorator, Mode=TwoWay}">Add [System.ComponentModel.DataAnnotations.Required] attribute for NOT NULL columns</CheckBox>
 
                         <CheckBox  Grid.Row="4" Name="chkStringLengthDecorator" VerticalAlignment="Center" Margin="0,5,0,0" 
-                                   IsChecked="{Binding Path=CsEntitySettings.StandardStringLengthDecorator, Mode=TwoWay}">Standard [StringLength(LEN)] decorator when string</CheckBox>
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardStringLengthDecorator, Mode=TwoWay}">Add [System.ComponentModel.DataAnnotations.StringLength(LEN)] attribute for string columns</CheckBox>
 
                         <StackPanel Orientation="Vertical" Grid.Row="5" Margin="0,5,0,0">
                             <CheckBox Name="chkJsonIgnoreDecorator" VerticalAlignment="Center" Margin="0,0,0,0" 
-                                   IsChecked="{Binding Path=CsEntitySettings.StandardJsonIgnoreDecorator, Mode=TwoWay}">Standard [JsonIgnore] decorator when table field names are (separator ","):</CheckBox>
+                                   IsChecked="{Binding Path=CsEntitySettings.StandardJsonIgnoreDecorator, Mode=TwoWay}">Add [Newtonsoft.Json.JsonIgnore] attribute for following columns (separator ","):</CheckBox>
                             <TextBox Name="txtJsonIgnoreFieldNames" VerticalAlignment="Center" MinWidth="240" Margin="20,5,0,2" 
                                      Text="{Binding Path=CsEntitySettings.FieldNamesWithJsonIgnoreDecorator, Mode=TwoWay}"></TextBox>
                         </StackPanel>
@@ -239,22 +239,6 @@
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
                             <Label MinWidth="200">Namespace for class repo:</Label>
                             <TextBox Name="txtRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRepositorySettings.Namespace, Mode=TwoWay}"></TextBox>
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-                <TabItem Name="tabRepoBase" Header="Base repo">
-                    <Grid Margin="0,10,0,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition MaxHeight="30"></RowDefinition>
-                            <RowDefinition MaxHeight="30"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
-                            <Label MinWidth="200">Namespace for base repo:</Label>
-                            <TextBox Name="txtBaseRepoNameSpace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.Namespace, Mode=TwoWay}"></TextBox>
-                        </StackPanel>
-                        <StackPanel Name="panConnectionString" Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
-                            <Label MinWidth="280">Connection string name in your appsettings.json:</Label>
-                            <TextBox Name="txtRepoConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsRespositoryBaseSettings.ConnectionStringName, Mode=TwoWay}"></TextBox>
                         </StackPanel>
                     </Grid>
                 </TabItem>

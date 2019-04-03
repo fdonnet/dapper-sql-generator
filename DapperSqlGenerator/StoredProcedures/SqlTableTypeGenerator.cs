@@ -15,7 +15,7 @@ namespace DapperSqlGenerator.StoredProcedures
         public SqlTableTypeGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table)
         {
-            _settings = TableSettings?.SqlTableTypeSettings ?? GeneratorSettings.GlobalSettings.SqlTableTypeSettings;
+            _settings = TableSettings?.SqlTableTypeSettings;
             //TODO to be implemented
             // this.DoNotIncludeColumns = doNotIncludeColumns ?? this.DoNotIncludeColumns;
         }

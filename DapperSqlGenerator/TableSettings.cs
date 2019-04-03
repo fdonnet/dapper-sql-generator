@@ -29,7 +29,7 @@ namespace DapperSqlGenerator
         public bool GenerateEntities { get; set; } = true;
         public bool GenerateRepositories { get; set; } = true;
 
-        //Sql settings
+        //Sql table settings
         public SqlDeleteGeneratorSettings SqlDeleteSettings { get; set; } = new SqlDeleteGeneratorSettings();
         public SqlInsertGeneratorSettings SqlInsertSettings { get; set; } = new SqlInsertGeneratorSettings();
         public SqlBulkInsertGeneratorSettings SqlBulkInsertSettings { get; set; } = new SqlBulkInsertGeneratorSettings();
@@ -39,14 +39,11 @@ namespace DapperSqlGenerator
         public SqlSelectByPKListGeneratorSettings SqlSelectByPKListSettings { get; set; } = new SqlSelectByPKListGeneratorSettings();
         public SqlSelectByUKGeneratorSettings SqlSelectByUKSettings { get; set; } = new SqlSelectByUKGeneratorSettings();
         public SqlTableTypeGeneratorSettings SqlTableTypeSettings { get; set; } = new SqlTableTypeGeneratorSettings();
-
-
-        //C# dapper settings
+        
+        //C# dapper table settings
         public CsEntityClassGeneratorSettings CsEntitySettings { get; set; } = new CsEntityClassGeneratorSettings();
-        public CsRepositoryBaseGeneratorSettings CsRespositoryBaseSettings { get; set; } = new CsRepositoryBaseGeneratorSettings();
         public CsRepositoryClassGeneratorSettings CsRepositorySettings { get; set; } = new CsRepositoryClassGeneratorSettings();
-
-
+        
     }
 
     /// <summary>

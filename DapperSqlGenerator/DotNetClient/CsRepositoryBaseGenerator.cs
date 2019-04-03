@@ -9,14 +9,16 @@ namespace DapperSqlGenerator.DotNetClient
 {
     public class CsRepositoryBaseGenerator : GeneratorBase
     {
+
         private readonly CsRepositoryBaseGeneratorSettings _settings;
 
-        public CsRepositoryBaseGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table)
+        public CsRepositoryBaseGenerator(GeneratorSettings generatorSettings)
+            : base(generatorSettings, null)
         {
 
-            _settings = TableSettings?.CsRespositoryBaseSettings ?? GeneratorSettings.GlobalSettings.CsRespositoryBaseSettings;
+            _settings = GeneratorSettings.CsRespositoryBaseSettings;
         }
+
         public override string Generate()
         {
             string output =

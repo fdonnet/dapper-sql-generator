@@ -19,13 +19,13 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Bulk insert
         /// </summary>
-        public async Task<bool> InsertBulk(IEnumerable<{_entityName}> {FirstCharacterToLower(_entityName)}List)
+        public async Task<bool> InsertBulk(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List)
         {{
             var p = new DynamicParameters();
-            p.Add(""@items"", Create{_entityName}DataTable({FirstCharacterToLower(_entityName)}List));
+            p.Add(""@items"", Create{_entityClassName}DataTable({FirstCharacterToLower(_entityClassName)}List));
 
             var ok = await _cn.ExecuteAsync
-                (""usp{_entityName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+                (""usp{_entityClassName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
 
             return true;
         }}";
@@ -64,13 +64,13 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Create special db table for bulk insert
         /// </summary>
-        private object Create{_entityName}DataTable(IEnumerable<{_entityName}> {_entityName}List)
+        private object Create{_entityClassName}DataTable(IEnumerable<{_entityClassFullName}> {_entityClassName}List)
         {{
             DataTable dt = new DataTable();
             {addColumns}
 
-            if ({_entityName}List != null)
-                foreach (var curObj in {_entityName}List)
+            if ({_entityClassName}List != null)
+                foreach (var curObj in {_entityClassName}List)
                 {{
                     DataRow row = dt.NewRow();
                     {addRows}

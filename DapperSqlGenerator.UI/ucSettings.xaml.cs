@@ -87,16 +87,9 @@ namespace DapperSqlGenerator.UI
 
             tabCustomDeco.Visibility = Visibility.Visible;
             tabCustomField.Visibility = Visibility.Visible;
-
-            //Hide connection string option for table settings (only global)
-            panConnectionString.Visibility = Visibility.Hidden;
-            tabRepoBase.Visibility = Visibility.Hidden;
             
-
             LoadCustomGrids(table);
-
-
-
+                                 
             _initialLoading = false;
         }
 

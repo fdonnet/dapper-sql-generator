@@ -90,7 +90,7 @@ namespace DapperSqlGenerator
             switch (sqlDataTypeName.ToLower())
             {
                 case "bigint":
-                    return "Int64" + (nullable ? "?" : "");
+                    return "long" + (nullable ? "?" : "");
                 case "binary":
                 case "image":
                 case "varbinary":
@@ -101,7 +101,7 @@ namespace DapperSqlGenerator
                     return "char" + (nullable ? "?" : "");
                 case "datetime":
                 case "smalldatetime":
-                    return "DateTime" + (nullable ? "?" : "");
+                    return "System.DateTime" + (nullable ? "?" : "");
                 case "decimal":
                 case "money":
                 case "numeric":
@@ -119,13 +119,13 @@ namespace DapperSqlGenerator
                 case "real":
                     return "single" + (nullable ? "?" : "");
                 case "smallint":
-                    return "Int16" + (nullable ? "?" : "");
+                    return "short" + (nullable ? "?" : "");
                 case "tinyint":
                     return "byte" + (nullable ? "?" : "");
                 case "uniqueidentifier":
-                    return "Guid" + (nullable ? "?" : "");
+                    return "System.Guid" + (nullable ? "?" : "");
                 case "date":
-                    return "DateTime" + (nullable ? "?" : "");
+                    return "System.DateTime" + (nullable ? "?" : "");
 
                 default:
                     return null;
