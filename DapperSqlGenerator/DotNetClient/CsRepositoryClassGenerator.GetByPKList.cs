@@ -12,8 +12,6 @@ namespace DapperSqlGenerator.DotNetClient
         private string PrintGetByPKListMethod()
         {
 
-
-
             string output = $@"
         /// <summary>
         /// Select by PK List
@@ -24,7 +22,7 @@ namespace DapperSqlGenerator.DotNetClient
             p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
 
             var entities = await _dbContext.Connection.QueryAsync<{_entityClassFullName}>
-                (""usp{_entityClassName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
+                (""usp{_entityClassName}_selectByPKList"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
             return entities;
         }}";
@@ -32,7 +30,6 @@ namespace DapperSqlGenerator.DotNetClient
             return output + Environment.NewLine + PrintPKTypeForSelectByPKList();
         }
 
-        //TODO to be reviewed : for the moment doesn't support composite PK
         /// <summary>
         /// 
         /// </summary>

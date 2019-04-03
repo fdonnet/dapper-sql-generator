@@ -23,14 +23,6 @@ namespace DapperSqlGenerator.StoredProcedures
         {
             _pkColumns = Table.GetPrimaryKeyColumns();
 
-            var pkFieldNames = String.Join("And",
-                _pkColumns.Select(col =>
-                {
-                    var colName = col.Name.Parts[2];
-                    return $"{TSqlModelHelper.PascalCase(colName)}";
-                })
-            );
-
             var innerJoins = String.Join(Environment.NewLine + "        AND ",
                 _pkColumns.Select(col =>
                 {
@@ -42,7 +34,7 @@ namespace DapperSqlGenerator.StoredProcedures
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
-                    + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldNames}List] TO [{roleName}] AS [dbo];"
+                    + $"ON OBJECT::[dbo].[usp{ TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectByPKList] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
 );
 
@@ -53,7 +45,7 @@ $@"
 -- Description:	Select By PKList Procedure for the table {Table.Name} 
 -- =================================================================
 
-CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectBy{pkFieldNames}List]
+CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectByPKList]
 (
     @pk_list [dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PKType] READONLY
 )
