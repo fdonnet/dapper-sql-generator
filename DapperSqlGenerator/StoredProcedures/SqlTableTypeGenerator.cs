@@ -13,7 +13,7 @@ namespace DapperSqlGenerator.StoredProcedures
         private readonly SqlTableTypeGeneratorSettings _settings;
 
         public SqlTableTypeGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table)
+            : base(generatorSettings, table: table)
         {
             _settings = TableSettings?.SqlTableTypeSettings;
             //TODO to be implemented

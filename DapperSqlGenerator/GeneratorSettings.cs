@@ -23,7 +23,7 @@ namespace DapperSqlGenerator
 
         public string OutputPath_CsRepositoryClasses { get; set; } = "MSSQLDapperGenerator.Repositories.cs";
         
-        public CsRepositoryBaseGeneratorSettings CsRespositoryBaseSettings { get; set; } = new CsRepositoryBaseGeneratorSettings();
+        public CsDbContextGeneratorSettings CsDbContextSettings { get; set; } = new CsDbContextGeneratorSettings();
 
         public TableSettings GlobalSettings { get; set; } = new TableSettings();
 

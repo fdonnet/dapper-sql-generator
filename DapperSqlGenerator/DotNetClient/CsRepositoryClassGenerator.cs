@@ -32,7 +32,7 @@ namespace DapperSqlGenerator.DotNetClient
         private string _pkFieldsWithTypes;
 
         public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table)
+            : base(generatorSettings, table: table)
         {
             _settings = TableSettings.CsRepositorySettings;
         }
@@ -53,37 +53,50 @@ namespace DapperSqlGenerator.DotNetClient
             _pkFieldsWithTypes = ConcatPkFieldsWithTypes();
             _uniqueKeys = Table.GetUniqueKeysWithColumns();
 
-            return InterfaceDeclaration() + ClassDeclaration(); ;
+            return 
+$@"
+
+namespace { _settings.Namespace} {{
+
+    {GenerateInterface()}
+
+    {GenerateClass()}
+
+}}
+
+";
         }
 
         /// <summary>
         /// Get the declaration for the repo class
         /// </summary>
         /// <returns></returns>
-        private string ClassDeclaration()
+        private string GenerateClass()
         {
+            var dbContextType = GeneratorSettings.CsDbContextSettings.Namespace + "." + GeneratorSettings.CsDbContextSettings.ClassName;
+            
             var methodDeclarations = String.Join(Environment.NewLine + "        ",
-                GetMethodsForClass());
+                GenerateClassMethods());
 
             string output =
-           $@" 
-/// =================================================================
-/// Author: {GeneratorSettings.AuthorName}
-/// Description:	Class for the repo {_repoClassName} 
-/// =================================================================
-
-namespace { _settings.Namespace} {{
-  
-    public partial class {_repoClassName} : BaseRepo, {_repoInterfaceName}
+$@" 
+    /// =================================================================
+    /// Author: {GeneratorSettings.AuthorName}
+    /// Description:	Class for the repo {_repoClassName} 
+    /// =================================================================
+    public partial class {_repoClassName} : {_repoInterfaceName}
     {{
-        public {_repoClassName}(IConfiguration config) : base(config)
+
+        protected {dbContextType} _dbContext = null;
+
+        public {_repoClassName}({dbContextType} dbContext)
         {{
+            _dbContext = dbContext;
         }}
         
         { methodDeclarations }
 
     }}
-}}
 
 ";
 
@@ -94,29 +107,25 @@ namespace { _settings.Namespace} {{
         /// Get the declaration for the repo interface
         /// </summary>
         /// <returns></returns>
-        private string InterfaceDeclaration()
+        private string GenerateInterface()
         {
             //Var needed to generate
 
             var methodDeclarations = String.Join(Environment.NewLine + "        ",
-                GetMethodSignaturesForInterface());
+                GenerateInterfaceMethods());
 
             string output =
 $@" 
-/// =================================================================
-/// Author: {GeneratorSettings.AuthorName}
-/// Description:	Interface for the repo {_repoInterfaceName} 
-/// =================================================================
-
-namespace { _settings.Namespace } {{
-  
-    public partial interface { _repoInterfaceName } : IBaseRepo
+    /// =================================================================
+    /// Author: {GeneratorSettings.AuthorName}
+    /// Description:	Interface for the repo {_repoInterfaceName} 
+    /// ================================================================= 
+    public partial interface { _repoInterfaceName }
     {{ 
         
         { methodDeclarations }
 
     }}
-}}
 
 ";
 
@@ -128,7 +137,7 @@ namespace { _settings.Namespace } {{
         /// yc SqlStored proc config and Entity config
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<string> GetMethodSignaturesForInterface()
+        private IEnumerable<string> GenerateInterfaceMethods()
 
         {
             //Get all
@@ -157,7 +166,7 @@ namespace { _settings.Namespace } {{
 
             //Bulk insert
             if (TableSettings.GenerateBulkInsertSP)
-                yield return $"Task<bool> InsertBulk(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List)";
+                yield return $"Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
 
             //Update
             if (TableSettings.GenerateUpdateSP)
@@ -168,16 +177,17 @@ namespace { _settings.Namespace } {{
                 yield return $"Task<bool> Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
 
             if (TableSettings.GenerateSelectByPkList)
-                yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)";
+                yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList);";
 
 
         }
+
 
         /// <summary>
         /// Get all the methods for the class repo based on the actual TSql config and entity config
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<string> GetMethodsForClass()
+        private IEnumerable<string> GenerateClassMethods()
         {
             if (TableSettings.GenerateSelectAllSP)
                 yield return PrintGetAllMethod();
@@ -210,7 +220,8 @@ namespace { _settings.Namespace } {{
 
         }
 
-        //-----------------------Tools & Helper----------------------------------------
+
+        //-----------------------Tools & Helpers----------------------------------------
 
         /// <summary>
         /// Concat all the actual pk fields names in a string with "And" as a separator

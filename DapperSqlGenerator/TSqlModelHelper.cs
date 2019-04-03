@@ -84,6 +84,60 @@ namespace DapperSqlGenerator
         /// </summary>
         /// <param name="sqlDataTypeName"></param>
         /// <returns></returns>
+        public static string GetDotNetDataType_SystemDataSqlTypes(string sqlDataTypeName)
+        {
+            if (sqlDataTypeName == null) throw new ArgumentNullException(nameof(sqlDataTypeName));
+            switch (sqlDataTypeName.ToLower())
+            {
+                case "bigint":
+                    return "SqlInt64";
+                case "binary":
+                case "image":
+                case "varbinary":
+                    return "SqlBinary";
+                case "bit":
+                    return "SqlBoolean";
+                case "char":
+                    return "SqlString";
+                case "datetime":
+                case "smalldatetime":
+                    return "SqlDateTime";
+                case "decimal":
+                case "money":
+                case "numeric":
+                    return "SqlDecimal";
+                case "float":
+                    return "SqlDouble";
+                case "int":
+                    return "SqlInt32";
+                case "nchar":
+                case "nvarchar":
+                case "text":
+                case "varchar":
+                case "xml":
+                    return "SqlString";
+                case "real":
+                    return "SqlSingle";
+                case "smallint":
+                    return "SqlInt16";
+                case "tinyint":
+                    return "SqlByte";
+                case "uniqueidentifier":
+                    return "SqlGuid";
+                case "date":
+                    return "SqlDateTime";
+
+                default:
+                    return null;
+            }
+        }
+
+
+        /// <summary>
+        /// Translate a SQL data type to a .NET type
+        /// </summary>
+        /// <param name="sqlDataTypeName"></param>
+        /// <returns></returns>
         public static string GetDotNetDataType(string sqlDataTypeName, bool nullable = false)
         {
             if (sqlDataTypeName == null) throw new ArgumentNullException(nameof(sqlDataTypeName));

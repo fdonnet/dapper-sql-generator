@@ -12,7 +12,7 @@ namespace DapperSqlGenerator.DotNetClient
         private readonly CsEntityClassGeneratorSettings _settings;
         
         public CsEntityClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table)
+            : base(generatorSettings, table: table)
         {
             _settings = TableSettings.CsEntitySettings;
         }

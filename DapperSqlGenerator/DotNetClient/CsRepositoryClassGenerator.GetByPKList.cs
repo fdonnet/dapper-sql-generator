@@ -23,10 +23,10 @@ namespace DapperSqlGenerator.DotNetClient
             var p = new DynamicParameters();
             p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
 
-            var ok = await _cn.ExecuteAsync
-                (""usp{_entityClassName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _trans);
+            var entities = await _dbContext.Connection.QueryAsync<{_entityClassFullName}>
+                (""usp{_entityClassName}_selectBy{_pkFieldsNames}List"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
-            return true;
+            return entities;
         }}";
 
             return output + Environment.NewLine + PrintPKTypeForSelectByPKList();

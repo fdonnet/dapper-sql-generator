@@ -108,7 +108,7 @@ namespace DapperSqlGenerator
 
                 string cs = "";
 
-                cs = new CsRepositoryBaseGenerator(generatorSettings).Generate();
+                cs = new CsDbContextGenerator(generatorSettings, model).Generate();
                 writer.WriteLine(cs);
                 await writer.FlushAsync();
 

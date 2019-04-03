@@ -12,7 +12,7 @@ namespace DapperSqlGenerator.StoredProcedures
         private readonly SqlSelectByUKGeneratorSettings _settings;
 
         public SqlSelectByUKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table)
+            : base(generatorSettings, table: table)
         {
             _settings = TableSettings?.SqlSelectByUKSettings;
         }
