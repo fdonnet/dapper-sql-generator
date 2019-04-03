@@ -10,7 +10,7 @@ namespace DapperSqlGenerator.DotNetClient
     public class CsEntityClassGenerator : GeneratorBase
     {
         private readonly CsEntityClassGeneratorSettings _settings;
-        
+
         public CsEntityClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
             : base(generatorSettings, table: table)
         {
@@ -35,7 +35,7 @@ namespace DapperSqlGenerator.DotNetClient
             string interfaceNames = "";
             if (!string.IsNullOrEmpty(_settings.ImplementCustomInterfaceNames))
             {
-                interfaceNames = (_settings.ImplementICloneable) 
+                interfaceNames = (_settings.ImplementICloneable)
                     ? ", " + _settings.ImplementCustomInterfaceNames
                     : " : " + _settings.ImplementCustomInterfaceNames;
 
@@ -109,15 +109,18 @@ namespace DapperSqlGenerator.DotNetClient
                 return $"{decorators}public {memberType} {memberName} {{ get; set; }}" + Environment.NewLine;
             }));
 
+            string pkType = PrintPkType();
             string output =
 $@" 
+namespace { _settings.Namespace } {{
+
+{pkType}    
+
 /// =================================================================
 /// Author: {GeneratorSettings.AuthorName}
 /// Description: Entity class for the table {Table.Name} 
 /// =================================================================
 
-namespace { _settings.Namespace } {{
-  
     public class {TSqlModelHelper.PascalCase(Table.Name.Parts[1])}{iCloneable}{interfaceNames}
     {{ 
         
@@ -134,6 +137,43 @@ namespace { _settings.Namespace } {{
         }
 
 
+        /// <summary>
+        /// If composite pk, need to define a custom type for select by PKList
+        /// </summary>
+        /// <returns></returns>
+        private string PrintPkType()
+        {
+
+            var memberDeclarations = String.Join(Environment.NewLine + "        ", TSqlModelHelper.GetPrimaryKeyColumns(Table).Select(col =>
+            {
+                var colName = col.Name.Parts[2];
+                var memberName = TSqlModelHelper.PascalCase(col.Name.Parts[2]);
+                var colDataType = col.GetColumnSqlDataType(false);
+ 
+
+                //Search for custom member type or use the conversion from Sql Types
+                var hasCustomMemberType = _settings?.FieldNameCustomTypes?.ContainsKey(colName) ?? false;
+
+                var memberType = hasCustomMemberType ? _settings.FieldNameCustomTypes[colName]
+                    : TSqlModelHelper.GetDotNetDataType(colDataType);
+
+
+                return $"public {memberType} {memberName} {{ get; set; }}";
+            }));
+
+            return 
+ $@"
+/// =================================================================
+/// Author: {GeneratorSettings.AuthorName}
+/// Description: PK class for the table {Table.Name} 
+/// =================================================================
+    public class {TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PKType
+    {{ 
+        
+        {memberDeclarations}
+
+    }}";
+        }
     }
 }
 

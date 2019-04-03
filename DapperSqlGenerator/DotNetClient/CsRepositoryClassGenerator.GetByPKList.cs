@@ -11,14 +11,14 @@ namespace DapperSqlGenerator.DotNetClient
 
         private string PrintGetByPKListMethod()
         {
-            
-            
+
+
 
             string output = $@"
         /// <summary>
         /// Select by PK List
         /// </summary>
-        public async Task<IEnumerable<{_entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{PrintPkListMethodParams()}> pkList)
+        public async Task<IEnumerable<{_entityClassFullName}>> GetBy{_pkFieldsNames}List(IEnumerable<{_entityClassName}_PKType> pkList)
         {{
             var p = new DynamicParameters();
             p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
@@ -39,41 +39,34 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintPKTypeForSelectByPKList()
         {
-            string addRows = string.Empty;
             string addColumns = String.Join(Environment.NewLine + "            ",
                 _pkColumns.Select(c =>
                 {
                     var colName = c.Name.Parts[2];
-                    var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
-                    //TODO Very bad, need to be reviewed
-                    var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
-                    var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
+                    var colSqlType = TSqlModelHelper.GetDotNetDataType_SystemDataSqlTypes(TSqlModelHelper.GetColumnSqlDataType(c, false));
 
-                    if (_pkColumns.Count() ==1)
-                    {
-                        addRows += colSqlType == "int"
-                        ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj);"
-                        : $@"              row[""{colName}""] = curObj;";
-                        addRows += Environment.NewLine + "            ";
-                    }
-                    else
-                    {
-                        //TODO by PK composite
-                        //addRows += colSqlType == "int"
-                        //? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
-                        //: $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
-                        //addRows += Environment.NewLine + "            ";
-                    }
-                    
+                    return $@"      dt.Columns.Add(""{colName}"", typeof({colSqlType}));";
+                }));
 
-                    return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
+            string addRows = String.Join(Environment.NewLine + "            ",
+                _pkColumns.Select(c =>
+                {
+                    var colName = c.Name.Parts[2];
+                    var colSqlType = TSqlModelHelper.GetDotNetDataType_SystemDataSqlTypes(TSqlModelHelper.GetColumnSqlDataType(c, false));
+
+                    // TODO: Better check if column type in settings is an enum
+                    var forceIntForEnum = colSqlType == "SqlInt32" ? "(int)" : string.Empty;
+
+                    return $@"row[""{colName}""] = new {colSqlType}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});";
+
+
                 }));
 
             string output = $@"
         /// <summary>
         /// Create special db table for select by PK List
         /// </summary>
-        private object Create{_entityClassName}PKDataTable(IEnumerable<{PrintPkListMethodParams()}> pkList)
+        private object Create{_entityClassName}PKDataTable(IEnumerable<{_entityClassName}_PKType> pkList)
         {{
             DataTable dt = new DataTable();
             {addColumns}
@@ -91,21 +84,6 @@ namespace DapperSqlGenerator.DotNetClient
         }}";
             return output;
         }
-
-        /// <summary>
-        /// Method params for select by PK list
-        /// </summary>
-        /// <returns></returns>
-        private string PrintPkListMethodParams()
-        {
-            if (_pkColumns.Count() == 1)
-                return TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(_pkColumns.ToArray()[0], true));
-            else
-                return $"{_entityClassName}_PKType";
- 
-        }
-
-
 
     }
 }
