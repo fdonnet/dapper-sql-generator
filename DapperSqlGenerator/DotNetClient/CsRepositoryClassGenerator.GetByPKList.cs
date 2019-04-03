@@ -39,8 +39,18 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintPKTypeForSelectByPKList()
         {
-            string addRows = string.Empty;
             string addColumns = String.Join(Environment.NewLine + "            ",
+                _pkColumns.Select(c =>
+                {
+                    var colName = c.Name.Parts[2];
+                    var colSqlType = TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(c, false), false);
+                    var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
+ 
+                    return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
+                }));
+
+            string addRows =
+                String.Join(Environment.NewLine + "            ",
                 _pkColumns.Select(c =>
                 {
                     var colName = c.Name.Parts[2];
@@ -49,12 +59,11 @@ namespace DapperSqlGenerator.DotNetClient
                     var tmp = colSqlType == "int" ? "SqlInt32" : colSqlType;
                     var forceIntForEnum = colSqlType == "int" ? "(int) " : string.Empty;
 
-                    if (_pkColumns.Count() ==1)
+                    if (_pkColumns.Count() == 1)
                     {
-                        addRows += colSqlType == "int"
+                        return colSqlType == "int"
                         ? $@"              row[""{colName}""] = new {tmp}({forceIntForEnum}curObj);"
                         : $@"              row[""{colName}""] = curObj;";
-                        addRows += Environment.NewLine + "            ";
                     }
                     else
                     {
@@ -64,7 +73,7 @@ namespace DapperSqlGenerator.DotNetClient
                         //: $@"              row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)};";
                         //addRows += Environment.NewLine + "            ";
                     }
-                    
+
 
                     return $@"      dt.Columns.Add(""{colName}"", typeof({tmp}));";
                 }));
@@ -101,7 +110,7 @@ namespace DapperSqlGenerator.DotNetClient
             if (_pkColumns.Count() == 1)
                 return TSqlModelHelper.GetDotNetDataType(TSqlModelHelper.GetColumnSqlDataType(_pkColumns.ToArray()[0], true));
             else
-                return $"{_entityName}_PKType";
+                return $"{_entityName}_PKType"; //Need to be implemented
  
         }
 
