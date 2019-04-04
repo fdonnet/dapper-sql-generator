@@ -34,7 +34,7 @@ namespace DapperSqlGenerator.DotNetClient
             {spParams}
 
             var entity = await _dbContext.Connection.QuerySingleOrDefaultAsync<{_entityClassFullName}>
-            (""usp{_entityClassName}_selectBy{ConcatUkFieldNames(ukColumns)}"", commandType: CommandType.StoredProcedure);
+            (""usp{_entityClassName}_selectBy{ConcatUkFieldNames(ukColumns)}"", p, commandType: CommandType.StoredProcedure);
 
             return entity;
         }}";
