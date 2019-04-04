@@ -65,9 +65,7 @@ In the "General" tab:
 - Define a namespace 
 - Implement interface(s) in the generated entity
 - Implement ICloneable (with a minimal .Clone() template function)
-- Set [Requiered] decorator 
-- Set [StringLength(LEN)] decorator 
-- Set [JsonIgnore] on some fields
+- Set some standards decorators
 
 At the table lvl settings, you can:
 
