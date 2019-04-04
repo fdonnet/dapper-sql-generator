@@ -143,6 +143,8 @@ namespace { _settings.Namespace } {{
         /// <returns></returns>
         private string PrintPkType()
         {
+            if (!TableSettings.GenerateSelectByPkList)
+                return string.Empty;
 
             var memberDeclarations = String.Join(Environment.NewLine + "        ", TSqlModelHelper.GetPrimaryKeyColumns(Table).Select(col =>
             {

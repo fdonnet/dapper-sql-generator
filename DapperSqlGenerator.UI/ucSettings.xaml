@@ -37,7 +37,7 @@
                         <CheckBox Name="chkGenerateUpdateSp" IsChecked="{Binding Path=GenerateUpdateSP, Mode=TwoWay}">Generate Update SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectAllSp" IsChecked="{Binding Path=GenerateSelectAllSP, Mode=TwoWay}">Generate Select All SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectByPk" IsChecked="{Binding Path=GenerateSelectByPk, Mode=TwoWay}">Generate Select by PK SP</CheckBox>
-                        <CheckBox Name="chkGenerateSelectByPkList" IsChecked="{Binding Path=GenerateSelectByPkList, Mode=TwoWay}">Generate Select by PK List SP - (not working for composite PK)</CheckBox>
+                        <CheckBox Name="chkGenerateSelectByPkList" IsChecked="{Binding Path=GenerateSelectByPkList, Mode=TwoWay}">Generate Select by PK List SP</CheckBox>
                         <CheckBox Name="chkGenerateSelectByUK" IsChecked="{Binding Path=GenerateSelectByUK, Mode=TwoWay}">Generate Select by UK SP</CheckBox>
                         
                     </StackPanel>
