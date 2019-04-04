@@ -102,7 +102,7 @@ Only available, for the moment" with Dapper async implementation...
 
 In netcore, see some implementations bellow if you have a service layer, and an api layer (controller):
 
-- Inject your DbContext in the service constructor (tips: you can choose the name you want in the generator for your DbContext class) . 
+- Inject your DbContext in the service constructor (**tips: you can choose the name you want in the generator for your DbContext class**) . 
 
 *You can see we have injected the IConfiguration too...*
 
