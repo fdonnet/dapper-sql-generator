@@ -153,7 +153,7 @@ Reminder: You can extend your interface and repo class via another "partial" fil
 #### And if I need a transaction between repos ?
 From a method of your service/core layer:
 
-The using statement is not really needed but it protects from yourself;
+The using statement is not really needed but it protects you from yourself;
 ```csharp
 //Open a transaction
  using(var trans = await _dbContext.OpenTransaction())
