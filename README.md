@@ -74,10 +74,10 @@ At the table lvl settings, you can:
 - Define a custom type (ex: if you have enum fields) or custom decorator for each table column:
 ![Alt text](/img/entitiesfieldtype.png?raw=true "Field type settings") ![Alt text](/img/entitiescustomdeco.png?raw=true "Decorators settings")
 
-## C# Repo generator
-It will generate ONE BaseRepo (interface + class) and a repo class for each table (+interface) (inheritance from the BaseRepo class). 
+## C# Repo/DAL generator
+It will generate ONE simple DBContext (interface + class) and a repo/dal class for each table (+interface).
 
-The repo for each table **will be defined as "partial"**. => You will be able to extend your functionnalities outside of the generated files.
+The repo/dal for each table **will be defined as "partial"**. => You will be able to extend your functionnalities outside of the generated files (via a new file for the interface or the class definition).
 
 In the settings, you can define the connection string **name** that will be injected via netcore IConfiguration object in the BaseRepo settings:
 
@@ -85,14 +85,14 @@ In the settings, you can define the connection string **name** that will be inje
 
 ! **It's the connection name, not the connection string...** !
 
-BaseRepo constructor:
+DbContext constructor:
 
 ```csharp
-protected BaseRepo(IConfiguration config)
+public DbContext(IConfiguration config)
  {
-    _config = config;
-    DefaultTypeMap.MatchNamesWithUnderscores = true;
-    _cn = new SqlConnection(_config.GetConnectionString("Default"));
+     _config = config;
+     DefaultTypeMap.MatchNamesWithUnderscores = true;
+     _cn = new SqlConnection(_config.GetConnectionString("Default"));
  }
 ```
  
@@ -104,23 +104,21 @@ Only available, for the moment" with Dapper async implementation...
 
 In netcore, see some implementations bellow if you have a service layer, and an api layer (controller):
 
-- Inject your repos (testRepo, testRepo2) in the service constructor. 
+- Inject your DbContext (you can choose the name you want in the generator) in the service constructor. 
 
 *You can see we have injected the IConfiguration too...*
 
 ```csharp
  private readonly ILogger<ServiceTest> _log;
  private readonly IConfiguration _config;
- private readonly ITestRepo _testRepo;
- private readonly ITest2Repo _testRepo2;
-
+ private readonly IDbContext _context;
+ 
  public ServiceTest(ILogger<ApplicationManager> logger, IConfiguration config, 
-    ITestRepo testRepo, ITest2Repo testRepo2)
+    IDbContext context)
  {
      _log = logger;
      _config = config;
-     _testRepo = testRepo;
-     _testRepo2 = testRepo2;
+     _context = context;
  }
 ```
 
@@ -141,40 +139,23 @@ public MyController(ILogger<MyController> logger, IConfiguration config,
 ```
 
 In your netcore startup / configure services function:
-- Add your repos as transient
-- And your service as scoped or transient
+- Add your dbcontext as transient/scoped
+- And your service as transient/scoped
 ```csharp
-services.AddTransient<ITestRepo, TestRepo>();
-services.AddTransient<ITest2Repo, Test2Repo>();
+services.AddTransient<IDbContext, DbContext>();
 
 services.AddScoped<IServiceTest, ServiceTest>();
 ```
 
-netcore, so good. Your repos will be injected automatically via your service injection in the controller.
-You will be able to use your DAL in your service layer.
+netcore, so good. Your DbContext will be injected automatically via your service injection in the controller.
+You will be able to use your DAL in your service layer (the DbContext call call all the repo/dal you have defined).
 
 Reminder: You can extend your interface and repo class via another "partial" file. It allows you to re-generate your base definition via the tool anytime.
 
 #### And if I need a transaction between repos ?
 From a method of your service/core layer:
 ```csharp
- //_testRepo and testRepo2 => repos injected in the service class contructor
- //open a transaction
- var openTrans = await _testRepo.OpenTransaction();
 
- //operation on the first repo
- var test = new TestEntity() { Name = "TEST" };
- var result = await _testRepo.Insert(test);
-
- //Pass the transaction to the second repo
- _testRepo2.SetExternalTransaction(_testRepo.GetActualTransaction());
-
- //run the operation on second repo
- var test2 = new Test2Entity() { Name = "TEST2" };
-  var result2 = await _testRepo2.Insert(test2);
-
- //Commit trans
- _testRepo.CommitTrans();
 ```
 
 
