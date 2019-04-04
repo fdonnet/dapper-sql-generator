@@ -191,7 +191,7 @@
                 </TabItem>
                 <TabItem Header="Custom field type" Name="tabCustomField">
                     <StackPanel>
-                        <Label>Define a custom c# type on specific fields to override the default conversion:</Label>
+                        <Label>Define a custom FULLY QUALIFIED c# type on specific fields to override the default conversion:</Label>
                         <DataGrid Name="grdCustomFieldTypes" AutoGenerateColumns="False" CanUserAddRows="False" 
                               CanUserDeleteRows="False" CanUserReorderColumns="False" CellEditEnding="GrdCustomFieldTypes_CellEditEnding"
                               IsSynchronizedWithCurrentItem="true">
@@ -208,7 +208,7 @@
                 </TabItem>
                 <TabItem Header="Custom field decorator" Name="tabCustomDeco">
                     <StackPanel>
-                        <Label>Define a custom c# decorator on specific fields to add more info format "[Decorator]:</Label>
+                        <Label>Define a custom FULLY QUALIFIED c# decorator on specific fields to add more info:</Label>
                         <DataGrid Name="grdCustomFieldDecorators" AutoGenerateColumns="False" CanUserAddRows="False" 
                               CanUserDeleteRows="False" CanUserReorderColumns="False" CellEditEnding="GrdCustomFieldDecorators_CellEditEnding"
                               IsSynchronizedWithCurrentItem="true">
