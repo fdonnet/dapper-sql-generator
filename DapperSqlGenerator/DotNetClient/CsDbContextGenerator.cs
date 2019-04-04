@@ -95,8 +95,12 @@ using Microsoft.Extensions.Configuration;
     {{
 
         IDbConnection Connection {{ get; }}
+        IDbTransaction Transaction {{ get;}}
 
-        IDbTransaction Transaction {{ get; set; }}
+        Task<bool> OpenTransaction();
+        void CommitTransaction();
+        void RollbackTransaction();
+
 
         {repoMemberDeclarations}
 
@@ -155,7 +159,6 @@ using Microsoft.Extensions.Configuration;
         protected IDbTransaction _trans = null;
         public IDbTransaction Transaction {{ 
             get => _trans;
-            set => _trans = value;
         }}
 
 
@@ -173,6 +176,47 @@ using Microsoft.Extensions.Configuration;
             _cn = new SqlConnection(_config.GetConnectionString(""{_settings.ConnectionStringName}""));
         }}
         
+
+        /// <summary>
+        /// Open a transaction
+        /// </summary>
+        public async Task<bool> OpenTransaction()
+        {{
+            if(_trans != null)
+                throw new Exception(""A transaction is already open, you need to use a new DBContext for parallel job"");
+
+            if (_cn.State == ConnectionState.Closed)
+            {{
+                if (!(_cn is DbConnection))
+                    throw new Exception(""Connection object does not support OpenAsync."");
+                
+                await (_cn as DbConnection).OpenAsync();
+            }}
+
+            _trans = _cn.BeginTransaction();
+
+            return true;
+        }}
+
+        /// <summary>
+        /// Commit the current transaction
+        /// </summary>
+        public void CommitTransaction()
+        {{
+            if  (_trans == null)
+                throw new Exception(""DB Transaction is not present"");
+
+            _trans.Commit();
+            _trans.Dispose();
+        }}
+
+        /// <summary>
+        /// Rollback the internal trans and all the operations linked to it
+        /// </summary>
+        public void RollbackTransaction()
+        {{
+            _trans?.Dispose();
+        }}
 
         /// <summary>
         /// Will be call at the end of the service (ex : transient service in api net core)
