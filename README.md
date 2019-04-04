@@ -152,12 +152,20 @@ Reminder: You can extend your interface and repo class via another "partial" fil
 
 #### And if I need a transaction between repos ?
 From a method of your service/core layer:
+
+The using statement is not really needed but it protects you from yourself;
 ```csharp
+//Open a transaction
+ using(var trans = await _dbContext.OpenTransaction())
+ {
+    //Execute operations example
+    var resultDel = await _dbContext.PermissionRepo.DeleteRoles(permissionId);
+    bool ok = await _dbContext.RolePermissionRepo.InsertByLinkedIds(linkedIds, currentUserId, DateTime.Now);
 
+    //Commit transaction
+    _dbContext.CommitTransaction();
+ }
 ```
-
-
-
 
 ............Don't hesitate to play and make pull requests...........
 
