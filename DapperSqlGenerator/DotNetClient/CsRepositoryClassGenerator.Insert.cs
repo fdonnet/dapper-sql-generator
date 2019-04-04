@@ -36,7 +36,7 @@ namespace DapperSqlGenerator.DotNetClient
                     _pkColumns.Select(col =>
                     {
                         var colName = col.Name.Parts[2];
-                        return $@"p.Add(""@{colName}"", direction: ParameterDirection.Output);";
+                        return $@"p.Add(""@{colName}"", dbType:{TSqlModelHelper.GetDotNetDataType_SystemDataDbTypes(TSqlModelHelper.GetColumnSqlDataType(col,false))}, direction: ParameterDirection.Output);";
                     }))
                 : string.Empty; // no identity PK
 

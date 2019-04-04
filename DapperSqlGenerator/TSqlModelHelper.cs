@@ -132,6 +132,59 @@ namespace DapperSqlGenerator
             }
         }
 
+        /// <summary>
+        /// Translate a SQL data type to a .NET type
+        /// </summary>
+        /// <param name="sqlDataTypeName"></param>
+        /// <returns></returns>
+        public static string GetDotNetDataType_SystemDataDbTypes(string sqlDataTypeName)
+        {
+            if (sqlDataTypeName == null) throw new ArgumentNullException(nameof(sqlDataTypeName));
+            switch (sqlDataTypeName.ToLower())
+            {
+                case "bigint":
+                    return "DbType.Int64"; 
+                case "binary":
+                case "image":
+                case "varbinary":
+                    return "DbType.Binary";
+                case "bit":
+                    return "DbType.Boolean";
+                case "char":
+                    return "DbType.String";
+                case "datetime":
+                case "smalldatetime":
+                    return "DbType.DateTime";
+                case "decimal":
+                case "money":
+                case "numeric":
+                    return "DbType.Decimal";
+                case "float":
+                    return "DbType.Double";
+                case "int":
+                    return "DbType.Int32";
+                case "nchar":
+                case "nvarchar":
+                case "text":
+                case "varchar":
+                case "xml":
+                    return "DbType.String";
+                case "real":
+                    return "DbType.Single";
+                case "smallint":
+                    return "DbType.Int16";
+                case "tinyint":
+                    return "DbType.Byte";
+                case "uniqueidentifier":
+                    return "DbType.Guid";
+                case "date":
+                    return "DbType.DateTime";
+
+                default:
+                    return null;
+            }
+        }
+
 
         /// <summary>
         /// Translate a SQL data type to a .NET type
