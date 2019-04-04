@@ -24,6 +24,9 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateBulkInsertSP)
+                return string.Empty;
+
             var allColumns = Table.GetAllColumns();
 
             // Identity columns will appear as output parameters

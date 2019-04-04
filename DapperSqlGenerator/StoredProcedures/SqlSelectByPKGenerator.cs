@@ -20,6 +20,9 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateSelectByPk)
+                return string.Empty;
+
             var pkColumns = Table.GetPrimaryKeyColumns();
 
             var inputParamDeclarations = String.Join(Environment.NewLine + ", ",

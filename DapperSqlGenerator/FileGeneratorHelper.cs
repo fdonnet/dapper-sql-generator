@@ -33,23 +33,23 @@ namespace DapperSqlGenerator
                     string sql = "";
 
                     sql = new SqlInsertGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if(sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlTableTypeGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty)  writer.WriteLine(sql);
                     sql = new SqlBulkInsertGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlUpdateGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlDeleteGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlSelectAllGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlSelectByPKGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlSelectByPKListGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
                     sql = new SqlSelectByUKGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(sql);
+                    if (sql != string.Empty) writer.WriteLine(sql);
 
                     await writer.FlushAsync();
                     progress += 100.0 / tablesCount;
@@ -80,7 +80,7 @@ namespace DapperSqlGenerator
                     string cs = "";
 
                     cs = new CsEntityClassGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(cs);
+                    if (cs != string.Empty) writer.WriteLine(cs);
 
                     await writer.FlushAsync();
                     progress += 100.0 / tablesCount;
@@ -116,7 +116,7 @@ namespace DapperSqlGenerator
                 {
 
                     cs = new CsRepositoryClassGenerator(generatorSettings, currTable).Generate();
-                    writer.WriteLine(cs);
+                    if(cs != string.Empty) writer.WriteLine(cs);
 
                     await writer.FlushAsync();
                     progress += 100.0 / tablesCount;

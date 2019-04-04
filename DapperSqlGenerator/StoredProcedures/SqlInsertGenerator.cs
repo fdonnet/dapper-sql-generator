@@ -20,10 +20,13 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateInsertSP)
+                return string.Empty;
+
             var allColumns = Table.GetAllColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             var identityColumns = allColumns.Where(col => col.GetProperty<bool>(Column.IsIdentity));
-            
+
             // Join output & input param declarations 
             var paramDeclarations = String.Join(Environment.NewLine + ", ",
                 identityColumns.Select(col =>

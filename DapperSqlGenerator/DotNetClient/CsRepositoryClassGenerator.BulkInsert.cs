@@ -54,10 +54,9 @@ namespace DapperSqlGenerator.DotNetClient
                     // TODO: Better check if column type in settings is an enum
                     var forceIntForEnum = colSqlType == "SqlInt32" ? "(int)" : string.Empty;
 
-                    if (!colIsNullable || colSqlType == "SqlString" || colSqlType == "SqlBinary")
-                        return $@"row[""{colName}""] = new {colSqlType}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});";                   
-                    else
-                        return $@"row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)} == null ? "
+                    return !colIsNullable || colSqlType == "SqlString" || colSqlType == "SqlBinary"
+                        ? $@"row[""{colName}""] = new {colSqlType}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)});"
+                        : $@"row[""{colName}""] = curObj.{TSqlModelHelper.PascalCase(colName)} == null ? "
                             + $@"{colSqlType}.Null"
                             + $@" : new {colSqlType}({forceIntForEnum}curObj.{TSqlModelHelper.PascalCase(colName)}.Value);";
                 })

@@ -26,6 +26,9 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateUpdateSP)
+                return string.Empty;
+
             var allColumns = Table.GetAllColumns();
             var pkColumns = Table.GetPrimaryKeyColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));

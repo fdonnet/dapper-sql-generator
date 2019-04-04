@@ -38,6 +38,9 @@ namespace DapperSqlGenerator.DotNetClient
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateRepositories)
+                return string.Empty;
+
             _repoClassName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]) + "Repo";
             _repoInterfaceName = "I" + _repoClassName;
 

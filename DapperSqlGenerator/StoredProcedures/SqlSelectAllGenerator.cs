@@ -21,6 +21,9 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateSelectAllSP)
+                return string.Empty;
+
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine

@@ -19,6 +19,9 @@ namespace DapperSqlGenerator.DotNetClient
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateEntities)
+                return string.Empty;
+
             var allColumns = Table.GetAllColumns();
             var pkColumns = TSqlModelHelper.GetPrimaryKeyColumns(Table);
 

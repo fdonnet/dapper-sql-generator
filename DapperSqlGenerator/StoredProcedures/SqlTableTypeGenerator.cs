@@ -22,6 +22,8 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateTableType)
+                return string.Empty;
 
             var allColumns = Table.GetAllColumns();
             //TODO

@@ -19,6 +19,9 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateSelectByUK)
+                return string.Empty;
+
             string output = string.Join(Environment.NewLine, GenerateForEachUk());
 
             return output;

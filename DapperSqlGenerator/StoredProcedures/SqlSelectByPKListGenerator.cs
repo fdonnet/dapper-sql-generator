@@ -21,6 +21,9 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
+            if (!TableSettings.GenerateSelectByPkList)
+                return string.Empty;
+
             _pkColumns = Table.GetPrimaryKeyColumns();
 
             var innerJoins = String.Join(Environment.NewLine + "        AND ",
