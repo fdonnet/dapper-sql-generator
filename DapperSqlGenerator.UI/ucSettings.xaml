@@ -168,7 +168,7 @@
                             <TextBox Name="txtEntitiesNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.Namespace, Mode=TwoWay}"></TextBox>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
-                            <Label  MinWidth="230">Custom interface names (separator ","):</Label>
+                            <Label  MinWidth="230">Custom interface FULLY QUALIFIED names (separator ","):</Label>
                             <TextBox Name="txtCustomInterface" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsEntitySettings.ImplementCustomInterfaceNames, Mode=TwoWay}"></TextBox>
                         </StackPanel>
 

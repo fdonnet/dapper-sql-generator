@@ -20,7 +20,7 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Select by PK List
         /// </summary>
-        public async Task<IEnumerable<{_entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassName}_PKType> pkList)
+        public async Task<IEnumerable<{_entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassFullName}_PKType> pkList)
         {{
             var p = new DynamicParameters();
             p.Add(""@pk_list"", Create{_entityClassName}PKDataTable(pkList));
@@ -67,7 +67,7 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Create special db table for select by PK List
         /// </summary>
-        private object Create{_entityClassName}PKDataTable(IEnumerable<{_entityClassName}_PKType> pkList)
+        private object Create{_entityClassName}PKDataTable(IEnumerable<{_entityClassFullName}_PKType> pkList)
         {{
             DataTable dt = new DataTable();
             {addColumns}

@@ -97,7 +97,7 @@ GO
                 _pkColumns.Select(col =>
                 {
                     var colName = col.Name.Parts[2];
-                    return $"[{TSqlModelHelper.PascalCase(colName)}] {TSqlModelHelper.GetColumnSqlDataType(col)}";
+                    return $"[{colName}] {TSqlModelHelper.GetColumnSqlDataType(col)}";
                 })
             );
 
