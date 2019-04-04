@@ -95,11 +95,12 @@ using Microsoft.Extensions.Configuration;
     {{
 
         IDbConnection Connection {{ get; }}
-        IDbTransaction Transaction {{ get;}}
+        IDbTransaction Transaction {{ get; }}
 
-        Task<bool> OpenTransaction();
-        void CommitTransaction();
-        void RollbackTransaction();
+        Task<IDbTransaction> OpenTransaction();
+        Task<IDbTransaction> OpenTransaction(IsolationLevel level);
+        void CommitTransaction(bool disposeTrans = true);
+        void RollbackTransaction(bool disposeTrans = true);
 
 
         {repoMemberDeclarations}
@@ -180,10 +181,10 @@ using Microsoft.Extensions.Configuration;
         /// <summary>
         /// Open a transaction
         /// </summary>
-        public async Task<bool> OpenTransaction()
+        public async Task<IDbTransaction> OpenTransaction()
         {{
             if(_trans != null)
-                throw new Exception(""A transaction is already open, you need to use a new DBContext for parallel job"");
+                throw new Exception(""A transaction is already open, you need to use a new {_settings.ClassName} for parallel job."");
 
             if (_cn.State == ConnectionState.Closed)
             {{
@@ -195,27 +196,56 @@ using Microsoft.Extensions.Configuration;
 
             _trans = _cn.BeginTransaction();
 
-            return true;
+            return _trans;
         }}
 
+
         /// <summary>
-        /// Commit the current transaction
+        /// Open a transaction with a specified isolation level
         /// </summary>
-        public void CommitTransaction()
+        public async Task<IDbTransaction> OpenTransaction(IsolationLevel level)
+        {{
+            if(_trans != null)
+                throw new Exception(""A transaction is already open, you need to use a new {_settings.ClassName} for parallel job."");
+
+            if (_cn.State == ConnectionState.Closed)
+            {{
+                if (!(_cn is DbConnection))
+                    throw new Exception(""Connection object does not support OpenAsync."");
+                
+                await (_cn as DbConnection).OpenAsync();
+            }}
+
+            _trans = _cn.BeginTransaction(level);
+
+            return _trans;
+        }}
+
+
+        /// <summary>
+        /// Commit the current transaction, and optionally dispose all resources related to the transaction.
+        /// </summary>
+        public void CommitTransaction(bool disposeTrans = true)
         {{
             if  (_trans == null)
-                throw new Exception(""DB Transaction is not present"");
+                throw new Exception(""DB Transaction is not present."");
 
             _trans.Commit();
-            _trans.Dispose();
+            if (disposeTrans) _trans.Dispose();
+            if (disposeTrans) _trans = null;
         }}
 
         /// <summary>
-        /// Rollback the internal trans and all the operations linked to it
+        /// Rollback the transaction and all the operations linked to it, and optionally dispose all resources related to the transaction.
         /// </summary>
-        public void RollbackTransaction()
+        public void RollbackTransaction(bool disposeTrans = true)
         {{
-            _trans?.Dispose();
+            if  (_trans == null)
+                throw new Exception(""DB Transaction is not present."");
+
+            _trans.Rollback();
+            if (disposeTrans) _trans.Dispose();
+            if (disposeTrans) _trans = null;
         }}
 
         /// <summary>

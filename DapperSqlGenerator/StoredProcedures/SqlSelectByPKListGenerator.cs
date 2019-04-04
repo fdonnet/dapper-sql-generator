@@ -47,7 +47,7 @@ $@"
 
 CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_selectByPKList]
 (
-    @pk_list [dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PKType] READONLY
+    @pk_list [dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PK] READONLY
 )
 AS
 BEGIN
@@ -104,11 +104,11 @@ GO
             var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 _settings.GrantExecuteToRoles.Select(roleName =>
                    "GRANT EXECUTE" + Environment.NewLine
-                   + $"ON TYPE::[dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PKType] TO [{roleName}] AS [dbo];"
+                   + $"ON TYPE::[dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PK] TO [{roleName}] AS [dbo];"
                    + Environment.NewLine + "GO"));
 
            string output = $@"
-CREATE TYPE [dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PKType] AS TABLE
+CREATE TYPE [dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_PK] AS TABLE
 (
 	{pkFieldParams}
 )
