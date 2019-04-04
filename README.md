@@ -153,7 +153,15 @@ Reminder: You can extend your interface and repo class via another "partial" fil
 #### And if I need a transaction between repos ?
 From a method of your service/core layer:
 ```csharp
+//Open a transaction
+ var trans = await _dbContext.OpenTransaction();
 
+//Execute operations example
+ var resultDel = await _dbContext.PermissionRepo.DeleteRoles(permissionId);
+ bool ok = await _dbContext.RolePermissionRepo.InsertByLinkedIds(linkedIds, currentUserId, DateTime.Now);
+
+ //Commit transaction
+ _dbContext.CommitTransaction();
 ```
 
 
