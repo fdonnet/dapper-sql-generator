@@ -77,7 +77,7 @@ It will generate ONE simple DBContext (interface + class) and a repo/dal class f
 
 The repo/dal for each table **will be defined as "partial"**. => You will be able to extend your functionnalities outside of the generated files (via a new file for the interface or the class definition).
 
-In the settings, you can define the connection string **name** that will be injected via netcore IConfiguration object in the BaseRepo settings:
+In the settings, you can define the connection string **name** that will be injected via netcore IConfiguration object in the DbContext settings:
 
 ![Alt text](/img/repoconstring.png?raw=true "Connection name")
 
@@ -102,7 +102,7 @@ Only available, for the moment" with Dapper async implementation...
 
 In netcore, see some implementations bellow if you have a service layer, and an api layer (controller):
 
-- Inject your DbContext (you can choose the name you want in the generator) in the service constructor. 
+- Inject your DbContext in the service constructor (tips: you can choose the name you want in the generator for your DbContext class) . 
 
 *You can see we have injected the IConfiguration too...*
 
@@ -138,15 +138,15 @@ public MyController(ILogger<MyController> logger, IConfiguration config,
 
 In your netcore startup / configure services function:
 - Add your dbcontext as transient/scoped
-- And your service as transient/scoped
+- And your services as transient/scoped
 ```csharp
 services.AddTransient<IDbContext, DbContext>();
 
 services.AddScoped<IServiceTest, ServiceTest>();
 ```
 
-netcore, so good. Your DbContext will be injected automatically via your service injection in the controller.
-You will be able to use your DAL in your service layer (the DbContext call call all the repo/dal you have defined).
+netcore, so good! Your DbContext will be injected automatically via your service injection in the controller.
+You will be able to use your DAL in your service layer (the DbContext will be able to call all the repo/dal you have defined).
 
 Reminder: You can extend your interface and repo class via another "partial" file. It allows you to re-generate your base definition via the tool anytime.
 
