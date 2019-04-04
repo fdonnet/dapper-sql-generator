@@ -165,12 +165,7 @@ The using statement is not really needed but it protects from yourself;
     //Commit transaction
     _dbContext.CommitTransaction();
  }
-
-
 ```
-
-
-
 
 ............Don't hesitate to play and make pull requests...........
 
