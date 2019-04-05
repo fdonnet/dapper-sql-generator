@@ -11,8 +11,8 @@ namespace DapperSqlGenerator.StoredProcedures
     {
         private readonly SqlInsertGeneratorSettings _settings;
 
-        public SqlInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode:preview)
         {
             _settings = TableSettings?.SqlInsertSettings;
         }
@@ -20,7 +20,7 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateInsertSP)
+            if (!TableSettings.GenerateInsertSP && !PreviewMode)
                 return string.Empty;
 
             var allColumns = Table.GetAllColumns();

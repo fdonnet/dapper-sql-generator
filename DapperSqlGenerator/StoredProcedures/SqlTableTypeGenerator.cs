@@ -12,8 +12,8 @@ namespace DapperSqlGenerator.StoredProcedures
 
         private readonly SqlTableTypeGeneratorSettings _settings;
 
-        public SqlTableTypeGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlTableTypeGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings?.SqlTableTypeSettings;
             //TODO to be implemented
@@ -22,7 +22,7 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateTableType)
+            if (!TableSettings.GenerateTableType && !PreviewMode)
                 return string.Empty;
 
             var allColumns = Table.GetAllColumns();

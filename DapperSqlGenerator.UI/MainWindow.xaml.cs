@@ -98,7 +98,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(GeneratorSettings, table);
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(GeneratorSettings, table, true);
                         output += gen.Generate();
                     }
                 }
@@ -116,7 +116,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(GeneratorSettings, table);
+                        SqlInsertGenerator gen = new SqlInsertGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }
@@ -134,7 +134,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(GeneratorSettings, table);
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }
@@ -151,7 +151,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(GeneratorSettings, table);
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }
@@ -168,7 +168,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectAllGenerator(GeneratorSettings, table);
+                        var gen = new SqlSelectAllGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }
@@ -185,7 +185,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKGenerator(GeneratorSettings, table);
+                        var gen = new SqlSelectByPKGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }
@@ -202,7 +202,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByUKGenerator(GeneratorSettings, table);
+                        var gen = new SqlSelectByUKGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }
@@ -219,7 +219,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlUpdateGenerator(GeneratorSettings, table);
+                        var gen = new SqlUpdateGenerator(GeneratorSettings, table,true);
 
                         output += gen.Generate();
                     }
@@ -237,7 +237,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlTableTypeGenerator(GeneratorSettings, table);
+                        var gen = new SqlTableTypeGenerator(GeneratorSettings, table,true);
 
                         output += gen.Generate();
                     }
@@ -516,7 +516,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new CsRepositoryClassGenerator(GeneratorSettings, table);
+                        var gen = new CsRepositoryClassGenerator(GeneratorSettings, table,true);
 
                         output += gen.Generate();
                     }
@@ -534,7 +534,7 @@ namespace DapperSqlGenerator.UI
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKListGenerator(GeneratorSettings, table);
+                        var gen = new SqlSelectByPKListGenerator(GeneratorSettings, table,true);
                         output += gen.Generate();
                     }
                 }

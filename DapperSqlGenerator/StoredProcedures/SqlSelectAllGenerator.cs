@@ -11,8 +11,8 @@ namespace DapperSqlGenerator.StoredProcedures
     {
         private readonly SqlSelectAllGeneratorSettings _settings;
 
-        public SqlSelectAllGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlSelectAllGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings?.SqlSelectAllSettings;
 
@@ -21,7 +21,7 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateSelectAllSP)
+            if (!TableSettings.GenerateSelectAllSP && !PreviewMode)
                 return string.Empty;
 
             var grants = String.Join(Environment.NewLine + Environment.NewLine,

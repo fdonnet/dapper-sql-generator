@@ -14,8 +14,8 @@ namespace DapperSqlGenerator.StoredProcedures
         //public IEnumerable<string> DoNotUpdateColumns { get; private set; } = new string[0]; 
 
 
-        public SqlUpdateGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlUpdateGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings?.SqlUpdateSettings;
         }
@@ -23,7 +23,7 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateUpdateSP)
+            if (!TableSettings.GenerateUpdateSP && !PreviewMode)
                 return string.Empty;
             
             var allColumns = Table.GetAllColumns();

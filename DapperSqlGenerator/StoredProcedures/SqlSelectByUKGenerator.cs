@@ -11,15 +11,15 @@ namespace DapperSqlGenerator.StoredProcedures
     {
         private readonly SqlSelectByUKGeneratorSettings _settings;
 
-        public SqlSelectByUKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlSelectByUKGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings?.SqlSelectByUKSettings;
         }
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateSelectByUK)
+            if (!TableSettings.GenerateSelectByUK && ! PreviewMode)
                 return string.Empty;
 
             string output = string.Join(Environment.NewLine, GenerateForEachUk());

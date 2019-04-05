@@ -11,8 +11,8 @@ namespace DapperSqlGenerator.StoredProcedures
     {
         private readonly SqlSelectByPKGeneratorSettings _settings;
 
-        public SqlSelectByPKGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlSelectByPKGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode:preview)
         {
             _settings = TableSettings?.SqlSelectByPKSettings;
         }
@@ -20,7 +20,7 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateSelectByPk)
+            if (!TableSettings.GenerateSelectByPk && ! PreviewMode)
                 return string.Empty;
 
             var pkColumns = Table.GetPrimaryKeyColumns();
