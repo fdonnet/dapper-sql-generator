@@ -167,6 +167,8 @@ The using statement is not really needed but it protects you from yourself;
  }
 ```
 
+Async transaction is a big debate. We choose to not use the .net transaction (TransactionScopeAsyncFlowOption) because we dont' really understand how it is working behind. We prefer to use a standard IDBTransaction, because we think it's finally not too bad... but you could convince us...
+
 ............Don't hesitate to play and make pull requests...........
 
 
