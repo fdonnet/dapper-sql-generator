@@ -18,9 +18,6 @@ namespace DapperSqlGenerator.StoredProcedures
             : base(generatorSettings, table: table)
         {
             _settings = TableSettings?.SqlUpdateSettings;
-
-            //todo to be implemented
-            //this.DoNotUpdateColumns = doNotUpdateColumns ?? this.DoNotUpdateColumns;
         }
 
 
@@ -28,8 +25,14 @@ namespace DapperSqlGenerator.StoredProcedures
         {
             if (!TableSettings.GenerateUpdateSP)
                 return string.Empty;
-
+            
             var allColumns = Table.GetAllColumns();
+            
+            //Exclude columns according to settings
+            allColumns = _settings.FieldNamesExcluded != null
+                ? allColumns.Where(c => !_settings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
+                : allColumns;
+            
             var pkColumns = Table.GetPrimaryKeyColumns();
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
 
@@ -42,11 +45,7 @@ namespace DapperSqlGenerator.StoredProcedures
                 })
             );
 
-            var tmpNonIdentiyColumns = _settings.FieldNamesExcluded != null
-                ? nonIdentityColumns.Where(c => !_settings.FieldNamesExcluded.Split(',').Contains(c.Name.Parts[2]))
-                : nonIdentityColumns;
-
-            var updateClause_setStatements = String.Join(Environment.NewLine + "        , ", tmpNonIdentiyColumns.Select(col =>
+            var updateClause_setStatements = String.Join(Environment.NewLine + "        , ", nonIdentityColumns.Select(col =>
             {
                 var colName = col.Name.Parts[2];
                 return $"[{colName}] = @{colName}";
