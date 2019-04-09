@@ -11,15 +11,15 @@ namespace DapperSqlGenerator.DotNetClient
     {
         private readonly CsEntityClassGeneratorSettings _settings;
 
-        public CsEntityClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public CsEntityClassGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings.CsEntitySettings;
         }
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateEntities)
+            if (!TableSettings.GenerateEntities && !PreviewMode)
                 return string.Empty;
 
             var allColumns = Table.GetAllColumns();

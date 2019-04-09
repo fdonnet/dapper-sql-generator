@@ -11,8 +11,8 @@ namespace DapperSqlGenerator.StoredProcedures
     {
         private readonly SqlDeleteGeneratorSettings _settings;
 
-        public SqlDeleteGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlDeleteGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings?.SqlDeleteSettings;
         }
@@ -20,7 +20,7 @@ namespace DapperSqlGenerator.StoredProcedures
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateDeleteSP)
+            if (!TableSettings.GenerateDeleteSP && !PreviewMode)
                 return string.Empty;
 
             var pkColumns = Table.GetPrimaryKeyColumns();

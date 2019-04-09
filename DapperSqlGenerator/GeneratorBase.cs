@@ -19,8 +19,10 @@ namespace DapperSqlGenerator
 
         public string TableName { get; protected set; }
 
+        public bool PreviewMode { get; protected set; }
 
-        public GeneratorBase(GeneratorSettings generatorSettings, TSqlModel model = null, TSqlObject table = null)
+
+        public GeneratorBase(GeneratorSettings generatorSettings, TSqlModel model = null, TSqlObject table = null, bool previewMode = false)
         {
             // Top level settings
             GeneratorSettings = generatorSettings;
@@ -40,6 +42,8 @@ namespace DapperSqlGenerator
                     ? generatorSettings.TablesSettings[TableName]
                     : generatorSettings.GlobalSettings;
             }
+
+            PreviewMode = previewMode;
 
         }
 

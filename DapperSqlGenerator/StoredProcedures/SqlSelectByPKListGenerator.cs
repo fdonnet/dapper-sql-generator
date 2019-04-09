@@ -13,15 +13,15 @@ namespace DapperSqlGenerator.StoredProcedures
         private IEnumerable<TSqlObject> _pkColumns;
 
 
-        public SqlSelectByPKListGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public SqlSelectByPKListGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings?.SqlSelectByPKListSettings;
         }
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateSelectByPkList)
+            if (!TableSettings.GenerateSelectByPkList && !PreviewMode)
                 return string.Empty;
 
             _pkColumns = Table.GetPrimaryKeyColumns();

@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace DapperSqlGenerator
 {
+    /// <summary>
+    /// Contains methods that generate C# and T-SQL constructs and bundle them in files, 
+    /// ready to be used in the final projects
+    /// </summary>
     public class FileGeneratorHelper
     {
 

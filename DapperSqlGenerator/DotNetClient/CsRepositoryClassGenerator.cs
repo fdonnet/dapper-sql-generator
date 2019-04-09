@@ -29,8 +29,8 @@ namespace DapperSqlGenerator.DotNetClient
         private string _pkFieldsNames;
         private string _pkFieldsWithTypes;
 
-        public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table)
-            : base(generatorSettings, table: table)
+        public CsRepositoryClassGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+            : base(generatorSettings, table: table, previewMode: preview)
         {
             _settings = TableSettings.CsRepositorySettings;
         }
@@ -38,7 +38,7 @@ namespace DapperSqlGenerator.DotNetClient
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateRepositories)
+            if (!TableSettings.GenerateRepositories && !PreviewMode)
                 return string.Empty;
 
             _repoClassName = TSqlModelHelper.PascalCase(Table.Name.Parts[1]) + "Repo";
@@ -142,15 +142,15 @@ $@"
 
         {
             //Get all
-            if (TableSettings.GenerateSelectAllSP)
+            if (TableSettings.GenerateSelectAllSP || PreviewMode)
                 yield return $"Task<IEnumerable<{_entityClassFullName}>> GetAll();";
 
             //Get by Primary key
-            if (TableSettings.GenerateSelectByPk)
+            if (TableSettings.GenerateSelectByPk || PreviewMode)
                 yield return $"Task<{_entityClassFullName}> GetBy{_pkFieldsNames}({_pkFieldsWithTypes});";
 
             //Get by Unique key
-            if (TableSettings.GenerateSelectByUK)
+            if (TableSettings.GenerateSelectByUK || PreviewMode)
             {
                 foreach (var ukColumns in _uniqueKeys)
                 {
@@ -162,22 +162,22 @@ $@"
             }
 
             //Insert
-            if (TableSettings.GenerateInsertSP)
+            if (TableSettings.GenerateInsertSP || PreviewMode)
                 yield return $"Task<int> Insert({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Bulk insert
-            if (TableSettings.GenerateBulkInsertSP)
+            if (TableSettings.GenerateBulkInsertSP || PreviewMode)
                 yield return $"Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
 
             //Update
-            if (TableSettings.GenerateUpdateSP)
+            if (TableSettings.GenerateUpdateSP || PreviewMode)
                 yield return $"Task<bool> Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Delete
-            if (TableSettings.GenerateDeleteSP)
+            if (TableSettings.GenerateDeleteSP || PreviewMode)
                 yield return $"Task<bool> Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
 
-            if (TableSettings.GenerateSelectByPkList)
+            if (TableSettings.GenerateSelectByPkList || PreviewMode)
                 yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassFullName}_PK> pkList);";
 
 
@@ -190,13 +190,13 @@ $@"
         /// <returns></returns>
         private IEnumerable<string> GenerateClassMethods()
         {
-            if (TableSettings.GenerateSelectAllSP)
+            if (TableSettings.GenerateSelectAllSP || PreviewMode)
                 yield return PrintGetAllMethod();
 
-            if (TableSettings.GenerateSelectByPk)
+            if (TableSettings.GenerateSelectByPk || PreviewMode)
                 yield return PrintGetByPKMethod();
 
-            if (TableSettings.GenerateSelectByUK)
+            if (TableSettings.GenerateSelectByUK || PreviewMode)
             {
                 foreach (var ukWithColumns in _uniqueKeys)
                 {
@@ -204,19 +204,19 @@ $@"
                 }
             }
 
-            if (TableSettings.GenerateInsertSP)
+            if (TableSettings.GenerateInsertSP || PreviewMode)
                 yield return PrintInsertMethod();
 
-            if (TableSettings.GenerateUpdateSP)
+            if (TableSettings.GenerateUpdateSP || PreviewMode)
                 yield return PrintUpdateMethod();
 
-            if (TableSettings.GenerateDeleteSP)
+            if (TableSettings.GenerateDeleteSP || PreviewMode)
                 yield return PrintDeleteMethod();
 
-            if (TableSettings.GenerateBulkInsertSP)
+            if (TableSettings.GenerateBulkInsertSP || PreviewMode)
                 yield return PrintBulkInsertMethod();
 
-            if (TableSettings.GenerateSelectByPkList)
+            if (TableSettings.GenerateSelectByPkList || PreviewMode)
                 yield return PrintGetByPKListMethod();
 
         }
