@@ -26,10 +26,13 @@ namespace DapperSqlGenerator.UI
     public partial class MainWindow : Window
     {
 
-        TSqlModel Model { get; set; } = null;
-        private string _dacpacPath = string.Empty;
-        public GeneratorSettings GeneratorSettings;
-        public IEnumerable<TSqlObject> Roles;
+        public TSqlModel Model { get; set; } = null;
+
+        private string DacpacPath { get; set; } = string.Empty;
+
+        public GeneratorSettings GeneratorSettings { get; set; } = null;
+
+        public IEnumerable<TSqlObject> Roles { get; set; } = null;
 
         public MainWindow()
         {
@@ -50,7 +53,7 @@ namespace DapperSqlGenerator.UI
         {
             try
             {
-                if (string.IsNullOrEmpty(_dacpacPath))
+                if (string.IsNullOrEmpty(DacpacPath))
                 {
                     MessageBox.Show("No dacpac file selected.", "Error to load", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
@@ -58,7 +61,7 @@ namespace DapperSqlGenerator.UI
                 {
                     buttonLoadModel.IsEnabled = false;
                     IsEnabled = false;
-                    Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
+                    Model = await Task.Run(() => TSqlModelHelper.LoadModel(DacpacPath));
                     LoadTablesList();
                     Roles = Model.GetAllRoles();
                     ucGlobalSettings.InitGlobalSettings();
@@ -257,7 +260,7 @@ namespace DapperSqlGenerator.UI
             if (openFileDialog.ShowDialog() == true)
                 txtPath.Text = openFileDialog.FileName;
 
-            _dacpacPath = txtPath.Text;
+            DacpacPath = txtPath.Text;
 
         }
 

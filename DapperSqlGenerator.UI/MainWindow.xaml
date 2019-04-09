@@ -4,14 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DapperSqlGenerator.UI"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="MS SQL Dapper Generator" Height="1750" Width="1300" Background="#e0e0e7">
+        Title="MS SQL Dapper Generator" Height="1150" Width="1300" Background="#e0e0e7">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
             <ColumnDefinition Width="7*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="0,3,0,3"></Setter>
+            </Style>
+        </Grid.Resources>
 
         <ScrollViewer Grid.Column="0" 
                       Background="#7fffffff"
@@ -27,7 +34,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label>Select your .dacpac file:</Label>
+                    <TextBlock>Select your .dacpac file:</TextBlock>
                     <TextBox Name="txtPath" Grid.Column="0" Grid.Row="1" IsEnabled="False"></TextBox>
                     <Button Name="buttonBrowse" Grid.Column="1" Grid.Row="1" Click="ButtonBrowse_Click" >Browse</Button>
                 </Grid>
@@ -39,17 +46,21 @@
                     <Button Name="buttonLoadConfig" Click="ButtonLoadConfig_Click" Padding="5,5" Margin="10,0,0,0" FontWeight="Bold" IsEnabled="False">Load existing config</Button>
                 </StackPanel>
 
-                <Label>Tables from your model:</Label>
-                <ListBox x:Name="lstTables" MaxHeight="260" MinHeight="150" SelectionMode="Extended" SelectionChanged="LstTables_SelectionChanged"></ListBox>
-                <Label FontSize="9">*You can define global settings bellow and precise settings for each table in the "Table generation settings pan" (right)</Label>
+                <TextBlock Margin="0,15,0,10" FontWeight="Bold">Global generation settings:</TextBlock>
+                <Grid Margin="0,2,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition ></RowDefinition>
+                        <RowDefinition ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" MinWidth="50">Author (mentioned in the comments above each class):</TextBlock>
+                    <TextBox Grid.Row="1" Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
+                </Grid>
 
-                <Label Margin="0,15,0,0" FontWeight="Bold">Global generation settings:</Label>
-                <StackPanel Orientation="Horizontal" Margin="0,2,0,10">
-                    <Label MinWidth="50">Author:</Label>
-                    <TextBox Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
-                </StackPanel>
+                <TextBlock>Generate Dapper Repositories for the following tables:</TextBlock>
+                <wpfx:CheckListBox x:Name="lstTables" MaxHeight="260" MinHeight="150"></wpfx:CheckListBox>
+                <TextBlock FontSize="9" TextWrapping="Wrap">You can define default table settings below and override settings for each table in the "Table generation settings pan" (right)</TextBlock>
 
-                <Label Margin="0,15,0,0" FontWeight="Bold">DB Context settings:</Label>
+                <TextBlock Margin="0,15,0,10" FontWeight="Bold">DB Context settings:</TextBlock>
                 <Grid Margin="0,0,0,15">
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="30"></RowDefinition>
@@ -62,19 +73,19 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" MinWidth="200" Grid.ColumnSpan="2" Margin="0,0,0,25.2" Grid.RowSpan="2">Namespace for DB context class:</Label>
+                    <TextBlock Grid.Row="0" Grid.Column="0" MinWidth="200" Grid.ColumnSpan="2" Grid.RowSpan="2">Namespace for DB context class:</TextBlock>
                     <TextBox Grid.Row="0" Grid.Column="2" Name="txtDbContextNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.Namespace, Mode=TwoWay}" Margin="0,4,-0.2,3.6"></TextBox>
 
-                    <Label Grid.Row="1" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2" Margin="0,0.4,0,0.2">Name of DB Context class:</Label>
+                    <TextBlock Grid.Row="1" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2">Name of DB Context class:</TextBlock>
                     <TextBox Grid.Row="1" Grid.Column="2" Name="txtDbContextClassName" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.ClassName, Mode=TwoWay}" Margin="0,3.4,-0.2,4.2"></TextBox>
 
-                    <Label Grid.Row="2" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2" Margin="0,0.4,0,0.2">Connection string name in App settings:</Label>
+                    <TextBlock Grid.Row="2" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2">Connection string name in App settings:</TextBlock>
                     <TextBox Grid.Row="2" Grid.Column="2" Name="txtDbContextConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.ConnectionStringName, Mode=TwoWay}" Margin="0,3.4,-0.2,4.2"></TextBox>
 
                 </Grid>
 
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
-                <Label Margin="0,15,0,0" FontWeight="Bold">Output settings:</Label>
+                <TextBlock Margin="0,15,0,10" FontWeight="Bold">Output settings:</TextBlock>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -85,7 +96,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label>Select output path for T-SQL stored procedures:</Label>
+                    <TextBlock>Select output path for T-SQL stored procedures:</TextBlock>
                     <TextBox Name="txtOutputPath_SQLProcedures" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_SqlScripts, Mode=TwoWay}"></TextBox>
                     <Button Name="buttonBrowseOutputPath_SQLProcedures" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_SQLProcedures_Click" >Browse</Button>
                 </Grid>
@@ -99,7 +110,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label>Select output path for C# entity classes:</Label>
+                    <TextBlock>Select output path for C# entity classes:</TextBlock>
                     <TextBox Name="txtOutputPath_CsEntityClasses" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_CsEntityClasses, Mode=TwoWay}"></TextBox>
                     <Button Name="buttonBrowseOutputPath_CsEntityClasses" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_CsEntityClasses_Click" >Browse</Button>
                 </Grid>
@@ -113,7 +124,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label>Select output path for C# repo classes:</Label>
+                    <TextBlock>Select output path for C# repo classes:</TextBlock>
                     <TextBox Name="txtOutputPath_CsRepositoryClasses" Grid.Column="0" Grid.Row="1" Text="{Binding Path=OutputPath_CsRepositoryClasses, Mode=TwoWay}"></TextBox>
                     <Button Name="buttonBrowseOutputPath_CsRepositoryClasses" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseOutputPath_CsRepositoryClasses_Click" >Browse</Button>
                 </Grid>

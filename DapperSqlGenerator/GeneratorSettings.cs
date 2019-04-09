@@ -25,6 +25,8 @@ namespace DapperSqlGenerator
         
         public CsDbContextGeneratorSettings CsDbContextSettings { get; set; } = new CsDbContextGeneratorSettings();
 
+        public List<string> SelectedTables { get; set; } = new List<string>();
+
         public TableSettings GlobalSettings { get; set; } = new TableSettings();
 
         public Dictionary<string, TableSettings> TablesSettings { get; set; } = new Dictionary<string, TableSettings>();
