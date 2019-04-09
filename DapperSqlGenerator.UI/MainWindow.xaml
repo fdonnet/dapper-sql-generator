@@ -36,7 +36,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock>Select your .dacpac file:</TextBlock>
                     <TextBox Name="txtPath" Grid.Column="0" Grid.Row="1" IsEnabled="False"></TextBox>
-                    <Button Name="buttonBrowse" Grid.Column="1" Grid.Row="1" Click="ButtonBrowse_Click" >Browse</Button>
+                    <Button Name="buttonBrowse" Grid.Column="1" Grid.Row="1" Click="ButtonBrowseDacpac_Click" >Browse</Button>
                 </Grid>
 
                 <Button x:Name="buttonLoadModel" Click="ButtonLoadModel_Click" Margin="40,20,40,10" MinHeight="37">Load Model</Button>
@@ -56,8 +56,15 @@
                     <TextBox Grid.Row="1" Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
                 </Grid>
 
-                <TextBlock>Generate Dapper Repositories for the following tables:</TextBlock>
-                <wpfx:CheckListBox x:Name="lstTables" MaxHeight="260" MinHeight="150"></wpfx:CheckListBox>
+                <CheckBox x:Name="chkGenerateForAllTables" Margin="0,0,0,10" IsChecked="{Binding GenerateForAllTables, Mode=TwoWay}"
+                          Checked="chkGenerateForAllTables_Checked"
+                          Unchecked="chkGenerateForAllTables_Unchecked">Run the generator for all tables in the model.</CheckBox>
+
+                <TextBlock >Run the generator only for the following tables:</TextBlock>
+                <wpfx:CheckListBox x:Name="lstSelectedTables" MaxHeight="260" MinHeight="150"
+                                   ItemSelectionChanged="LstSelectedTables_ItemSelectionChanged"
+                                   DataContextChanged="LstSelectedTables_DataContextChanged"></wpfx:CheckListBox>
+                
                 <TextBlock FontSize="9" TextWrapping="Wrap">You can define default table settings below and override settings for each table in the "Table generation settings pan" (right)</TextBlock>
 
                 <TextBlock Margin="0,15,0,10" FontWeight="Bold">DB Context settings:</TextBlock>
@@ -74,13 +81,16 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" MinWidth="200" Grid.ColumnSpan="2" Grid.RowSpan="2">Namespace for DB context class:</TextBlock>
-                    <TextBox Grid.Row="0" Grid.Column="2" Name="txtDbContextNamespace" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.Namespace, Mode=TwoWay}" Margin="0,4,-0.2,3.6"></TextBox>
+                    <TextBox Grid.Row="0" Grid.Column="2" Name="txtDbContextNamespace" VerticalAlignment="Center" MinWidth="125" 
+                             Text="{Binding Path=CsDbContextSettings.Namespace, Mode=TwoWay}"></TextBox>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2">Name of DB Context class:</TextBlock>
-                    <TextBox Grid.Row="1" Grid.Column="2" Name="txtDbContextClassName" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.ClassName, Mode=TwoWay}" Margin="0,3.4,-0.2,4.2"></TextBox>
+                    <TextBox Grid.Row="1" Grid.Column="2" Name="txtDbContextClassName" VerticalAlignment="Center" MinWidth="125" 
+                             Text="{Binding Path=CsDbContextSettings.ClassName, Mode=TwoWay}"></TextBox>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" MinWidth="280" Grid.ColumnSpan="2">Connection string name in App settings:</TextBlock>
-                    <TextBox Grid.Row="2" Grid.Column="2" Name="txtDbContextConnectionString" VerticalAlignment="Center" MinWidth="125" Text="{Binding Path=CsDbContextSettings.ConnectionStringName, Mode=TwoWay}" Margin="0,3.4,-0.2,4.2"></TextBox>
+                    <TextBox Grid.Row="2" Grid.Column="2" Name="txtDbContextConnectionString" VerticalAlignment="Center" MinWidth="125" 
+                             Text="{Binding Path=CsDbContextSettings.ConnectionStringName, Mode=TwoWay}" ></TextBox>
 
                 </Grid>
 
@@ -157,8 +167,8 @@
                             </StackPanel>
                             <StackPanel  Orientation="Horizontal" Margin="3,5,3,2">
                                 <Button x:Name="buttonGenerateNetEntityClass" Click="ButtonGenerateNetEntityClass_Click" Margin="3,0,3,0" Padding="5,5">.NET Entity Class</Button>
-                                <Button x:Name="buttonGenerateBaseRepo" Click="ButtonGenerateBaseRepo_Click" Margin="3,0,3,0" Padding="5,5">Base repo</Button>
-                                <Button x:Name="buttonGenerateClassRepo" Click="ButtonGenerateClassRepo_Click" Margin="3,0,3,0" Padding="5,5">Repo</Button>
+                                <Button x:Name="buttonGenerateBaseRepo" Click="ButtonGenerateBaseRepo_Click" Margin="3,0,3,0" Padding="5,5">DB Context</Button>
+                                <Button x:Name="buttonGenerateClassRepo" Click="ButtonGenerateClassRepo_Click" Margin="3,0,3,0" Padding="5,5">Table Repo</Button>
                             </StackPanel>
                         </StackPanel>
 

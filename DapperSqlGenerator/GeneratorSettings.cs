@@ -39,11 +39,26 @@ namespace DapperSqlGenerator
         /// </summary>
         public CsDbContextGeneratorSettings CsDbContextSettings { get; set; } = new CsDbContextGeneratorSettings();
 
+
+        /// <summary>
+        /// If it's true, Dapper repos will be generated for all tables in a dacpac model.
+        /// In this case, SelectedTables is not used.
+        /// </summary>
+        public bool GenerateForAllTables { get; set; } = true;
+
+        /// <summary>
+        /// List of tables in model, for which Dapper repository generation is needed.
+        /// This is used only if GenerateForAllTables = false 
+        /// </summary>
+        public List<string> SelectedTables { get; set; } = new List<string>();
+
+
         /// <summary>
         /// Default generation settings for all SQL tables 
         /// </summary>
         public TableSettings GlobalSettings { get; set; } = new TableSettings();
 
+        [JsonProperty()]
         /// <summary>
         /// Generation settings for specific SQL table, which override global settings
         /// </summary>
@@ -52,7 +67,7 @@ namespace DapperSqlGenerator
 
         public void SaveToFile(string configPath)
         {
-            File.WriteAllText(configPath, JsonConvert.SerializeObject(this));
+            File.WriteAllText(configPath, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 
 
