@@ -56,7 +56,7 @@
                     <TextBox Grid.Row="1" Name="txtAuthor" VerticalAlignment="Center" MinWidth="200" Text="{Binding Path=AuthorName, Mode=TwoWay}"></TextBox>
                 </Grid>
 
-                <CheckBox x:Name="chkGenerateForAllTables" Margin="0,0,0,10" IsChecked="{Binding GenerateForAllTables, Mode=TwoWay}"
+                <CheckBox x:Name="chkGenerateForAllTables" Margin="0,0,0,10" IsChecked="{Binding RunGeneratorForAllTables, Mode=TwoWay}"
                           Checked="chkGenerateForAllTables_Checked"
                           Unchecked="chkGenerateForAllTables_Unchecked">Run the generator for all tables in the model.</CheckBox>
 

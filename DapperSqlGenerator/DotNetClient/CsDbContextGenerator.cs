@@ -25,7 +25,19 @@ namespace DapperSqlGenerator.DotNetClient
         public override string Generate()
         {
             _interfaceName = "I" + _settings.ClassName;
-            _tables = Model.GetAllTables();
+
+            var tablesByName = Model.GetAllTables().ToDictionary(currTable => currTable.Name.Parts[1].ToLower());
+            if (GeneratorSettings.RunGeneratorForAllTables)
+            {
+                _tables = tablesByName.Values;
+            }
+            else
+            {
+                // Select, from model, only those tables that need the generator to run
+                _tables = GeneratorSettings.RunGeneratorForSelectedTables
+                    .Where(tableName => tablesByName.ContainsKey(tableName.ToLower()))
+                    .Select(tableName => tablesByName[tableName.ToLower()]);
+            }                
 
             string @using = GenerateUsingStatements();
             string @interface = GenerateInterface();
