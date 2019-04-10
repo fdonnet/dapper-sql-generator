@@ -142,15 +142,15 @@ $@"
 
         {
             //Get all
-            if (TableSettings.GenerateSelectAllSP || PreviewMode)
+            if (TableSettings.GenerateSelectAllSP)
                 yield return $"Task<IEnumerable<{_entityClassFullName}>> GetAll();";
 
             //Get by Primary key
-            if (TableSettings.GenerateSelectByPk || PreviewMode)
+            if (TableSettings.GenerateSelectByPk)
                 yield return $"Task<{_entityClassFullName}> GetBy{_pkFieldsNames}({_pkFieldsWithTypes});";
 
             //Get by Unique key
-            if (TableSettings.GenerateSelectByUK || PreviewMode)
+            if (TableSettings.GenerateSelectByUK)
             {
                 foreach (var ukColumns in _uniqueKeys)
                 {
@@ -162,22 +162,22 @@ $@"
             }
 
             //Insert
-            if (TableSettings.GenerateInsertSP || PreviewMode)
+            if (TableSettings.GenerateInsertSP)
                 yield return $"Task<int> Insert({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Bulk insert
-            if (TableSettings.GenerateBulkInsertSP || PreviewMode)
+            if (TableSettings.GenerateBulkInsertSP)
                 yield return $"Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
 
             //Update
-            if (TableSettings.GenerateUpdateSP || PreviewMode)
+            if (TableSettings.GenerateUpdateSP)
                 yield return $"Task<bool> Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Delete
-            if (TableSettings.GenerateDeleteSP || PreviewMode)
+            if (TableSettings.GenerateDeleteSP)
                 yield return $"Task<bool> Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
 
-            if (TableSettings.GenerateSelectByPkList || PreviewMode)
+            if (TableSettings.GenerateSelectByPkList)
                 yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassFullName}_PK> pkList);";
 
 
@@ -190,13 +190,13 @@ $@"
         /// <returns></returns>
         private IEnumerable<string> GenerateClassMethods()
         {
-            if (TableSettings.GenerateSelectAllSP || PreviewMode)
+            if (TableSettings.GenerateSelectAllSP)
                 yield return PrintGetAllMethod();
 
-            if (TableSettings.GenerateSelectByPk || PreviewMode)
+            if (TableSettings.GenerateSelectByPk)
                 yield return PrintGetByPKMethod();
 
-            if (TableSettings.GenerateSelectByUK || PreviewMode)
+            if (TableSettings.GenerateSelectByUK)
             {
                 foreach (var ukWithColumns in _uniqueKeys)
                 {
@@ -204,19 +204,19 @@ $@"
                 }
             }
 
-            if (TableSettings.GenerateInsertSP || PreviewMode)
+            if (TableSettings.GenerateInsertSP)
                 yield return PrintInsertMethod();
 
-            if (TableSettings.GenerateUpdateSP || PreviewMode)
+            if (TableSettings.GenerateUpdateSP)
                 yield return PrintUpdateMethod();
 
-            if (TableSettings.GenerateDeleteSP || PreviewMode)
+            if (TableSettings.GenerateDeleteSP)
                 yield return PrintDeleteMethod();
 
-            if (TableSettings.GenerateBulkInsertSP || PreviewMode)
+            if (TableSettings.GenerateBulkInsertSP)
                 yield return PrintBulkInsertMethod();
 
-            if (TableSettings.GenerateSelectByPkList || PreviewMode)
+            if (TableSettings.GenerateSelectByPkList)
                 yield return PrintGetByPKListMethod();
 
         }
