@@ -129,26 +129,26 @@ namespace DapperSqlGenerator.UI
         {
             if (lstSelectedTables.DataContext is GeneratorSettings generatorSettings)
             {
-                if (!generatorSettings.GenerateForAllTables)
+                _loading++;
+                if (!generatorSettings.RunGeneratorForAllTables)
                 {
                     lstSelectedTables.IsEnabled = true;
-
-                    if (generatorSettings.SelectedTables?.Any() ?? false)
+                    bool selectedTablesIsNullOrEmpty = generatorSettings.RunGeneratorForSelectedTables?.Any() ?? false;
+                    if (selectedTablesIsNullOrEmpty)
                     {
-                        _loading++;
                         lstSelectedTables.UnSelectAll();
                         foreach (var item in lstSelectedTables.Items)
                         {
-                            if (generatorSettings.SelectedTables.Any(r => r == ((TSqlObject)item).Name.Parts[1]))
+                            if (generatorSettings.RunGeneratorForSelectedTables.Any(r => r == ((TSqlObject)item).Name.Parts[1]))
                             {
                                 lstSelectedTables.SelectedItems.Add(item);
                             }
                         }
-                        _loading--;
                     }
                     else
                     {
                         lstSelectedTables.SelectAll();
+                        generatorSettings.RunGeneratorForSelectedTables = GetSelectedTablesFromCheckListBox().OrderBy(tbl => tbl).ToList();
                     }
                 }
                 else
@@ -156,6 +156,7 @@ namespace DapperSqlGenerator.UI
                     lstSelectedTables.IsEnabled = false;
                     lstSelectedTables.SelectAll();
                 }
+                _loading--;
             }
         }
 
@@ -167,8 +168,8 @@ namespace DapperSqlGenerator.UI
             {
                 if (lstSelectedTables.DataContext is GeneratorSettings generatorSettings)
                 {
-                    if (!generatorSettings.GenerateForAllTables)
-                        generatorSettings.SelectedTables = GetSelectedTablesFromCheckListBox().OrderBy(tbl => tbl).ToList();
+                    if (!generatorSettings.RunGeneratorForAllTables)
+                        generatorSettings.RunGeneratorForSelectedTables = GetSelectedTablesFromCheckListBox().OrderBy(tbl => tbl).ToList();
                 }
             }
         }

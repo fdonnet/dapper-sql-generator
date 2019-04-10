@@ -44,13 +44,13 @@ namespace DapperSqlGenerator
         /// If it's true, Dapper repos will be generated for all tables in a dacpac model.
         /// In this case, SelectedTables is not used.
         /// </summary>
-        public bool GenerateForAllTables { get; set; } = true;
+        public bool RunGeneratorForAllTables { get; set; } = true;
 
         /// <summary>
         /// List of tables in model, for which Dapper repository generation is needed.
         /// This is used only if GenerateForAllTables = false 
         /// </summary>
-        public List<string> SelectedTables { get; set; } = new List<string>();
+        public List<string> RunGeneratorForSelectedTables { get; set; } = new List<string>();
 
 
         /// <summary>
