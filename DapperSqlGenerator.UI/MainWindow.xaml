@@ -93,7 +93,7 @@
                              Text="{Binding Path=CsDbContextSettings.ConnectionStringName, Mode=TwoWay}" ></TextBox>
 
                 </Grid>
-
+                <TextBlock Margin="0,0,0,5" FontWeight="Bold">Default table settings:</TextBlock>
                 <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
                 <TextBlock Margin="0,15,0,10" FontWeight="Bold">Output settings:</TextBlock>
 
@@ -177,9 +177,9 @@
                             Select one or more tables and click on the preview buttons...</TextBox>
                     </Grid>
                 </TabItem>
-                <TabItem Name="TabOverride" Header="Table generation settings" IsEnabled="False">
+                <TabItem Name="TabOverride" Header="Override table settings" IsEnabled="False">
                     <StackPanel>
-                        <CheckBox Name="chkOverrideSettings" Margin="2,10" Checked="ChkOverrideSettings_Checked" Unchecked="ChkOverrideSettings_Unchecked">Override global settings</CheckBox>
+                        <CheckBox Name="chkOverrideSettings" Margin="2,10" Checked="ChkOverrideSettings_Checked" Unchecked="ChkOverrideSettings_Unchecked">Override default settings</CheckBox>
                         <local:ucSettings x:Name="ucTableSettings" Visibility="Hidden"></local:ucSettings>
                     </StackPanel>
                 </TabItem>
