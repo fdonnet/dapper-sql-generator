@@ -30,11 +30,15 @@ namespace DapperSqlGenerator.UI
 
         public TSqlModel Model { get; set; } = null;
 
+        public IEnumerable<TSqlObject> ModelTables { get; set; } = null;
+
+
         public string DacpacPath { get; set; } = string.Empty;
 
         public GeneratorSettings GeneratorSettings { get; set; } = null;
 
         public IEnumerable<TSqlObject> Roles { get; set; } = null;
+
 
         /// <summary>
         /// Semaphore variable to check loading status. If > 0, then there's something loading.
@@ -101,10 +105,14 @@ namespace DapperSqlGenerator.UI
         /// </summary>
         private void LoadTablesFromModel()
         {
-            var tables = Model.GetAllTables();
-            lstSelectedTables.ItemsSource = tables;
+            ModelTables = Model.GetAllTables();
+
+            lstSelectedTables.ItemsSource = ModelTables;
             lstSelectedTables.DisplayMemberPath = "Name.Parts[1]";
             lstSelectedTables.SelectAll();
+
+            comboOverrideSettingsForTable.ItemsSource = ModelTables;
+            comboOverrideSettingsForTable.DisplayMemberPath = "Name.Parts[1]";
         }
 
         private void chkGenerateForAllTables_Checked(object sender, RoutedEventArgs e)
@@ -189,46 +197,7 @@ namespace DapperSqlGenerator.UI
             }
         }
 
-
-        /// <summary>
-        /// When the table selection changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LstTables_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ucTableSettings.Visibility = Visibility.Hidden;
-            chkOverrideSettings.Visibility = Visibility.Hidden;
-            TabOverride.IsEnabled = false;
-
-            //if one table selected
-            if (lstSelectedTables.SelectedItems.Count == 1)
-            {
-                TabOverride.IsEnabled = true;
-                chkOverrideSettings.Visibility = Visibility.Visible;
-
-                //Check if the config already exists
-                if (GeneratorSettings.TablesSettings.ContainsKey(((TSqlObject)lstSelectedTables.SelectedItems[0]).Name.Parts[1]))
-                {
-                    chkOverrideSettings.IsChecked = true;
-
-                    //To be sure the correct settings are loaded
-                    ucTableSettings.InitTableSettings((TSqlObject)lstSelectedTables.SelectedItems[0]);
-                    chkOverrideSettings.Content = $"Override global settings for table: " +
-                        $"{((TSqlObject)lstSelectedTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
-
-                    ucTableSettings.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    chkOverrideSettings.IsChecked = false;
-                    ucTableSettings.Visibility = Visibility.Hidden;
-                }
-
-            }
-        }
-
-
+        
 
         private void ButtonBrowseDacpac_Click(object sender, RoutedEventArgs e)
         {
@@ -298,6 +267,20 @@ namespace DapperSqlGenerator.UI
         }
 
 
+        private void ComboOverrideSettingsForTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboOverrideSettingsForTable.SelectedItem is TSqlObject selectedTable)
+            {
+                string tableName = selectedTable.Name.Parts[1].ToLower();
+
+                if (GeneratorSettings.TablesSettings.ContainsKey(tableName))
+                    chkOverrideSettings.IsChecked = true;
+                else
+                    chkOverrideSettings.IsChecked = false;
+            }
+        }
+
+
         /// <summary>
         /// Override with table settings
         /// </summary>
@@ -305,11 +288,15 @@ namespace DapperSqlGenerator.UI
         /// <param name="e"></param>
         private void ChkOverrideSettings_Checked(object sender, RoutedEventArgs e)
         {
-            ucTableSettings.Visibility = Visibility.Visible;
-            ucTableSettings.InitTableSettings(((TSqlObject)lstSelectedTables.SelectedItems[0]));
-            chkOverrideSettings.Content = $"Override global settings for table: " +
-                $"{((TSqlObject)lstSelectedTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
+            // TODO : make current combo box item in bold
+            ucTableSettings.Visibility = Visibility.Hidden;
 
+            if (comboOverrideSettingsForTable.SelectedItem is TSqlObject selectedTable)
+            {
+                ucTableSettings.Visibility = Visibility.Visible;
+                ucTableSettings.InitTableSettings(selectedTable);
+                chkOverrideSettings.Content = $"Override global settings for table: {selectedTable.Name.Parts[1]}";
+            }
         }
 
 
@@ -320,6 +307,7 @@ namespace DapperSqlGenerator.UI
         /// <param name="e"></param>
         private void ChkOverrideSettings_Unchecked(object sender, RoutedEventArgs e)
         {
+            // TODO : make current combo box item not in bold
             var tableName = ((TSqlObject)lstSelectedTables.SelectedItems[0]).Name.Parts[1];
 
             bool toBeRemoved = GeneratorSettings.TablesSettings.ContainsKey(tableName);

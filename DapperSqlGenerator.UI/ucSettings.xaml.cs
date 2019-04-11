@@ -63,18 +63,18 @@ namespace DapperSqlGenerator.UI
         /// <param name="tableName"></param>
         public void InitTableSettings(TSqlObject table)
         {
-            var tableName = table.Name.Parts[1];
+            var lowerTableName = table.Name.Parts[1].ToLower();
             _initialLoading = true;
 
             _parent = (MainWindow)Application.Current.MainWindow;
 
-            if (_parent.GeneratorSettings.TablesSettings.TryGetValue(tableName, out _curTableSettings) == false)
+            if (_parent.GeneratorSettings.TablesSettings.TryGetValue(lowerTableName, out _curTableSettings) == false)
                 _curTableSettings = null;
 
             if (_curTableSettings == null)
             {
                 _curTableSettings = _curTableSettings.CopySettings(_parent.GeneratorSettings.GlobalSettings);
-                _curTableSettings.TableName = tableName;
+                _curTableSettings.TableName = lowerTableName;
 
                 _parent.GeneratorSettings.TablesSettings.Add(_curTableSettings.TableName, _curTableSettings);
             }

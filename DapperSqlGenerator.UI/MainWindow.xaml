@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:DapperSqlGenerator.UI"
              xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="MS SQL Dapper Generator" Height="1150" Width="1300" Background="#e0e0e7">
+        Title="MS SQL Dapper Generator" Height="850" Width="1400" Background="#f0f0f7">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
-            <ColumnDefinition Width="7*"></ColumnDefinition>
+            <ColumnDefinition Width="6*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <Grid.Resources>
@@ -21,7 +21,6 @@
         </Grid.Resources>
 
         <ScrollViewer Grid.Column="0" 
-                      Background="#7fffffff"
                       VerticalScrollBarVisibility="Auto" 
                       HorizontalScrollBarVisibility="Disabled">
             <StackPanel Margin="10,5,10,15">
@@ -93,8 +92,7 @@
                              Text="{Binding Path=CsDbContextSettings.ConnectionStringName, Mode=TwoWay}" ></TextBox>
 
                 </Grid>
-                <TextBlock Margin="0,0,0,5" FontWeight="Bold">Default table settings:</TextBlock>
-                <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
+                
                 <TextBlock Margin="0,15,0,10" FontWeight="Bold">Output settings:</TextBlock>
 
                 <Grid>
@@ -147,6 +145,19 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <TabControl Grid.Row="0" >
+                <TabItem Name="tabDefaultTableSettings" Header="Default table settings">
+                    <StackPanel Margin="10">
+                        <local:ucSettings x:Name="ucGlobalSettings"></local:ucSettings>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="TabOverride" Header="Override table settings">
+                    <StackPanel Margin="10">
+                        <TextBlock>Select a table from the model:</TextBlock>
+                        <ComboBox Name="comboOverrideSettingsForTable" SelectionChanged="ComboOverrideSettingsForTable_SelectionChanged"></ComboBox>
+                        <CheckBox Name="chkOverrideSettings" Margin="2,10" Checked="ChkOverrideSettings_Checked" Unchecked="ChkOverrideSettings_Unchecked">Override default settings</CheckBox>
+                        <local:ucSettings x:Name="ucTableSettings" Visibility="Hidden"></local:ucSettings>
+                    </StackPanel>
+                </TabItem>
                 <TabItem Name="tabPreview" Header="Preview">
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
@@ -174,14 +185,8 @@
 
                         <TextBox Grid.Row="1"  x:Name="txtOutput" AcceptsReturn="True" 
                              VerticalScrollBarVisibility="Auto" FontFamily="Lucida Console" Margin="3,5,3,5" Padding="2,5,2,2">
-                            Select one or more tables and click on the preview buttons...</TextBox>
+                            Click on one of the preview buttons to generate code...</TextBox>
                     </Grid>
-                </TabItem>
-                <TabItem Name="TabOverride" Header="Override table settings" IsEnabled="False">
-                    <StackPanel>
-                        <CheckBox Name="chkOverrideSettings" Margin="2,10" Checked="ChkOverrideSettings_Checked" Unchecked="ChkOverrideSettings_Unchecked">Override default settings</CheckBox>
-                        <local:ucSettings x:Name="ucTableSettings" Visibility="Hidden"></local:ucSettings>
-                    </StackPanel>
                 </TabItem>
             </TabControl>
             <TabControl Grid.Row="1" Margin="0,10,0,0">

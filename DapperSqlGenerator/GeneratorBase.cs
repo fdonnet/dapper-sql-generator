@@ -38,7 +38,7 @@ namespace DapperSqlGenerator
                 TableName = table.Name.Parts[1];
 
                 // Table generation settings - easy accessor
-                TableSettings = !string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName)
+                TableSettings = !string.IsNullOrEmpty(TableName) && generatorSettings.TablesSettings.ContainsKey(TableName.ToLower())
                     ? generatorSettings.TablesSettings[TableName]
                     : generatorSettings.GlobalSettings;
             }

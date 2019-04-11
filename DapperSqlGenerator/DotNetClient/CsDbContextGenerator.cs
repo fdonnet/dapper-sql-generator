@@ -88,15 +88,16 @@ using Microsoft.Extensions.Configuration;
             var repoMemberDeclarations = String.Join(Environment.NewLine + "        ",
                 _tables.Select(currTable =>
                 {
-                    var tableName = TSqlModelHelper.PascalCase(currTable.Name.Parts[1]);
+                    var pascalTableName = TSqlModelHelper.PascalCase(currTable.Name.Parts[1]);
 
-                    var tableSettings = GeneratorSettings.TablesSettings.ContainsKey(currTable.Name.Parts[1]) ?
-                        GeneratorSettings.TablesSettings[currTable.Name.Parts[1]]
+                    var lowerTableName = currTable.Name.Parts[1].ToLower();
+                    var tableSettings = GeneratorSettings.TablesSettings.ContainsKey(lowerTableName) ?
+                        GeneratorSettings.TablesSettings[lowerTableName]
                         : GeneratorSettings.GlobalSettings;
 
                     var repoNamespace = tableSettings.CsRepositorySettings.Namespace;
-                    var repoInterfaceName = "I" + tableName + "Repo";
-                    var repoPropertyName = tableName + "Repo";
+                    var repoInterfaceName = "I" + pascalTableName + "Repo";
+                    var repoPropertyName = pascalTableName + "Repo";
 
                     return $"{repoNamespace}.{repoInterfaceName} {repoPropertyName} {{ get; }}";
                 })
@@ -129,16 +130,17 @@ using Microsoft.Extensions.Configuration;
             var repoMemberDefinitions = String.Join(Environment.NewLine,
                 _tables.Select(currTable =>
                 {
-                    var tableName = TSqlModelHelper.PascalCase(currTable.Name.Parts[1]);
+                    var pascalTableName = TSqlModelHelper.PascalCase(currTable.Name.Parts[1]);
 
-                    var tableSettings = GeneratorSettings.TablesSettings.ContainsKey(currTable.Name.Parts[1]) ?
-                        GeneratorSettings.TablesSettings[currTable.Name.Parts[1]]
+                    var lowerTableName = currTable.Name.Parts[1].ToLower();
+                    var tableSettings = GeneratorSettings.TablesSettings.ContainsKey(lowerTableName) ?
+                        GeneratorSettings.TablesSettings[lowerTableName]
                         : GeneratorSettings.GlobalSettings;
 
                     var repoNamespace = tableSettings.CsRepositorySettings.Namespace;
-                    var repoInterfaceName = "I" + tableName + "Repo";
-                    var repoClassName = tableName + "Repo";
-                    var repoPropertyName = tableName + "Repo";
+                    var repoInterfaceName = "I" + pascalTableName + "Repo";
+                    var repoClassName = pascalTableName + "Repo";
+                    var repoPropertyName = pascalTableName + "Repo";
                     var repoProtectedFieldName = $"_{FirstCharacterToLower(repoPropertyName)}";
 
                     return $@"
