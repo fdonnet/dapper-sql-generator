@@ -1,4 +1,4 @@
-------------------------DRAFT----------------------
+------------------------DRAFT---------------------- **Some UI changes**
 
 # MSSQL - Dapper generator
 A simple and not too ambitious tool that helps you to generate some important generic layers for your MSSQL - C# (netcore) - Dapper project. 
