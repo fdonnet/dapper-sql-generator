@@ -64,6 +64,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 ";
 
@@ -149,6 +150,7 @@ using Microsoft.Extensions.Configuration;
 
 
         protected readonly IConfiguration _config;
+        protected readonly IHostEnvironment _env;
 
         
         protected IDbConnection _cn = null;
@@ -170,9 +172,10 @@ using Microsoft.Extensions.Configuration;
         /// Main constructor, inject standard config : Default connection string
         /// Need to be reviewed to be more generic (choose the connection string to inject)
         /// </summary>
-        public {_settings.ClassName}(IConfiguration config)
+        public {_settings.ClassName}(IConfiguration config, IHostEnvironment env)
         {{
             _config = config;
+            _env = env;
             DefaultTypeMap.MatchNamesWithUnderscores = true;
             _cn = new SqlConnection(_config.GetConnectionString(""{_settings.ConnectionStringName}""));
         }}
