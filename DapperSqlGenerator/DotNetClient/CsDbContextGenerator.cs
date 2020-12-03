@@ -108,6 +108,7 @@ using Microsoft.Extensions.Hosting;
 
     }}
 
+
 ";
             return output;
         }
@@ -145,6 +146,33 @@ using Microsoft.Extensions.Hosting;
 
             string output = $@"
 
+    /// <summary>
+    ///Interface for {_settings.ClassName}Factory
+    /// </summary>
+    public interface {_interfaceName}Factory
+    {{
+        {_settings.ClassName} Create();
+    }}
+
+    /// <summary>
+    /// Used when the DBcontext itself is not suffisent to manage its lifecycle 
+    /// Ex in WPF app you need to dispose the DBContexts to allow connection pooling and to be thread safe
+    /// Very simple implementation = with only one DB connection (can be extended to support multiple DB con)
+    /// </summary>
+    public class {_settings.ClassName}Factory : {_interfaceName}Factory
+    {{
+        private readonly string _conString;
+        public {_settings.ClassName}Factory(string dbConnectionString)
+        {{
+            _conString = dbConnectionString;
+        }}
+
+        public {_settings.ClassName} Create()
+        {{
+            return new {_settings.ClassName}(_conString);
+        }}
+    }}
+
     public class {_settings.ClassName} : {_interfaceName}
     {{
 
@@ -178,6 +206,16 @@ using Microsoft.Extensions.Hosting;
             _env = env;
             DefaultTypeMap.MatchNamesWithUnderscores = true;
             _cn = new SqlConnection(_config.GetConnectionString(""{_settings.ConnectionStringName}""));
+        }}
+
+        /// <summary>
+        /// Main constructor, inject standard config : Default connection string
+        /// Pass the connection string directly (in case of usage with WPF or dekstop app, can be heavy to always inject)
+        /// </summary>
+        public {_settings.ClassName}(string connectionString)
+        {{
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+            _cn = new SqlConnection(connectionString);
         }}
         
 

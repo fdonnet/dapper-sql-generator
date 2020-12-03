@@ -38,7 +38,7 @@ namespace DapperSqlGenerator.DotNetClient
             {spParams}
 
             var ok = await _dbContext.Connection.ExecuteAsync
-                (""usp{_entityClassName}_Update"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
+                (""usp{_entityClassName}_update"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
             return true;
         }}";
