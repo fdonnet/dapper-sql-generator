@@ -80,7 +80,8 @@ namespace DapperSqlGenerator
 
 
         /// <summary>
-        /// Translate a SQL data type to a .NET type
+        /// Translate a SQL data type to the corresponding SQL type class in System.Data.SqlTypes.
+        /// This method is needed DataTable generation, for stored procedures accepting table types
         /// </summary>
         /// <param name="sqlDataTypeName"></param>
         /// <returns></returns>
@@ -133,7 +134,7 @@ namespace DapperSqlGenerator
         }
 
         /// <summary>
-        /// Translate a SQL data type to a .NET type
+        /// Translate a SQL data type to the corresponding System.Data.DbType enum value
         /// </summary>
         /// <param name="sqlDataTypeName"></param>
         /// <returns></returns>
@@ -187,7 +188,7 @@ namespace DapperSqlGenerator
 
 
         /// <summary>
-        /// Translate a SQL data type to a .NET type
+        /// Translate a SQL data type to a .NET basic type
         /// </summary>
         /// <param name="sqlDataTypeName"></param>
         /// <returns></returns>

@@ -26,7 +26,6 @@ namespace DapperSqlGenerator.UI
     {
 
         private MainWindow _parent;
-        private bool _isGlobalSettings = true;
         private TableSettings _curGlobalSettings = null;
         private TableSettings _curTableSettings = null;
         private bool _initialLoading = true;
@@ -43,7 +42,6 @@ namespace DapperSqlGenerator.UI
         /// </summary>
         public void InitGlobalSettings()
         {
-            _isGlobalSettings = true;
             _initialLoading = true;
 
             _parent = (MainWindow)Application.Current.MainWindow;
@@ -65,19 +63,18 @@ namespace DapperSqlGenerator.UI
         /// <param name="tableName"></param>
         public void InitTableSettings(TSqlObject table)
         {
-            var tableName = table.Name.Parts[1];
-            _isGlobalSettings = false;
+            var lowerTableName = table.Name.Parts[1].ToLower();
             _initialLoading = true;
 
             _parent = (MainWindow)Application.Current.MainWindow;
 
-            if (_parent.GeneratorSettings.TablesSettings.TryGetValue(tableName, out _curTableSettings) == false)
+            if (_parent.GeneratorSettings.TablesSettings.TryGetValue(lowerTableName, out _curTableSettings) == false)
                 _curTableSettings = null;
 
             if (_curTableSettings == null)
             {
                 _curTableSettings = _curTableSettings.CopySettings(_parent.GeneratorSettings.GlobalSettings);
-                _curTableSettings.TableName = tableName;
+                _curTableSettings.TableName = lowerTableName;
 
                 _parent.GeneratorSettings.TablesSettings.Add(_curTableSettings.TableName, _curTableSettings);
             }

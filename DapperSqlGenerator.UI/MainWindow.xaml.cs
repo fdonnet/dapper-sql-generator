@@ -17,6 +17,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using Xceed.Wpf.Toolkit;
+using MessageBox = System.Windows.MessageBox;
 
 namespace DapperSqlGenerator.UI
 {
@@ -26,10 +28,23 @@ namespace DapperSqlGenerator.UI
     public partial class MainWindow : Window
     {
 
-        TSqlModel Model { get; set; } = null;
-        private string _dacpacPath = string.Empty;
-        public GeneratorSettings GeneratorSettings;
-        public IEnumerable<TSqlObject> Roles;
+        public TSqlModel Model { get; set; } = null;
+
+        public IEnumerable<TSqlObject> ModelTables { get; set; } = null;
+
+
+        public string DacpacPath { get; set; } = string.Empty;
+
+        public GeneratorSettings GeneratorSettings { get; set; } = null;
+
+        public IEnumerable<TSqlObject> Roles { get; set; } = null;
+
+
+        /// <summary>
+        /// Semaphore variable to check loading status. If > 0, then there's something loading.
+        /// </summary>
+        private int _loading = 0;
+
 
         public MainWindow()
         {
@@ -50,22 +65,27 @@ namespace DapperSqlGenerator.UI
         {
             try
             {
-                if (string.IsNullOrEmpty(_dacpacPath))
+                if (string.IsNullOrEmpty(DacpacPath))
                 {
                     MessageBox.Show("No dacpac file selected.", "Error to load", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
                 else
                 {
+                    _loading++;
                     buttonLoadModel.IsEnabled = false;
                     IsEnabled = false;
-                    Model = await Task.Run(() => TSqlModelHelper.LoadModel(_dacpacPath));
-                    LoadTablesList();
+
+                    Model = await Task.Run(() => TSqlModelHelper.LoadModel(DacpacPath));
+                    LoadTablesFromModel();
                     Roles = Model.GetAllRoles();
+
                     ucGlobalSettings.InitGlobalSettings();
                     ucGlobalSettings.IsEnabled = true;
                     IsEnabled = true;
                     buttonLoadConfig.IsEnabled = true;
                     buttonSaveConfig.IsEnabled = true;
+                    _loading--;
+
                     MessageBox.Show("Model loaded successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
@@ -79,175 +99,107 @@ namespace DapperSqlGenerator.UI
             }
         }
 
+
         /// <summary>
-        /// Show all tables in the model
+        /// Load all tables from the model, and show them in the lstSelectedTables list
         /// </summary>
-        private void LoadTablesList()
+        private void LoadTablesFromModel()
         {
-            var tables = Model.GetAllTables();
-            lstTables.ItemsSource = tables;
-            lstTables.DisplayMemberPath = "Name.Parts[1]";
+            ModelTables = Model.GetAllTables();
+
+            lstSelectedTables.ItemsSource = ModelTables;
+            lstSelectedTables.DisplayMemberPath = "Name.Parts[1]";
+            lstSelectedTables.SelectAll();
+
+            comboOverrideSettingsForTable.ItemsSource = ModelTables;
+            comboOverrideSettingsForTable.DisplayMemberPath = "Name.Parts[1]";
         }
 
-        private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
+        private void chkGenerateForAllTables_Checked(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        SqlDeleteGenerator gen = new SqlDeleteGenerator(GeneratorSettings, table, true);
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
-            }
-
+            LstSelectedTables_DataContextChanged(lstSelectedTables,
+                new DependencyPropertyChangedEventArgs(CheckListBox.DataContextProperty, lstSelectedTables.DataContext, lstSelectedTables.DataContext));
         }
 
-        private void ButtonGenerateInsert_Click(object sender, RoutedEventArgs e)
+        private void chkGenerateForAllTables_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        SqlInsertGenerator gen = new SqlInsertGenerator(GeneratorSettings, table,true);
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
-            }
+            LstSelectedTables_DataContextChanged(lstSelectedTables,
+                new DependencyPropertyChangedEventArgs(CheckListBox.DataContextProperty, lstSelectedTables.DataContext, lstSelectedTables.DataContext));
         }
 
 
-        private void ButtonGenerateBulkInsert_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Initializes the check list box, selecting (checking) the roles which are granted to the SQL procedure.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LstSelectedTables_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (lstTables.SelectedItems.Count > 0)
+            if (lstSelectedTables.DataContext is GeneratorSettings generatorSettings)
             {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
+                _loading++;
+                if (!generatorSettings.RunGeneratorForAllTables)
                 {
-                    if (item is TSqlObject table)
+                    lstSelectedTables.IsEnabled = true;
+                    bool selectedTablesIsNullOrEmpty = generatorSettings.RunGeneratorForSelectedTables?.Any() ?? false;
+                    if (selectedTablesIsNullOrEmpty)
                     {
-                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(GeneratorSettings, table,true);
-                        output += gen.Generate();
+                        lstSelectedTables.UnSelectAll();
+                        foreach (var item in lstSelectedTables.Items)
+                        {
+                            if (generatorSettings.RunGeneratorForSelectedTables.Any(r => r == ((TSqlObject)item).Name.Parts[1]))
+                            {
+                                lstSelectedTables.SelectedItems.Add(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lstSelectedTables.SelectAll();
+                        generatorSettings.RunGeneratorForSelectedTables = GetSelectedTablesFromCheckListBox().OrderBy(tbl => tbl).ToList();
                     }
                 }
-                txtOutput.Text = output;
-            }
-        }
-
-        private void ButtonGenerateNetEntityClass_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
+                else
                 {
-                    if (item is TSqlObject table)
-                    {
-                        CsEntityClassGenerator gen = new CsEntityClassGenerator(GeneratorSettings, table,true);
-                        output += gen.Generate();
-                    }
+                    lstSelectedTables.IsEnabled = false;
+                    lstSelectedTables.SelectAll();
                 }
-                txtOutput.Text = output;
-            }
-        }
-
-        private void ButtonGenerateSelectAll_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        var gen = new SqlSelectAllGenerator(GeneratorSettings, table,true);
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
-            }
-        }
-
-        private void ButtonGenerateSelectByPK_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        var gen = new SqlSelectByPKGenerator(GeneratorSettings, table,true);
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
-            }
-        }
-
-        private void ButtonGenerateSelectByUK_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        var gen = new SqlSelectByUKGenerator(GeneratorSettings, table,true);
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
-            }
-        }
-
-        private void ButtonGenerateUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        var gen = new SqlUpdateGenerator(GeneratorSettings, table,true);
-
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
-            }
-        }
-
-        private void ButtonGenerateTableType_Click(object sender, RoutedEventArgs e)
-        {
-            if (lstTables.SelectedItems.Count > 0)
-            {
-                string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
-                {
-                    if (item is TSqlObject table)
-                    {
-                        var gen = new SqlTableTypeGenerator(GeneratorSettings, table,true);
-
-                        output += gen.Generate();
-                    }
-                }
-                txtOutput.Text = output;
+                _loading--;
             }
         }
 
 
-        private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
+        private void LstSelectedTables_ItemSelectionChanged(object sender, Xceed.Wpf.Toolkit.Primitives.ItemSelectionChangedEventArgs e)
+        {
+            // Update the data source
+            if (_loading == 0)
+            {
+                if (lstSelectedTables.DataContext is GeneratorSettings generatorSettings)
+                {
+                    if (!generatorSettings.RunGeneratorForAllTables)
+                        generatorSettings.RunGeneratorForSelectedTables = GetSelectedTablesFromCheckListBox().OrderBy(tbl => tbl).ToList();
+                }
+            }
+        }
+
+
+
+        /// <summary>
+        /// Extract IEnumerable of strings (tables names) from the checklist box
+        /// </summary>
+        /// <param name="curList"></param>
+        /// <returns></returns>
+        private IEnumerable<string> GetSelectedTablesFromCheckListBox()
+        {
+            foreach (var item in lstSelectedTables.SelectedItems)
+            {
+                yield return ((TSqlObject)item).Name.Parts[1];
+            }
+        }
+
+        
+
+        private void ButtonBrowseDacpac_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -257,7 +209,7 @@ namespace DapperSqlGenerator.UI
             if (openFileDialog.ShowDialog() == true)
                 txtPath.Text = openFileDialog.FileName;
 
-            _dacpacPath = txtPath.Text;
+            DacpacPath = txtPath.Text;
 
         }
 
@@ -284,6 +236,7 @@ namespace DapperSqlGenerator.UI
             }
         }
 
+
         /// <summary>
         /// Load all the settings from a JSON file
         /// </summary>
@@ -298,13 +251,15 @@ namespace DapperSqlGenerator.UI
 
             if (openFileDialog.ShowDialog() == true)
             {
+                _loading++;
+
                 var configPath = openFileDialog.FileName;
                 GeneratorSettings = GeneratorSettings.LoadFromFile(configPath);
                 DataContext = GeneratorSettings;
                 ucGlobalSettings.InitGlobalSettings();
 
                 tabPreview.IsSelected = true;
-                lstTables.UnselectAll();
+                _loading--;
 
                 MessageBox.Show("Configuration(all settings) loaded successfully",
                      "Info", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -312,43 +267,19 @@ namespace DapperSqlGenerator.UI
         }
 
 
-        /// <summary>
-        /// When the table selection changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LstTables_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboOverrideSettingsForTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ucTableSettings.Visibility = Visibility.Hidden;
-            chkOverrideSettings.Visibility = Visibility.Hidden;
-            TabOverride.IsEnabled = false;
-
-            //if one table selected
-            if (lstTables.SelectedItems.Count == 1)
+            if (comboOverrideSettingsForTable.SelectedItem is TSqlObject selectedTable)
             {
-                TabOverride.IsEnabled = true;
-                chkOverrideSettings.Visibility = Visibility.Visible;
+                string tableName = selectedTable.Name.Parts[1].ToLower();
 
-                //Check if the config already exists
-                if (GeneratorSettings.TablesSettings.ContainsKey(((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1]))
-                {
+                if (GeneratorSettings.TablesSettings.ContainsKey(tableName))
                     chkOverrideSettings.IsChecked = true;
-
-                    //To be sure the correct settings are loaded
-                    ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]));
-                    chkOverrideSettings.Content = $"Override global settings for table: " +
-                        $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
-
-                    ucTableSettings.Visibility = Visibility.Visible;
-                }
                 else
-                {
                     chkOverrideSettings.IsChecked = false;
-                    ucTableSettings.Visibility = Visibility.Hidden;
-                }
-
             }
         }
+
 
         /// <summary>
         /// Override with table settings
@@ -357,12 +288,17 @@ namespace DapperSqlGenerator.UI
         /// <param name="e"></param>
         private void ChkOverrideSettings_Checked(object sender, RoutedEventArgs e)
         {
-            ucTableSettings.Visibility = Visibility.Visible;
-            ucTableSettings.InitTableSettings(((TSqlObject)lstTables.SelectedItems[0]));
-            chkOverrideSettings.Content = $"Override global settings for table: " +
-                $"{((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1].ToUpper()}";
+            // TODO : make current combo box item in bold
+            ucTableSettings.Visibility = Visibility.Hidden;
 
+            if (comboOverrideSettingsForTable.SelectedItem is TSqlObject selectedTable)
+            {
+                ucTableSettings.Visibility = Visibility.Visible;
+                ucTableSettings.InitTableSettings(selectedTable);
+                chkOverrideSettings.Content = $"Override global settings for table: {selectedTable.Name.Parts[1]}";
+            }
         }
+
 
         /// <summary>
         /// Cancel table settings and return to global settings
@@ -371,7 +307,8 @@ namespace DapperSqlGenerator.UI
         /// <param name="e"></param>
         private void ChkOverrideSettings_Unchecked(object sender, RoutedEventArgs e)
         {
-            var tableName = ((TSqlObject)lstTables.SelectedItems[0]).Name.Parts[1];
+            // TODO : make current combo box item not in bold
+            var tableName = ((TSqlObject)lstSelectedTables.SelectedItems[0]).Name.Parts[1];
 
             bool toBeRemoved = GeneratorSettings.TablesSettings.ContainsKey(tableName);
             if (toBeRemoved)
@@ -380,6 +317,7 @@ namespace DapperSqlGenerator.UI
             chkOverrideSettings.Content = "Override global settings";
             ucTableSettings.Visibility = Visibility.Hidden;
         }
+
 
         /// <summary>
         /// Open a save dialog, to browse and select output path for SQL stored procedures
@@ -401,6 +339,7 @@ namespace DapperSqlGenerator.UI
             }
         }
 
+
         /// <summary>
         /// Open a save dialog, to browse and select output path for C# entity classes
         /// </summary>
@@ -420,6 +359,7 @@ namespace DapperSqlGenerator.UI
                 txtOutputPath_CsEntityClasses.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
             }
         }
+
 
         /// <summary>
         /// Open a save dialog, to browse and select output path for C# Dapper repositories
@@ -441,9 +381,10 @@ namespace DapperSqlGenerator.UI
             }
         }
 
+
         private async void ButtonGenerateAllFiles_Click(object sender, RoutedEventArgs e)
         {
-            var ans = MessageBox.Show("Generation output could overwrite already existing files. Are you sure to continue?", 
+            var ans = MessageBox.Show("Generation output could overwrite already existing files. Are you sure to continue?",
                 "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (ans == MessageBoxResult.No)
@@ -461,7 +402,7 @@ namespace DapperSqlGenerator.UI
 
 
                 // Write SQL file containing all generated scripts and stored procedures     
-                await Task.Run(() => FileGeneratorHelper.WriteSqlScriptsFileAsync(Model, GeneratorSettings, 
+                await Task.Run(() => FileGeneratorHelper.WriteSqlScriptsFileAsync(Model, GeneratorSettings,
                     (progress) => Dispatcher.Invoke(() => progBarGenerateAllFiles.Value = progress * 50 / 100)));
 
                 progBarGenerateAllFiles.Value = 50;
@@ -494,6 +435,171 @@ namespace DapperSqlGenerator.UI
         }
 
 
+        #region PREVIEW METHODS
+
+
+        private void ButtonGenerateDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        SqlDeleteGenerator gen = new SqlDeleteGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+
+        }
+
+
+        private void ButtonGenerateInsert_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        SqlInsertGenerator gen = new SqlInsertGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+
+        private void ButtonGenerateBulkInsert_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+
+        private void ButtonGenerateNetEntityClass_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        CsEntityClassGenerator gen = new CsEntityClassGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+
+        private void ButtonGenerateSelectAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectAllGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+        private void ButtonGenerateSelectByPK_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectByPKGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+
+        private void ButtonGenerateSelectByUK_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlSelectByUKGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+
+        private void ButtonGenerateUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlUpdateGenerator(GeneratorSettings, table, true);
+
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
+
+
+        private void ButtonGenerateTableType_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSelectedTables.SelectedItems.Count > 0)
+            {
+                string output = string.Empty;
+                foreach (var item in lstSelectedTables.SelectedItems)
+                {
+                    if (item is TSqlObject table)
+                    {
+                        var gen = new SqlTableTypeGenerator(GeneratorSettings, table, true);
+
+                        output += gen.Generate();
+                    }
+                }
+                txtOutput.Text = output;
+            }
+        }
 
 
         private void ButtonGenerateBaseRepo_Click(object sender, RoutedEventArgs e)
@@ -507,16 +613,17 @@ namespace DapperSqlGenerator.UI
 
         }
 
+
         private void ButtonGenerateClassRepo_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItems.Count > 0)
+            if (lstSelectedTables.SelectedItems.Count > 0)
             {
                 string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
+                foreach (var item in lstSelectedTables.SelectedItems)
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new CsRepositoryClassGenerator(GeneratorSettings, table,true);
+                        var gen = new CsRepositoryClassGenerator(GeneratorSettings, table, true);
 
                         output += gen.Generate();
                     }
@@ -524,22 +631,26 @@ namespace DapperSqlGenerator.UI
                 txtOutput.Text = output;
             }
         }
+
 
         private void ButtonGenerateSelectByPKList_Click(object sender, RoutedEventArgs e)
         {
-            if (lstTables.SelectedItems.Count > 0)
+            if (lstSelectedTables.SelectedItems.Count > 0)
             {
                 string output = string.Empty;
-                foreach (var item in lstTables.SelectedItems)
+                foreach (var item in lstSelectedTables.SelectedItems)
                 {
                     if (item is TSqlObject table)
                     {
-                        var gen = new SqlSelectByPKListGenerator(GeneratorSettings, table,true);
+                        var gen = new SqlSelectByPKListGenerator(GeneratorSettings, table, true);
                         output += gen.Generate();
                     }
                 }
                 txtOutput.Text = output;
             }
         }
+
+        #endregion
+
     }
 }

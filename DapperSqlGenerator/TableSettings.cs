@@ -12,7 +12,7 @@ namespace DapperSqlGenerator
     public class TableSettings
     {
         //Only used when table settings
-        public string TableName = new Guid().ToString();
+        public string TableName = "";
 
         //Generation options - Sql
         public bool GenerateDeleteSP { get; set; } = true;
