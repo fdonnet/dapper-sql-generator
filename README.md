@@ -178,13 +178,13 @@ Task<IEnumerable<Object2>> object2Task;
 //Job1
 using (var dbContext1 = _dbContextFactory.Create())
 {
-  object1Task = db.object1Repo.GetAll();
+  object1Task = dbContext1.object1Repo.GetAll();
 }
 
 //Job2
 using (var dbContext2 = _dbContextFactory.Create())
 {
-  object2Task = db.object2Repo.GetAll();
+  object2Task = dbContext2.object2Repo.GetAll();
 }
 
 //Wait for jobs finished and retrieve the result
