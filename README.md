@@ -192,7 +192,7 @@ await Task.WhenAll(object1Task, object2Task);
 var object1List = await object1Task;
 var object2List = await object2Task;
 ```
-See above : 2 separate DB contexts to open 2 db connections..
+See above : 2 separate DB contexts to open 2 parallel db connections..
 
 
 
