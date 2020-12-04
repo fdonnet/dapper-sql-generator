@@ -176,13 +176,13 @@ Task<IEnumerable<Object1>> object1Task;
 Task<IEnumerable<Object2>> object2Task;
 
 //Job1
-using (var db = _db.Create())
+using (var dbContext1 = _dbContextFactory.Create())
 {
   object1Task = db.object1Repo.GetAll();
 }
 
 //Job1
-using (var db = _db.Create())
+using (var dbContext2 = _dbContextFactory.Create())
 {
   object2Task = db.object2Repo.GetAll();
 }
