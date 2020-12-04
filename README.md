@@ -171,7 +171,7 @@ Async transaction is a big debate. We choose to not use the .net transaction (Tr
 In case of parallel jobs (Tasks) or if you use the DAL in a NON Web/Web Api scope... the lifetime of our Dbcontexts needs to be more managed.
 The generator implements a very minimalitic DBContextFactory. So you can inject the IDBContextFactory in your services constructor and keep the control :
 ```csharp
-//Parallel 2 tasks jobs
+//Parallel 2 tasks jobs (thread safe)
 Task<IEnumerable<Object1>> object1Task;
 Task<IEnumerable<Object2>> object2Task;
 
@@ -181,18 +181,18 @@ using (var dbContext1 = _dbContextFactory.Create())
   object1Task = db.object1Repo.GetAll();
 }
 
-//Job1
+//Job2
 using (var dbContext2 = _dbContextFactory.Create())
 {
   object2Task = db.object2Repo.GetAll();
 }
 
-//Finish tasks
+//Wait for jobs finished and retrieve the result
 await Task.WhenAll(object1Task, object2Task);
 var object1List = await object1Task;
 var object2List = await object2Task;
 ```
-See above : 2 separate DB context to open 2 db connections..
+See above : 2 separate DB contexts to open 2 db connections..
 
 
 
