@@ -1,5 +1,3 @@
-------------------------DRAFT---------------------- **Some UI changes**
-
 # MSSQL - Dapper generator
 A simple and not too ambitious tool that helps you to generate some important generic layers for your MSSQL - C# (netcore) - Dapper project. 
 
@@ -169,7 +167,32 @@ The using statement is not really needed but it protects you from yourself;
 
 Async transaction is a big debate. We choose to not use the .net transaction (TransactionScopeAsyncFlowOption) because we dont' really understand how it is working behind. We prefer to use a standard IDBTransaction, because we think it's finally not too bad... but you could convince us...
 
-............Don't hesitate to play and make pull requests...........
+#### And if I need a more control on my DBContext lifecycle ?
+In case of parallel jobs (Tasks) or if you use the DAL in a NON Web/Web Api scope... the lifetime of our Dbcontexts needs to be more managed.
+The generator implements a very minimalitic DBContextFactory. So you can inject the IDBContextFactory in your services constructor and keep the control :
+```csharp
+//Parallel 2 tasks jobs
+Task<IEnumerable<Object1>> object1Task;
+Task<IEnumerable<Object2>> object2Task;
+
+//Job1
+using (var db = _db.Create())
+{
+  object1Task = db.object1Repo.GetAll();
+}
+
+//Job1
+using (var db = _db.Create())
+{
+  object2Task = db.object2Repo.GetAll();
+}
+
+//Finish tasks
+await Task.WhenAll(object1Task, object2Task);
+var object1List = await object1Task;
+var object2List = await object2Task;
+```
+See above : 2 separate DB context to open 2 db connections..
 
 
 
