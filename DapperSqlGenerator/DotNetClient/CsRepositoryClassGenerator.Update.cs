@@ -32,15 +32,14 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Update
         /// </summary>
-        public async Task<bool> Update({_entityClassFullName} {paramName})
+        public async Task Update({_entityClassFullName} {paramName})
         {{
             var p = new DynamicParameters();
             {spParams}
 
-            var ok = await _dbContext.Connection.ExecuteAsync
+            _ = await _dbContext.Connection.ExecuteAsync
                 (""usp{_entityClassName}_update"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
-            return true;
         }}";
 
             return output;

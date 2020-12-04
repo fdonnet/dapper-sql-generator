@@ -26,15 +26,14 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Delete
         /// </summary>
-        public async Task<bool> Delete({_pkFieldsWithTypes})
+        public async Task Delete({_pkFieldsWithTypes})
         {{
             var p = new DynamicParameters();
             {spParams}
 
-            var ok = await _dbContext.Connection.ExecuteAsync
+            _ = await _dbContext.Connection.ExecuteAsync
                 (""usp{_entityClassName}_Delete"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
-            return true;
         }}";
 
             return output;
