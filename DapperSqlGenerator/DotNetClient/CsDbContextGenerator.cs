@@ -37,7 +37,7 @@ namespace DapperSqlGenerator.DotNetClient
                 _tables = GeneratorSettings.RunGeneratorForSelectedTables
                     .Where(tableName => tablesByName.ContainsKey(tableName.ToLower()))
                     .Select(tableName => tablesByName[tableName.ToLower()]);
-            }                
+            }
 
             string @using = GenerateUsingStatements();
             string @interface = GenerateInterface();
@@ -205,6 +205,8 @@ using Microsoft.Extensions.Hosting;
         public IDbTransaction Transaction {{ 
             get => _trans;
         }}
+        
+        private bool _disposed = false;
 
 
         {repoMemberDefinitions}
@@ -304,16 +306,30 @@ using Microsoft.Extensions.Hosting;
         }}
 
         /// <summary>
-        /// Will be call at the end of the service (ex : transient service in api net core)
+        /// Will be call at the end of the service (ex : transient service in api net core) GC correct way
         /// </summary>
         public void Dispose()
         {{
-            _trans?.Dispose();
-            _cn?.Close();
-            _cn?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }}
 
-
+        /// <summary>
+        /// Better way to dispose if someone needs to inherit the DB context and have to dispose unmanaged ressources
+        /// </summary>
+        private void Dispose(bool disposing)
+        {{
+            if(! _disposed)
+            {{
+                if(disposing)
+                {{
+                    _trans?.Dispose();
+                    _cn?.Close();
+                    _cn?.Dispose();
+                }}
+            }}
+            _disposed = true;             
+        }}
     }}
 
 ";

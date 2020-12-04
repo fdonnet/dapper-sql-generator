@@ -65,7 +65,7 @@ namespace DapperSqlGenerator.DotNetClient
             {spPkParams}
             {spNormalParams}
 
-            var ok = await _dbContext.Connection.ExecuteAsync
+            _ = await _dbContext.Connection.ExecuteAsync
                 (""usp{_entityClassName}_Insert"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
             
             {returnStatement}
