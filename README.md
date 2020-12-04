@@ -169,7 +169,7 @@ Async transaction is a big debate. We choose to not use the .net transaction (Tr
 
 #### And if I need more control on my DBContext lifecycle ?
 In case of parallel jobs (Tasks) or if you use the DAL in a NON Web/Web Api scope... the lifetime of our Dbcontexts needs to be more managed.
-The generator implements a very minimalitic DBContextFactory. So you can inject the IDBContextFactory in your services constructor and keep the control :
+The generator implements a very minimalistic DBContextFactory. So you can inject the IDBContextFactory in your services constructor and keep the control :
 ```csharp
 //Parallel 2 tasks jobs (thread safe)
 Task<IEnumerable<Object1>> object1Task;
