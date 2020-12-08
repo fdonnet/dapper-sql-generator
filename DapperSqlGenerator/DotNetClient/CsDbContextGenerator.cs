@@ -175,7 +175,15 @@ using Microsoft.Extensions.Hosting;
     /// </summary>
     public class {_settings.ClassName}Factory : {_interfaceName}Factory
     {{
-        private readonly string _conString;
+        protected readonly string _conString;
+        protected readonly IConfiguration _config;
+
+        public DbContextFactory(IConfiguration config)
+        {{
+            _config = config;
+            _conString = _config.GetConnectionString(""Default"");
+        }}
+
         public {_settings.ClassName}Factory(string dbConnectionString)
         {{
             _conString = dbConnectionString;
