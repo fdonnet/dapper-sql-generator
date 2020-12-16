@@ -176,18 +176,15 @@ Task<IEnumerable<Object1>> object1Task;
 Task<IEnumerable<Object2>> object2Task;
 
 //Job1
-using (var dbContext1 = _dbContextFactory.Create())
-{
-  object1Task = dbContext1.object1Repo.GetAll();
-}
+using var dbContext1 = _dbContextFactory.Create();
+object1Task = dbContext1.object1Repo.GetAll();
 
 //Job2
-using (var dbContext2 = _dbContextFactory.Create())
-{
-  object2Task = dbContext2.object2Repo.GetAll();
-}
+using var dbContext2 = _dbContextFactory.Create();
+object2Task = dbContext2.object2Repo.GetAll();
 
 //Wait for jobs finished and retrieve the result
+// Don't close the Dbcontexts before Task.WhenAll
 await Task.WhenAll(object1Task, object2Task);
 var object1List = await object1Task;
 var object2List = await object2Task;
