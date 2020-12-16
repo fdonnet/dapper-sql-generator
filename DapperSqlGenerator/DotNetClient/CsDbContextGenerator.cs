@@ -229,6 +229,7 @@ using Microsoft.Extensions.Hosting;
             _config = config;
             _env = env;
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.Settings.CommandTimeout = 60000;
             _cn = new SqlConnection(_config.GetConnectionString(""{_settings.ConnectionStringName}""));
         }}
 
@@ -239,6 +240,7 @@ using Microsoft.Extensions.Hosting;
         public {_settings.ClassName}(string connectionString)
         {{
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.Settings.CommandTimeout = 60000;
             _cn = new SqlConnection(connectionString);
         }}
         
