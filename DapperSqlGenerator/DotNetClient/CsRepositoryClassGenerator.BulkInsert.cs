@@ -17,17 +17,22 @@ namespace DapperSqlGenerator.DotNetClient
         {
             string output = $@"
         /// <summary>
-        /// Bulk insert
+        /// Bulk insert (return false if not record to insert, true if insert without error)
         /// </summary>
         public async Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List)
         {{
-            var p = new DynamicParameters();
-            p.Add(""@items"", Create{_entityClassName}DataTable({FirstCharacterToLower(_entityClassName)}List));
+            if({FirstCharacterToLower(_entityClassName)}List is null || !{FirstCharacterToLower(_entityClassName)}List.Any())
+                return false;
+            else
+            {{
+                var p = new DynamicParameters();
+                p.Add(""@items"", Create{_entityClassName}DataTable({FirstCharacterToLower(_entityClassName)}List));
 
-            var ok = await _dbContext.Connection.ExecuteAsync
-                (""usp{_entityClassName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
+                _ = await _dbContext.Connection.ExecuteAsync
+                    (""usp{_entityClassName}_bulkInsert"", p, commandType: CommandType.StoredProcedure, transaction: _dbContext.Transaction);
 
-            return true;
+                return true;
+            }}
         }}";
 
             return output + Environment.NewLine + PrintTableTypeForBulkInsert(); ;
@@ -41,7 +46,9 @@ namespace DapperSqlGenerator.DotNetClient
         /// <returns></returns>
         private string PrintTableTypeForBulkInsert()
         {
-            var removeIdentityColumns = _allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
+            //var removeIdentityColumns = _allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
+            //Keep identity
+            var removeIdentityColumns = _allColumns;
 
             // Hint: 'addRows' will be filled in addColumns 
             string addRows = String.Join(Environment.NewLine + "                    ",
@@ -75,7 +82,7 @@ namespace DapperSqlGenerator.DotNetClient
         /// <summary>
         /// Create special db table for bulk insert
         /// </summary>
-        private object Create{_entityClassName}DataTable(IEnumerable<{_entityClassFullName}> {_entityClassName}List)
+        private static object Create{_entityClassName}DataTable(IEnumerable<{_entityClassFullName}> {_entityClassName}List)
         {{
             DataTable dt = new DataTable();
             {addColumns}

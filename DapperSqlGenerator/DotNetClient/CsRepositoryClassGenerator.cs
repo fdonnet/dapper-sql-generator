@@ -169,6 +169,10 @@ $@"
             if (TableSettings.GenerateBulkInsertSP)
                 yield return $"Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
 
+            //Bulk update
+            if (TableSettings.GenerateBulkUpdateSP)
+                yield return $"Task<bool> BulkUpdate(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
+
             //Update
             if (TableSettings.GenerateUpdateSP)
                 yield return $"Task Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
@@ -215,6 +219,9 @@ $@"
 
             if (TableSettings.GenerateBulkInsertSP)
                 yield return PrintBulkInsertMethod();
+
+            if (TableSettings.GenerateBulkUpdateSP)
+                yield return PrintBulkUpdateMethod();
 
             if (TableSettings.GenerateSelectByPkList)
                 yield return PrintGetByPKListMethod();

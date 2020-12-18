@@ -81,6 +81,8 @@
     <Compile Include="FileGeneratorHelper.cs" />
     <Compile Include="GeneratorSettings.cs" />
     <Compile Include="GeneratorBase.cs" />
+    <Compile Include="StoredProcedures\SqlBulkUpdateGenerator.cs" />
+    <Compile Include="StoredProcedures\SqlBulkUpdateGeneratorSettings.cs" />
     <Compile Include="TableSettings.cs" />
     <Compile Include="StoredProcedures\SqlBulkInsertGenerator.cs" />
     <Compile Include="StoredProcedures\SqlBulkInsertGeneratorSettings.cs" />
@@ -106,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="DotNetClient\CsRepositoryClassGenerator.BulkUpdate.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
