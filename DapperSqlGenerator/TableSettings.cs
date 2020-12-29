@@ -13,11 +13,13 @@ namespace DapperSqlGenerator
     {
         //Only used when table settings
         public string TableName = "";
+        private bool _bulkInsert = true;
 
         //Generation options - Sql
         public bool GenerateDeleteSP { get; set; } = true;
         public bool GenerateInsertSP { get; set; } = true;
-        public bool GenerateBulkInsertSP { get; set; } = true;
+        public bool GenerateBulkInsertSP { get { return _bulkInsert; } set { _bulkInsert = value; } }
+        public bool GenerateBulkUpdateSP { get { return _bulkInsert; } set { _bulkInsert = value; } }
         public bool GenerateUpdateSP { get; set; } = true;
         public bool GenerateSelectAllSP { get; set; } = true;
         public bool GenerateSelectByPk { get; set; } = true;
@@ -33,6 +35,7 @@ namespace DapperSqlGenerator
         public SqlDeleteGeneratorSettings SqlDeleteSettings { get; set; } = new SqlDeleteGeneratorSettings();
         public SqlInsertGeneratorSettings SqlInsertSettings { get; set; } = new SqlInsertGeneratorSettings();
         public SqlBulkInsertGeneratorSettings SqlBulkInsertSettings { get; set; } = new SqlBulkInsertGeneratorSettings();
+        public SqlBulkUpdateGeneratorSettings SqlBulkUpdateSettings { get; set; } = new SqlBulkUpdateGeneratorSettings();
         public SqlUpdateGeneratorSettings SqlUpdateSettings { get; set; } = new SqlUpdateGeneratorSettings();
         public SqlSelectAllGeneratorSettings SqlSelectAllSettings { get; set; } = new SqlSelectAllGeneratorSettings();
         public SqlSelectByPKGeneratorSettings SqlSelectByPKSettings { get; set; } = new SqlSelectByPKGeneratorSettings();

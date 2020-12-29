@@ -169,13 +169,17 @@ $@"
             if (TableSettings.GenerateBulkInsertSP)
                 yield return $"Task<bool> BulkInsert(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
 
+            //Bulk update
+            if (TableSettings.GenerateBulkUpdateSP)
+                yield return $"Task<bool> BulkUpdate(IEnumerable<{_entityClassFullName}> {FirstCharacterToLower(_entityClassName)}List);";
+
             //Update
             if (TableSettings.GenerateUpdateSP)
-                yield return $"Task<bool> Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
+                yield return $"Task Update({_entityClassFullName} {FirstCharacterToLower(_entityClassName)});";
 
             //Delete
             if (TableSettings.GenerateDeleteSP)
-                yield return $"Task<bool> Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
+                yield return $"Task Delete(int id);"; // TODO: only work with and int id as pk, hard coded need to be changed
 
             if (TableSettings.GenerateSelectByPkList)
                 yield return $"Task<IEnumerable<{ _entityClassFullName}>> GetByPKList(IEnumerable<{_entityClassFullName}_PK> pkList);";
@@ -215,6 +219,9 @@ $@"
 
             if (TableSettings.GenerateBulkInsertSP)
                 yield return PrintBulkInsertMethod();
+
+            if (TableSettings.GenerateBulkUpdateSP)
+                yield return PrintBulkUpdateMethod();
 
             if (TableSettings.GenerateSelectByPkList)
                 yield return PrintGetByPKListMethod();

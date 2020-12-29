@@ -485,7 +485,8 @@ namespace DapperSqlGenerator.UI
                     if (item is TSqlObject table)
                     {
                         SqlBulkInsertGenerator gen = new SqlBulkInsertGenerator(GeneratorSettings, table, true);
-                        output += gen.Generate();
+                        SqlBulkUpdateGenerator gen2 = new SqlBulkUpdateGenerator(GeneratorSettings, table, true);
+                        output += gen.Generate() + gen2.Generate();
                     }
                 }
                 txtOutput.Text = output;

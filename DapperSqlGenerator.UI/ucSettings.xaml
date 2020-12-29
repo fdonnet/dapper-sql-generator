@@ -30,7 +30,7 @@
                         <CheckBox Name="chkGenerateDeleteSp" IsChecked="{Binding Path=GenerateDeleteSP, Mode=TwoWay}">Generate Delete SP</CheckBox>
                         <CheckBox Name="chkGenerateInsertSp" IsChecked="{Binding Path=GenerateInsertSP, Mode=TwoWay}">Generate Insert SP</CheckBox>
                         <StackPanel Orientation="Vertical">
-                            <CheckBox Name="chkGenerateBulkInsertSp" Checked="ChkGenerateBulkInsertSp_Checked" Unchecked="ChkGenerateBulkInsertSp_Unchecked" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate Bulk Insert SP</CheckBox>
+                            <CheckBox Name="chkGenerateBulkInsertSp" Checked="ChkGenerateBulkInsertSp_Checked" Unchecked="ChkGenerateBulkInsertSp_Unchecked" IsChecked="{Binding Path=GenerateBulkInsertSP, Mode=TwoWay}">Generate Bulk Insert/Update SP</CheckBox>
                             <CheckBox Name="chkGenerateTableType" Margin="20,0,0,5" IsEnabled="False"  IsChecked="{Binding Path=GenerateTableType, Mode=TwoWay}">Generate Table Type</CheckBox>
                         </StackPanel>
                         

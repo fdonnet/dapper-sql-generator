@@ -144,7 +144,7 @@ namespace DapperSqlGenerator
             switch (sqlDataTypeName.ToLower())
             {
                 case "bigint":
-                    return "DbType.Int64"; 
+                    return "DbType.Int64";
                 case "binary":
                 case "image":
                 case "varbinary":
@@ -253,9 +253,16 @@ namespace DapperSqlGenerator
             {
                 int length = column.GetProperty<int>(Column.Length);
                 bool isMax = column.GetProperty<bool>(Column.IsMax);
-                return length == 0 && !isMax
+                int precision = column.GetProperty<int>(Column.Precision);
+                int scale = column.GetProperty<int>(Column.Scale);
+
+                return precision != 0
+                    ? sdt.ToString().ToUpper() + $"({precision},{scale})"
+                    : length == 0 && !isMax
                     ? sdt.ToString().ToUpper()
-                    : length == 0 ? sdt.ToString().ToUpper() + "(MAX)" : sdt.ToString().ToUpper() + "(" + length + ")";
+                    : length == 0
+                    ? sdt.ToString().ToUpper() + "(MAX)"
+                    : sdt.ToString().ToUpper() + "(" + length + ")";
             }
             else
             {
@@ -294,7 +301,7 @@ namespace DapperSqlGenerator
             if (table == null) throw new ArgumentNullException(nameof(table));
 
             IEnumerable<TSqlObject> uks = table.GetReferencing(UniqueConstraint.Host, DacQueryScopes.UserDefined);
- 
+
             if (uks != null)
             {
                 foreach (var uk in uks)
@@ -310,7 +317,7 @@ namespace DapperSqlGenerator
 
         }
 
-        
+
         /// <summary>
         /// Check if a column is nullable
         /// </summary>

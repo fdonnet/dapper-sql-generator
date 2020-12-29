@@ -7,24 +7,23 @@ using System.Threading.Tasks;
 
 namespace DapperSqlGenerator.StoredProcedures
 {
-
     /// <summary>
-    /// Generates the code of a Bulk Insert procedure for a SQL table
+    /// Generates the code of a Bulk update procedure for a SQL table
     /// </summary>
-    public class SqlBulkInsertGenerator : GeneratorBase
+    public class SqlBulkUpdateGenerator : GeneratorBase
     {
-        private readonly SqlBulkInsertGeneratorSettings _settings;
 
-        public SqlBulkInsertGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
+        private readonly SqlBulkUpdateGeneratorSettings _settings;
+
+        public SqlBulkUpdateGenerator(GeneratorSettings generatorSettings, TSqlObject table, bool preview = false)
             : base(generatorSettings, table: table, previewMode: preview)
         {
-            _settings = TableSettings?.SqlBulkInsertSettings;
+            _settings = TableSettings?.SqlBulkUpdateSettings;
         }
-
 
         public override string Generate()
         {
-            if (!TableSettings.GenerateBulkInsertSP && !PreviewMode)
+            if (!TableSettings.GenerateBulkUpdateSP && !PreviewMode)
                 return string.Empty;
 
             var allColumns = Table.GetAllColumns();
@@ -36,20 +35,39 @@ namespace DapperSqlGenerator.StoredProcedures
             // Identity columns will appear as output parameters
             var nonIdentityColumns = allColumns.Where(col => !col.GetProperty<bool>(Column.IsIdentity));
             var identityColumns = allColumns.Where(col => col.GetProperty<bool>(Column.IsIdentity));
+            var pkColumns = Table.GetPrimaryKeyColumns();
 
             var tableTypeName = $"[dbo].[udt{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}]";
 
-            var insertClause_columns = String.Join(Environment.NewLine + "        , ",
-                nonIdentityColumns.Select(col =>
+            var inputParamDeclarations = String.Join(Environment.NewLine + ", ",
+                allColumns.Select(col =>
                 {
                     var colName = col.Name.Parts[2];
-                    return $"[{colName}]";
-                }));
+                    var colDataType = col.GetColumnSqlDataType();
+                    return $"@{colName} {colDataType}";
+                })
+            );
             
-            var grants = String.Join(Environment.NewLine + Environment.NewLine,
+            var updateClause_setStatements = String.Join(Environment.NewLine + "        , ", nonIdentityColumns.Select(col =>
+            {
+                var colName = col.Name.Parts[2];
+                return $"a.[{colName}] = i.[{colName}]";
+            }));
+
+            //var whereClause_conditions = String.Join(" AND ", pkColumns.Select(col =>
+            //{
+            //    var colName = col.Name.Parts[2];
+            //    return $"[{colName}] = @{colName}";
+            //}));
+
+            //Only support one field PKS for the moment
+            var colNameStr = pkColumns.First().Name.Parts[2];
+            var joinClause = $"INNER JOIN @items i ON " + $"a.[{colNameStr}] = i.{colNameStr}";
+
+        var grants = String.Join(Environment.NewLine + Environment.NewLine,
                 _settings.GrantExecuteToRoles.Select(roleName =>
                     "GRANT EXECUTE" + Environment.NewLine
-                    + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkInsert] TO [{roleName}] AS [dbo];"
+                    + $"ON OBJECT::[dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkUpdate] TO [{roleName}] AS [dbo];"
                     + Environment.NewLine + "GO")
             );
 
@@ -57,10 +75,10 @@ namespace DapperSqlGenerator.StoredProcedures
 $@" 
 -- =================================================================
 -- Author: {this.GeneratorSettings.AuthorName}
--- Description:	Bulk Insert Procedure for the table {Table.Name} 
+-- Description:	Bulk Update Procedure for the table {Table.Name} 
 -- =================================================================
 
-CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkInsert]
+CREATE PROCEDURE [dbo].[usp{TSqlModelHelper.PascalCase(Table.Name.Parts[1])}_bulkUpdate]
 (
 @items {tableTypeName} READONLY
 )
@@ -75,9 +93,11 @@ BEGIN
 
     BEGIN TRY
     
-        INSERT INTO {Table.Name}
-        SELECT {insertClause_columns}
-	    FROM @items
+        UPDATE a
+        SET 
+        {updateClause_setStatements}
+        FROM {Table.Name} a
+        {joinClause}
 
     END TRY
     BEGIN CATCH
@@ -103,6 +123,5 @@ GO
 
             return output;
         }
-
     }
 }

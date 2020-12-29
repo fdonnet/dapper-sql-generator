@@ -37,7 +37,7 @@ namespace DapperSqlGenerator.DotNetClient
                 _tables = GeneratorSettings.RunGeneratorForSelectedTables
                     .Where(tableName => tablesByName.ContainsKey(tableName.ToLower()))
                     .Select(tableName => tablesByName[tableName.ToLower()]);
-            }                
+            }
 
             string @using = GenerateUsingStatements();
             string @interface = GenerateInterface();
@@ -77,6 +77,7 @@ using System.Collections.Generic;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 ";
 
@@ -175,7 +176,15 @@ using Microsoft.Extensions.Hosting;
     /// </summary>
     public class {_settings.ClassName}Factory : {_interfaceName}Factory
     {{
-        private readonly string _conString;
+        protected readonly string _conString;
+        protected readonly IConfiguration _config;
+
+        public DbContextFactory(IConfiguration config)
+        {{
+            _config = config;
+            _conString = _config.GetConnectionString(""Default"");
+        }}
+
         public {_settings.ClassName}Factory(string dbConnectionString)
         {{
             _conString = dbConnectionString;
@@ -205,6 +214,8 @@ using Microsoft.Extensions.Hosting;
         public IDbTransaction Transaction {{ 
             get => _trans;
         }}
+        
+        private bool _disposed = false;
 
 
         {repoMemberDefinitions}
@@ -219,6 +230,7 @@ using Microsoft.Extensions.Hosting;
             _config = config;
             _env = env;
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.Settings.CommandTimeout = 60000;
             _cn = new SqlConnection(_config.GetConnectionString(""{_settings.ConnectionStringName}""));
         }}
 
@@ -229,6 +241,7 @@ using Microsoft.Extensions.Hosting;
         public {_settings.ClassName}(string connectionString)
         {{
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.Settings.CommandTimeout = 60000;
             _cn = new SqlConnection(connectionString);
         }}
         
@@ -304,16 +317,30 @@ using Microsoft.Extensions.Hosting;
         }}
 
         /// <summary>
-        /// Will be call at the end of the service (ex : transient service in api net core)
+        /// Will be call at the end of the service (ex : transient service in api net core) GC correct way
         /// </summary>
         public void Dispose()
         {{
-            _trans?.Dispose();
-            _cn?.Close();
-            _cn?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }}
 
-
+        /// <summary>
+        /// Better way to dispose if someone needs to inherit the DB context and have to dispose unmanaged ressources
+        /// </summary>
+        private void Dispose(bool disposing)
+        {{
+            if(! _disposed)
+            {{
+                if(disposing)
+                {{
+                    _trans?.Dispose();
+                    _cn?.Close();
+                    _cn?.Dispose();
+                }}
+            }}
+            _disposed = true;             
+        }}
     }}
 
 ";

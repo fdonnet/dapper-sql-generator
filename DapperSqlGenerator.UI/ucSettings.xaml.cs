@@ -215,6 +215,7 @@ namespace DapperSqlGenerator.UI
         private void ChkGenerateBulkInsertSp_Checked(object sender, RoutedEventArgs e)
         {
             chkGenerateTableType.IsChecked = true;
+            
         }
 
         /// <summary>

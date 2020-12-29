@@ -168,7 +168,7 @@
                             <StackPanel  Orientation="Horizontal" Margin="3,5,3,2">
                                 <Button x:Name="buttonGenerateDelete" Click="ButtonGenerateDelete_Click" Margin="3,0,3,0" Padding="5,5">Delete</Button>
                                 <Button x:Name="buttonGenerateInsert" Click="ButtonGenerateInsert_Click" Margin="3,0,3,0" Padding="5,5">Insert</Button>
-                                <Button x:Name="buttonGenerateBulkInsert" Click="ButtonGenerateBulkInsert_Click" Margin="3,0,3,0" Padding="5,5">Bulk Insert</Button>
+                                <Button x:Name="buttonGenerateBulkInsert" Click="ButtonGenerateBulkInsert_Click" Margin="3,0,3,0" Padding="5,5">Bulk Insert/Update</Button>
                                 <Button x:Name="buttonGenerateUpdate" Click="ButtonGenerateUpdate_Click" Margin="3,0,3,0" Padding="5,5">Update</Button>
                                 <Button x:Name="buttonGenerateSelectAll" Click="ButtonGenerateSelectAll_Click" Margin="3,0,3,0" Padding="5,5">Select All</Button>
                                 <Button x:Name="buttonGenerateSelectByPK" Click="ButtonGenerateSelectByPK_Click" Margin="3,0,3,0" Padding="5,5">Select By PK</Button>

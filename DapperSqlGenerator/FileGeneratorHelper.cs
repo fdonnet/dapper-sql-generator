@@ -53,6 +53,8 @@ namespace DapperSqlGenerator
                         if (sql != string.Empty) writer.WriteLine(sql);
                         sql = new SqlBulkInsertGenerator(generatorSettings, currTable).Generate();
                         if (sql != string.Empty) writer.WriteLine(sql);
+                        sql = new SqlBulkUpdateGenerator(generatorSettings, currTable).Generate();
+                        if (sql != string.Empty) writer.WriteLine(sql);
                         sql = new SqlUpdateGenerator(generatorSettings, currTable).Generate();
                         if (sql != string.Empty) writer.WriteLine(sql);
                         sql = new SqlDeleteGenerator(generatorSettings, currTable).Generate();
