@@ -1,116 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7F06D33-31B5-4BA3-BDB7-57CA5DD58787}</ProjectGuid>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DapperSqlGenerator</RootNamespace>
-    <AssemblyName>DapperSqlGenerator</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Data.Tools.Schema.Sql, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.DacFx.x64.150.4897.1\lib\net46\Microsoft.Data.Tools.Schema.Sql.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.Tools.Utilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.DacFx.x64.150.4897.1\lib\net46\Microsoft.Data.Tools.Utilities.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Dac, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.DacFx.x64.150.4897.1\lib\net46\Microsoft.SqlServer.Dac.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Dac.Extensions, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.DacFx.x64.150.4897.1\lib\net46\Microsoft.SqlServer.Dac.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.TransactSql.ScriptDom, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.DacFx.x64.150.4897.1\lib\net46\Microsoft.SqlServer.TransactSql.ScriptDom.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Types, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.DacFx.x64.150.4897.1\lib\net46\Microsoft.SqlServer.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.SqlServer.DacFx" Version="160.6296.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DotNetClient\CsCodeGeneratorSettings.cs" />
-    <Compile Include="DotNetClient\CsEntityClassGenerator.cs" />
-    <Compile Include="DotNetClient\CsEntityClassGeneratorSettings.cs" />
-    <Compile Include="DotNetClient\CsDbContextGenerator.cs" />
-    <Compile Include="DotNetClient\CsDbContextGeneratorSettings.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.BulkInsert.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.Delete.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetByPK.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetByPKList.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetByUK.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.Insert.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGeneratorSettings.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.GetAll.cs" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.Update.cs" />
-    <Compile Include="FileGeneratorHelper.cs" />
-    <Compile Include="GeneratorSettings.cs" />
-    <Compile Include="GeneratorBase.cs" />
-    <Compile Include="StoredProcedures\SqlBulkUpdateGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlBulkUpdateGeneratorSettings.cs" />
-    <Compile Include="TableSettings.cs" />
-    <Compile Include="StoredProcedures\SqlBulkInsertGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlBulkInsertGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlDeleteGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlDeleteGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlInsertGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlInsertGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlSelectAllGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlSelectAllGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlSelectByPKGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlSelectByPKGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlSelectByPKListGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlSelectByPKListGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlSelectByUKGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlSelectByUKGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlTableTypeGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlTableTypeGeneratorSettings.cs" />
-    <Compile Include="StoredProcedures\SqlUpdateGenerator.cs" />
-    <Compile Include="StoredProcedures\SqlUpdateGeneratorSettings.cs" />
-    <Compile Include="TSqlModelHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <Compile Include="DotNetClient\CsRepositoryClassGenerator.BulkUpdate.cs" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

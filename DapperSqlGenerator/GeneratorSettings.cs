@@ -1,11 +1,8 @@
 ﻿using DapperSqlGenerator.DotNetClient;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DapperSqlGenerator
 {
@@ -58,7 +55,7 @@ namespace DapperSqlGenerator
         /// </summary>
         public TableSettings GlobalSettings { get; set; } = new TableSettings();
 
-        [JsonProperty()]
+        [JsonPropertyName("TablesSettings")]
         /// <summary>
         /// Generation settings for specific SQL table, which override global settings
         /// </summary>
@@ -67,14 +64,13 @@ namespace DapperSqlGenerator
 
         public void SaveToFile(string configPath)
         {
-            File.WriteAllText(configPath, JsonConvert.SerializeObject(this, Formatting.Indented));
+            File.WriteAllText(configPath, JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true }));
         }
 
 
         public static GeneratorSettings LoadFromFile(string configPath)
         {
-            return JsonConvert.DeserializeObject
-                <GeneratorSettings>(File.ReadAllText(configPath));
+            return JsonSerializer.Deserialize<GeneratorSettings>(File.ReadAllText(configPath));
         }
 
     }
