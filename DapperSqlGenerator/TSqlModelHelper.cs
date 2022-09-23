@@ -21,8 +21,8 @@ namespace DapperSqlGenerator
             ModelLoadOptions options = new ModelLoadOptions()
             {
                 LoadAsScriptBackedModel = false,
-                ModelStorageType = DacSchemaModelStorageType.File
             };
+
             return TSqlModel.LoadFromDacpac(dacpacFileName, options);
         }
 

@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using DapperSqlGenerator.DotNetClient;
+﻿using DapperSqlGenerator.DotNetClient;
 using DapperSqlGenerator.StoredProcedures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DapperSqlGenerator
@@ -63,8 +63,8 @@ namespace DapperSqlGenerator
         /// <returns></returns>
         public static TableSettings CopySettings(this TableSettings settings, TableSettings globalSettings)
         {
-            string tmp = JsonConvert.SerializeObject(globalSettings);
-            return JsonConvert.DeserializeObject<TableSettings>(tmp);
+            string tmp = JsonSerializer.Serialize(globalSettings);
+            return JsonSerializer.Deserialize<TableSettings>(tmp);
         }
     }
 }
