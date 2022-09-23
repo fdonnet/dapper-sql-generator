@@ -28,6 +28,8 @@ namespace DapperSqlGenerator.UI
         {
             //Only one main windows
             services.AddSingleton<MainWindow>();
+            //Settings singleton
+            services.AddSingleton<GeneratorSettings>(); 
         }
     }
 }
