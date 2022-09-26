@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
 
 namespace DapperSqlGenerator.UI
@@ -13,8 +9,27 @@ namespace DapperSqlGenerator.UI
     /// </summary>
     public partial class App : Application
     {
+        public IServiceProvider _serviceProvider { get; private set; }
 
-        public new static App Current { get { return (App)Application.Current; } }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //Services init
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            _serviceProvider = serviceCollection.BuildServiceProvider();
 
+            var mainWindows = _serviceProvider.GetRequiredService<MainWindow>();
+
+            mainWindows.Show();
+
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            //Only one main windows
+            services.AddSingleton<MainWindow>();
+            //Settings singleton
+            services.AddSingleton<GeneratorSettings>(); 
+        }
     }
 }
