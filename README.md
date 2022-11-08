@@ -1,5 +1,3 @@
-This repo will become obsolete soon (no update), you can go here and help : https://github.com/fdonnet/Dapper-Layers-Generator (new project compatible with all db providers, a console app that you can run on Linux too, Alpha release soon for MySql)
-
 # MSSQL - Dapper generator
 A simple and not too ambitious tool that helps you to generate some important generic layers for your MSSQL - C# (netcore) - Dapper project. 
 
