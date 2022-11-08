@@ -1,3 +1,5 @@
+For MySql or to see the new version i m working on, go => https://github.com/fdonnet/Dapper-Layers-Generator (Console app, multi db provider) 
+
 # MSSQL - Dapper generator
 A simple and not too ambitious tool that helps you to generate some important generic layers for your MSSQL - C# (netcore) - Dapper project. 
 
